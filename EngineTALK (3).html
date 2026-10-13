@@ -1,0 +1,1054 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#000000">
+<title>EngineTALK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;600;700&family=IBM+Plex+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#000;--bg-soft:#0a0a0a;--line:#3a3a3f;--track:#1e1e22;
+  --fg:#fff;--soft:#d8d8e0;--mute:#a0a0a8;--dim:#6a6a72;
+  --cta:#f0f0fa;--on-cta:#000;
+  --ok:#fff;--warn:#f6d303;--bad:#ff4d4f;
+  --lat:'Barlow Semi Condensed','IBM Plex Sans KR',system-ui,sans-serif;
+  --ko:'IBM Plex Sans KR',system-ui,-apple-system,sans-serif;
+  --g:20px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden;margin:0;background:var(--bg);color:var(--fg);font-family:var(--ko);font-size:16px;line-height:1.5}
+body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);overscroll-behavior:none}
+button,input,textarea,select{font:inherit;color:inherit}
+.view{display:none;max-width:720px;margin:0 auto;padding:0 var(--g) 120px}
+.view.on{display:block}
+.num{font-family:var(--lat);font-variant-numeric:tabular-nums;letter-spacing:1px}
+.cap{font-family:var(--lat);font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--mute)}
+.mute{color:var(--mute)}.soft{color:var(--soft)}.warn{color:var(--warn)}.bad{color:var(--bad)}
+h2{font-size:26px;font-weight:700;letter-spacing:-.5px;margin:20px 0 4px}
+hr{border:0;border-top:1px solid var(--line);margin:20px 0}
+
+/* header */
+.hdr{display:flex;justify-content:space-between;align-items:center;height:72px;border-bottom:1px solid var(--line);margin:0 calc(-1*var(--g)) 0;padding:0 var(--g);gap:12px}
+.wm b{display:block;font-family:var(--lat);font-weight:700;font-size:22px;letter-spacing:1.8px;line-height:1}
+.wm span{font-family:var(--lat);font-size:12px;letter-spacing:1.2px;color:var(--mute)}
+.eq{text-align:right}.eq b{display:block;font-family:var(--lat);font-size:15px;letter-spacing:1.2px;line-height:1.1}
+.eq span{font-family:var(--lat);font-size:11px;letter-spacing:1px;color:var(--mute)}
+.back{width:64px;height:64px;margin-left:-14px;background:none;border:0;font-size:30px;color:var(--fg)}
+.hdr h1{flex:1;font-size:20px;margin:0}
+
+/* stat readout */
+.stat{display:flex;align-items:flex-end;flex-wrap:wrap;gap:4px 14px;margin:6px 0 2px}
+.stat .v{font-family:var(--lat);font-variant-numeric:tabular-nums;font-weight:700;line-height:.9;letter-spacing:1px}
+.v.hero{font-size:76px}.v.lg{font-size:56px}.v.xl{font-size:92px}
+.stat .u{font-family:var(--lat);font-size:20px;color:var(--mute);margin-left:4px}
+.refs{font-family:var(--lat);font-variant-numeric:tabular-nums;font-size:14px;line-height:1.35;padding-bottom:6px;white-space:nowrap}
+.refs span{color:var(--mute)}.refs b{font-weight:400;color:var(--soft)}
+.status{font-size:30px;font-weight:700;letter-spacing:-.5px;line-height:1.15;margin:22px 0 8px}
+
+/* buttons */
+.btn{display:flex;align-items:center;justify-content:center;width:100%;border-radius:44px;font-family:var(--ko);font-weight:700;font-size:20px;border:1px solid var(--fg);background:transparent;color:var(--fg);cursor:pointer;user-select:none}
+.btn.fill{background:var(--cta);color:var(--on-cta);border-color:var(--cta)}
+.btn.h88{height:88px;font-size:22px}.btn.h84{height:84px}.btn.h64{height:64px;font-size:18px}.btn.h52{height:52px;font-size:16px;border-radius:32px}
+.btn:active{opacity:.7}.btn:disabled{opacity:.35}
+.btn.badline{border-color:var(--bad);color:var(--bad)}
+.stack>*+*{margin-top:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* menu */
+.menu{margin-top:24px;border-top:1px solid var(--line)}
+.menu button{display:flex;align-items:center;gap:16px;width:100%;height:68px;background:none;border:0;border-bottom:1px solid var(--line);font-size:19px;font-weight:600;text-align:left;padding:0}
+.menu button i{font-style:normal;font-family:var(--lat);color:var(--dim);width:28px;font-size:15px;letter-spacing:1px}
+.menu button em{margin-left:auto;font-style:normal;color:var(--mute)}
+
+.panel{background:var(--bg-soft);border:1px solid var(--line);border-radius:16px;padding:16px}
+.alert{border:1px solid var(--warn);border-radius:16px;padding:14px 16px;margin:16px 0}
+.alert .cap{color:var(--warn)}
+.prog{height:3px;background:var(--track);border-radius:2px;overflow:hidden;margin-top:10px}.prog i{display:block;height:100%;background:var(--fg)}
+
+/* forms */
+.fld{margin:22px 0 0}
+.fld>label,.fld>.lb{display:block;font-size:15px;color:var(--soft);margin-bottom:8px;font-weight:600}
+.seg{display:grid;gap:8px}.seg.c2{grid-template-columns:1fr 1fr}.seg.c3{grid-template-columns:1fr 1fr 1fr}
+.seg button{min-height:62px;border:1px solid var(--line);background:var(--bg-soft);border-radius:14px;font-size:18px;font-weight:600;line-height:1.2;padding:6px}
+.seg button small{display:block;font-family:var(--lat);font-size:13px;letter-spacing:1px;color:var(--mute);font-weight:400}
+.seg button.sel{border-color:var(--fg);background:var(--fg);color:#000}.seg button.sel small{color:#333}
+.seg.need button:not(.sel){border-color:var(--warn)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{min-height:52px;padding:0 16px;border:1px solid var(--line);background:var(--bg-soft);border-radius:26px;font-size:16px}
+.chips button.sel{background:var(--fg);color:#000;border-color:var(--fg)}
+input[type=text],input[type=number],textarea{width:100%;min-height:62px;background:var(--bg-soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:19px;color:var(--fg);outline:none}
+textarea{min-height:120px;resize:vertical;line-height:1.45}
+input:focus,textarea:focus{border-color:var(--fg)}
+.fname{font-family:var(--lat);font-size:18px;letter-spacing:.3px;overflow-wrap:anywhere;padding:14px 16px;border:1px dashed var(--line);border-radius:14px;margin-top:8px}
+.actbar{position:fixed;left:0;right:0;bottom:0;padding:12px var(--g) calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#000 22%);z-index:5}
+.actbar>div{max-width:680px;margin:0 auto}
+.hint{font-size:14px;color:var(--mute);margin-top:6px}
+
+/* list */
+.tabs{display:flex;gap:8px;margin:16px 0}
+.tabs button{flex:1;height:52px;border-radius:26px;border:1px solid var(--line);background:none;font-size:16px;font-weight:600}
+.tabs button.sel{border-color:var(--fg);background:var(--fg);color:#000}
+.item{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:16px 0}
+.item .t{font-family:var(--lat);font-size:18px;letter-spacing:.5px;word-break:break-all}
+.item .s{font-size:14px;color:var(--mute);margin-top:2px}
+.item .o{font-size:15px;color:var(--soft);margin-top:6px;white-space:pre-wrap}
+.tag{display:inline-block;font-family:var(--lat);font-size:12px;letter-spacing:1px;border:1px solid var(--line);border-radius:10px;padding:1px 8px;margin-right:6px;color:var(--soft)}
+.empty{color:var(--mute);padding:40px 0;text-align:center}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;font-size:16px}.kv dt{color:var(--mute)}.kv dd{margin:0}
+audio{width:100%;margin:12px 0}
+
+/* recording overlay */
+#rec{position:fixed;inset:0;background:#000;z-index:20;display:none;flex-direction:column;padding:calc(env(safe-area-inset-top) + 12px) var(--g) calc(env(safe-area-inset-bottom) + 14px);overflow:hidden}
+#rec.on{display:flex}
+#rec{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#rec .cv-wrap,#rec canvas,#rec svg{pointer-events:none}
+.circ-wrap{display:flex;justify-content:center;margin-top:4px}
+#circ{display:block;width:min(100%,340px,max(220px,calc(100vh - 400px)));aspect-ratio:1/1}
+#circ text{font-family:var(--lat)}
+.lg{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--mute)}
+.lg i{display:inline-block;width:10px;height:10px;margin-right:4px;vertical-align:-1px}
+.rtop{display:flex;align-items:center;justify-content:space-between}
+.rtop .t{font-family:var(--lat);font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:1px}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--fg);margin-right:10px;vertical-align:2px;animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:.15}}
+.rtop .btn{width:auto;padding:0 22px}
+.meter{display:flex;align-items:center;gap:12px;margin:10px 0 4px}
+.meter .bar{flex:1;height:14px;background:var(--track);border-radius:7px;overflow:hidden;position:relative}
+.meter .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--fg);width:0}
+.meter .bar i.hot{background:var(--warn)}.meter .bar i.clip{background:var(--bad)}
+.meter .num{width:96px;text-align:right;font-size:16px}
+.rwarn{min-height:24px;font-size:16px;font-weight:600}
+canvas{display:block;width:100%;border:1px solid var(--line);border-radius:12px;background:#000}
+.cv-wrap{margin-top:10px}
+.cv-wrap .cap{margin-bottom:4px;display:flex;justify-content:space-between}
+#rec .grow{flex:1;min-height:8px}
+
+/* toast + modal */
+#toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--cta);color:#000;padding:14px 22px;border-radius:30px;font-weight:700;font-size:16px;z-index:50;display:none;max-width:90vw;text-align:center}
+#busy{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:60;display:none;align-items:center;justify-content:center;font-size:20px;font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- ============ HOME ============ -->
+<section class="view on" id="v-home">
+  <div class="hdr">
+    <div class="wm"><b>ENGINETALK</b><span>LANDER · 현장</span></div>
+    <div class="eq"><b>UNIMAT JUNIOR</b><span>PLASSER &amp; THEURER</span></div>
+  </div>
+
+  <div id="secureAlert" class="alert" style="display:none">
+    <div class="cap">MIC NOT AVAILABLE</div>
+    <div>이 주소에서는 마이크를 쓸 수 없습니다. <b>https://</b> 주소로 열어야 합니다. 도움말(06)을 보세요.</div>
+  </div>
+
+  <div class="status" id="homeStatus">기준 수집 중</div>
+  <div class="cap" id="homeLastLabel">LAST RUN · 최근 측정</div>
+  <div class="stat">
+    <div><span class="v hero" id="homeRpm">—</span><span class="u">rpm</span></div>
+    <div class="refs" id="homeRefs"><span>측정 기록 없음</span></div>
+  </div>
+  <div class="hint num" id="homeFile"></div>
+  <div class="prog"><i id="homeProg" style="width:0"></i></div>
+  <div class="hint" id="homeProgTxt">기준 완성까지 측정 20건 · 서로 다른 날 10일</div>
+
+  <div class="stack" style="margin-top:28px">
+    <button class="btn fill h88" id="btnStart">측정 시작</button>
+    <button class="btn h84" id="btnAddLog">의견 · 점검 · 정비 기록</button>
+  </div>
+
+  <div class="menu">
+    <button data-go="history"><i>03</i>측정 기록 · 이력<em>›</em></button>
+    <button data-go="data"><i>04</i>보내기 · 받기<em>›</em></button>
+    <button data-go="help"><i>05</i>도움말 · 녹음 요령<em>›</em></button>
+  </div>
+  <p class="hint" style="margin-top:20px">EngineTALK v0.2.0 · 저장 위치: 이 폰의 브라우저</p>
+</section>
+
+<!-- ============ META (after stop) ============ -->
+<section class="view" id="v-meta">
+  <div class="hdr"><h1>측정 정보 입력</h1></div>
+  <p class="hint" style="margin-top:14px">녹음은 이미 안전하게 저장되었습니다. 아래 세 가지를 고르면 파일 이름이 정해집니다.</p>
+
+  <div class="fld"><div class="lb">측정 위치 (엔진 기준)</div>
+    <div class="seg c2 need" data-key="side">
+      <button data-v="L">왼쪽<small>L · LEFT</small></button>
+      <button data-v="R">오른쪽<small>R · RIGHT</small></button>
+    </div></div>
+  <div class="fld"><div class="lb">작업 전 · 후</div>
+    <div class="seg c2 need" data-key="timing">
+      <button data-v="B">작업 전<small>B · BEFORE · 냉간</small></button>
+      <button data-v="A">작업 후<small>A · AFTER · 열간</small></button>
+    </div></div>
+  <div class="fld"><div class="lb">작업 모드</div>
+    <div class="seg c2 need" data-key="mode">
+      <button data-v="N">일반<small>N · NORMAL<br>유압 OFF</small></button>
+      <button data-v="W">작업<small>W · WORKING<br>유압 ON</small></button>
+    </div></div>
+
+  <div class="fld"><div class="lb">파일 이름</div>
+    <div class="fname" id="fnamePreview">—</div></div>
+
+  <hr>
+  <div class="fld"><label for="mOperator">측정자</label>
+    <input type="text" id="mOperator" placeholder="이름" autocomplete="name"></div>
+  <div class="fld"><label for="mGauge">게이지 rpm (선택)</label>
+    <input type="number" id="mGauge" inputmode="numeric" placeholder="예: 2200"></div>
+  <div class="fld"><label for="mOpinion">측정자 의견 (선택)</label>
+    <textarea id="mOpinion" placeholder="예: 오른쪽에서 평소보다 날카로운 소리. 키보드의 마이크 버튼으로 말로 입력해도 됩니다."></textarea>
+    <div class="fld" style="margin-top:10px"><div class="lb">확신 정도</div>
+      <div class="seg c3" data-key="confidence">
+        <button data-v="확실">확실</button><button data-v="추정">추정</button><button data-v="느낌">느낌</button>
+      </div></div>
+  </div>
+
+  <div class="fld"><div class="lb">점검 · 정비 (선택)</div>
+    <div class="seg c3" data-key="workType">
+      <button data-v="none">없음</button><button data-v="점검">점검</button><button data-v="정비">정비</button>
+    </div>
+    <div id="mWorkBox" style="display:none">
+      <div class="fld"><div class="lb">항목 (여러 개 선택)</div><div class="chips" id="mItems"></div></div>
+      <div class="fld"><label for="mWorkText">내용</label>
+        <textarea id="mWorkText" placeholder="예: 발전기 벨트 장력 조정, 텐셔너 이상 없음"></textarea></div>
+    </div>
+  </div>
+
+  <div class="actbar"><div><button class="btn fill h88" id="btnMetaSave" disabled>저장</button></div></div>
+</section>
+
+<!-- ============ LOG ADD ============ -->
+<section class="view" id="v-log">
+  <div class="hdr"><button class="back" data-back>‹</button><h1>의견 · 점검 · 정비 기록</h1></div>
+  <div class="fld"><div class="lb">종류</div>
+    <div class="seg c3" data-key="lkind">
+      <button data-v="opinion">의견</button><button data-v="점검">점검</button><button data-v="정비">정비</button>
+    </div></div>
+  <div class="fld" id="lItemsBox" style="display:none"><div class="lb">항목 (여러 개 선택)</div><div class="chips" id="lItems"></div></div>
+  <div class="fld" id="lConfBox"><div class="lb">확신 정도</div>
+    <div class="seg c3" data-key="lconf">
+      <button data-v="확실">확실</button><button data-v="추정">추정</button><button data-v="느낌">느낌</button>
+    </div></div>
+  <div class="fld"><label for="lText">내용</label>
+    <textarea id="lText" placeholder="확실하지 않아도 남겨 주세요. 키보드의 마이크 버튼으로 말로 입력할 수 있습니다."></textarea></div>
+  <div class="fld"><label for="lOperator">작성자</label>
+    <input type="text" id="lOperator" placeholder="이름"></div>
+  <div class="hint" id="lLinkHint"></div>
+  <div class="actbar"><div><button class="btn fill h88" id="btnLogSave">기록 저장</button></div></div>
+</section>
+
+<!-- ============ HISTORY ============ -->
+<section class="view" id="v-history">
+  <div class="hdr"><button class="back" data-back>‹</button><h1>측정 기록 · 이력</h1></div>
+  <div class="tabs">
+    <button data-tab="rec" class="sel">측정</button>
+    <button data-tab="all">전체 이력</button>
+  </div>
+  <div id="histList"></div>
+</section>
+
+<!-- ============ DETAIL ============ -->
+<section class="view" id="v-detail">
+  <div class="hdr"><button class="back" data-back>‹</button><h1>측정 상세</h1></div>
+  <div id="detailBody"></div>
+</section>
+
+<!-- ============ DATA ============ -->
+<section class="view" id="v-data">
+  <div class="hdr"><button class="back" data-back>‹</button><h1>보내기 · 받기</h1></div>
+  <h2>보내기</h2>
+  <p class="hint">다른 작업자의 EngineTALK, 또는 PC의 EngineNOTE로 보냅니다. 카카오톡·메일·파일 앱으로 공유할 수 있습니다.</p>
+  <div class="stack" style="margin-top:14px">
+    <button class="btn fill h84" id="btnExpFull">이력 + 사운드 보내기 (.zip)</button>
+    <button class="btn h64" id="btnExpJson">이력만 보내기 (작은 파일)</button>
+  </div>
+  <p class="hint" id="expInfo"></p>
+  <hr>
+  <h2>받기</h2>
+  <p class="hint">받은 .zip 또는 .engineear 파일을 고르면, 겹치지 않는 기록만 합칩니다.</p>
+  <div class="stack" style="margin-top:14px">
+    <button class="btn h84" id="btnImport">파일 불러오기</button>
+    <input type="file" id="fileImport" accept=".zip,.engineear,.json,application/zip,application/json" hidden>
+  </div>
+  <hr>
+  <h2>이 폰의 저장 공간</h2>
+  <p class="hint" id="storeInfo">확인 중…</p>
+  <div class="stack" style="margin-top:10px"><button class="btn h52" id="btnPersist">저장 데이터 보호 요청</button></div>
+  <p class="hint">아이폰은 오래 열지 않으면 브라우저 데이터를 지울 수 있습니다. 홈 화면에 추가하고, 정기적으로 보내기로 백업하세요.</p>
+</section>
+
+<!-- ============ HELP ============ -->
+<section class="view" id="v-help">
+  <div class="hdr"><button class="back" data-back>‹</button><h1>도움말 · 녹음 요령</h1></div>
+  <h2>폰에서 여는 방법</h2>
+  <p>마이크는 <b>https://</b> 주소에서만 켜집니다. 파일 앱이나 카톡에서 이 HTML 파일을 바로 열면 녹음이 안 됩니다. https 주소(예: GitHub Pages)에 올려 두고, 사파리·크롬에서 연 뒤 <b>홈 화면에 추가</b>하세요.</p>
+  <h2>원음 그대로 녹음</h2>
+  <p>이 앱은 에코 제거·소음 억제·자동 음량 조절을 끄도록 요청하고, 압축하지 않은 WAV(16-bit)로 저장합니다. 폰 기종에 따라 일부 처리가 꺼지지 않을 수 있어, 측정 상세에 실제 적용 상태를 기록합니다.</p>
+  <p><b>클리핑</b>은 편집이 아니라 소리가 마이크 한계를 넘어 잘리는 현상입니다. 측정 중 음량 막대가 빨갛게 되면 폰을 엔진에서 조금 멀리 두세요.</p>
+  <h2>녹음 요령</h2>
+  <p>엔진 블록에서 50 cm~1 m, 매번 같은 자리·같은 방향. 냉각팬 바로 앞, 배기구, 에어밸브 배기구 근처는 피합니다. 측정 중 화면을 끄거나 다른 앱으로 가면 녹음이 끊길 수 있습니다. 작업 모드 W는 유압 ON, 일반 N은 유압 OFF를 뜻합니다.</p>
+  <h2>측정 화면의 원형 막대</h2>
+  <p>원 둘레의 막대는 주파수 대역별 소리 크기입니다. 12시(40 Hz)에서 시작해 시계 방향으로 높은 소리(12 kHz)까지 갑니다. 1시~6시는 엔진 본체 소리, 6시 이후는 베어링·누설 같은 이상음 영역입니다.</p>
+  <p>회색 막대는 같은 운전 영역(공회전 또는 작업)의 최근 10건 평균, 흰 막대는 지금 소리입니다. 평균보다 6 dB 이상 크면 노랑, 10 dB 이상이면 빨강으로 바뀝니다. 원 가운데의 "평균과 일치"는 두 모양이 얼마나 닮았는지를 보여주는 참고값입니다.</p>
+  <h2>파일 이름</h2>
+  <p class="num" style="font-size:18px">20261012_1445_R_B_W_45s.wav</p>
+  <p>날짜 · 시각 · 좌우(L/R) · 작업 전후(B/A) · 모드(N/W) · 길이(초)</p>
+</section>
+
+<!-- ============ RECORDING OVERLAY ============ -->
+<div id="rec">
+  <div class="rtop">
+    <div class="t"><span class="dot"></span><span id="rTime">00:00</span></div>
+    <button class="btn h52" id="btnRecCancel">취소</button>
+  </div>
+  <div class="circ-wrap"><svg id="circ" viewBox="0 0 300 300" aria-label="주파수 대역별 소리 크기"></svg></div>
+  <div class="lg"><span><i style="background:#55555d"></i>최근 평균</span><span><i style="background:#fff"></i>실시간</span><span><i style="background:var(--warn)"></i>+6 dB</span><span><i style="background:var(--bad)"></i>+10 dB</span></div>
+  <div class="refs" style="display:flex;gap:18px;justify-content:center;margin-top:6px"><div><span>폭발 주파수 </span><b id="rFreq">—</b></div><div><span>신호 선명도 </span><b id="rSnr">—</b></div></div>
+  <div class="meter"><div class="bar"><i id="rLvl"></i></div><div class="num" id="rDb">− dBFS</div></div>
+  <div class="rwarn" id="rWarn"></div>
+  <div class="cv-wrap"><div class="cap"><span>RPM · 최근 60초</span><span>910 · 2300</span></div><canvas id="cvRpm" height="55"></canvas></div>
+  <div class="grow"></div>
+  <button class="btn fill h88" id="btnRecStop">측정 종료</button>
+</div>
+
+<div id="toast"></div>
+<div id="busy">처리 중…</div>
+
+<script>
+'use strict';
+/* =========================================================
+   EngineTALK v0.1 — 착륙선 (현장 앱)
+   통합설계서: EngineTALK_NOTE_통합설계서.md
+   ========================================================= */
+const APP_VERSION = '0.2.0';
+const ANALYSIS_VERSION = 'rt-0.2';
+const EQUIP = { code: 'MTT01', name: 'UNIMAT JUNIOR' };
+const ITEMS = ['엔진오일','냉각수','연료필터','에어필터','오일필터','팬벨트','발전기 벨트','텐셔너','배터리','스타터','터보차저','연료라인 에어빼기','유압유','기어유','기타'];
+
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+function el(tag, props, ...kids){
+  const e = document.createElement(tag);
+  if (props) for (const k in props){
+    if (k === 'class') e.className = props[k];
+    else if (k === 'text') e.textContent = props[k];
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), props[k]);
+    else e.setAttribute(k, props[k]);
+  }
+  for (const c of kids.flat()) if (c != null) e.append(c.nodeType ? c : document.createTextNode(String(c)));
+  return e;
+}
+const pad = (n, w=2) => String(n).padStart(w, '0');
+const fmtDate = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const fmtMMSS = s => `${pad(Math.floor(s/60))}:${pad(Math.floor(s%60))}`;
+const fmtMB = b => (b/1048576).toFixed(1) + ' MB';
+function toast(msg, ms=2400){ const t=$('#toast'); t.textContent=msg; t.style.display='block'; clearTimeout(toast._t); toast._t=setTimeout(()=>t.style.display='none', ms); }
+function busy(on, msg){ const b=$('#busy'); b.textContent=msg||'처리 중…'; b.style.display=on?'flex':'none'; }
+function vibrate(p){ try{ navigator.vibrate && navigator.vibrate(p); }catch(e){} }
+
+/* ---------------- storage (IndexedDB 'engineear', 설계서 6.2) ---------------- */
+const DB = {
+  db: null, mem: null,
+  async open(){
+    if (!('indexedDB' in window)) { this.mem = {kv:new Map(),records:new Map(),audio:new Map(),maint:new Map(),notes:new Map()}; return; }
+    try{
+      this.db = await new Promise((res, rej) => {
+        const r = indexedDB.open('engineear', 1);
+        r.onupgradeneeded = () => { const d=r.result; for (const s of ['kv','records','audio','maint','notes']) if(!d.objectStoreNames.contains(s)) d.createObjectStore(s); };
+        r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+      });
+    }catch(e){ this.mem = {kv:new Map(),records:new Map(),audio:new Map(),maint:new Map(),notes:new Map()}; toast('저장소를 열 수 없어 임시 모드로 동작합니다. 꼭 보내기로 백업하세요.', 5000); }
+  },
+  tx(store, mode, fn){
+    if (this.mem) return Promise.resolve(fn(null));
+    return new Promise((res, rej) => { const t=this.db.transaction(store, mode); const s=t.objectStore(store); let out; Promise.resolve(fn(s)).then(v=>out=v); t.oncomplete=()=>res(out); t.onerror=()=>rej(t.error); t.onabort=()=>rej(t.error); });
+  },
+  async get(store, key){ if(this.mem) return this.mem[store].get(key); return this.tx(store,'readonly',s=>new Promise(r=>{const q=s.get(key); q.onsuccess=()=>r(q.result);})); },
+  async put(store, key, val){ if(this.mem){ this.mem[store].set(key,val); return; } return this.tx(store,'readwrite',s=>{ s.put(val,key); }); },
+  async del(store, key){ if(this.mem){ this.mem[store].delete(key); return; } return this.tx(store,'readwrite',s=>{ s.delete(key); }); },
+  async all(store){ if(this.mem) return [...this.mem[store].values()]; return this.tx(store,'readonly',s=>new Promise(r=>{const q=s.getAll(); q.onsuccess=()=>r(q.result);})); },
+};
+let settings = { deviceId:null, operator:'', lastExportAt:null };
+async function loadSettings(){
+  const s = await DB.get('kv','settings'); if (s) Object.assign(settings, s);
+  if (!settings.deviceId) { settings.deviceId = Math.random().toString(36).slice(2,8); await saveSettings(); }
+}
+const saveSettings = () => DB.put('kv','settings', {...settings});
+const newId = tag => `${settings.deviceId}${tag||''}-${Date.now()}`;
+
+/* ---------------- navigation ---------------- */
+const navStack = ['home'];
+function go(name, push=true){
+  $$('.view').forEach(v => v.classList.remove('on'));
+  $('#v-'+name).classList.add('on');
+  if (push && navStack[navStack.length-1] !== name) navStack.push(name);
+  window.scrollTo(0,0);
+  if (name==='home') renderHome();
+  if (name==='history') renderHistory();
+  if (name==='data') renderData();
+}
+function back(){ navStack.pop(); go(navStack[navStack.length-1] || 'home', false); }
+$$('[data-back]').forEach(b => b.addEventListener('click', back));
+$$('[data-go]').forEach(b => b.addEventListener('click', () => go(b.dataset.go)));
+
+/* segmented buttons */
+function segInit(root){
+  root.querySelectorAll('.seg').forEach(seg => seg.addEventListener('click', e => {
+    const b = e.target.closest('button'); if(!b) return;
+    seg.querySelectorAll('button').forEach(x=>x.classList.toggle('sel', x===b));
+    seg.classList.remove('need');
+    seg.dispatchEvent(new CustomEvent('change', {detail:b.dataset.v}));
+  }));
+}
+const segVal = (root, key) => { const b = root.querySelector(`.seg[data-key="${key}"] button.sel`); return b ? b.dataset.v : null; };
+function segSet(root, key, v){ const seg=root.querySelector(`.seg[data-key="${key}"]`); seg.querySelectorAll('button').forEach(x=>x.classList.toggle('sel', x.dataset.v===v)); if (v!=null) seg.classList.remove('need'); }
+function segClear(root, key, need){ const seg=root.querySelector(`.seg[data-key="${key}"]`); seg.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); seg.classList.toggle('need', !!need); }
+function chipsInit(box){ box.innerHTML=''; for (const it of ITEMS) box.append(el('button',{text:it,onclick:e=>e.currentTarget.classList.toggle('sel')})); }
+const chipsVal = box => $$('#'+box.id+' button.sel').map(b=>b.textContent);
+
+/* ---------------- HOME ---------------- */
+async function renderHome(){
+  const recs = (await DB.all('records')).filter(r=>r.meta).sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+  const days = new Set(recs.map(r=>r.createdAt.slice(0,10))).size;
+  const n = recs.length;
+  $('#homeStatus').textContent = n===0 ? '첫 측정을 기다립니다' : (n>=20 && days>=10 ? '기준 완성' : '기준 수집 중');
+  $('#homeProg').style.width = Math.min(100, Math.min(n/20, days/10)*100) + '%';
+  $('#homeProgTxt').textContent = `측정 ${n}/20건 · 서로 다른 날 ${days}/10일`;
+  const refs = $('#homeRefs'); refs.innerHTML='';
+  if (n){
+    const r = recs[0];
+    const L = r.live || {}, d = new Date(r.createdAt);
+    const big = L.workMedian || L.idleMedian || L.rpmMedian;
+    $('#homeLastLabel').textContent = L.workMedian ? 'WORK RPM · 최근 측정 작업' : (L.idleMedian ? 'IDLE RPM · 최근 측정 공회전' : 'LAST RUN · 최근 측정');
+    $('#homeRpm').textContent = big ? Math.round(big) : '—';
+    if (L.workMedian && L.idleMedian) refs.append(el('div',{},el('span',{text:'공회전 '}),el('b',{text:Math.round(L.idleMedian)})));
+    refs.append(el('div',{},el('b',{text:`${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`})));
+    refs.append(el('div',{},el('span',{text:'길이 '}),el('b',{text:r.duration+' s'})));
+    $('#homeFile').textContent = r.fileName;
+  } else {
+    $('#homeRpm').textContent='—'; refs.append(el('span',{text:'측정 기록 없음'})); $('#homeFile').textContent='';
+  }
+}
+
+/* =========================================================
+   RECORDING — 원음 그대로 (처리 끔 요청 + PCM 직접 수집 → WAV)
+   ========================================================= */
+const REC = { on:false };
+const WORKLET_SRC = `
+class Rec extends AudioWorkletProcessor{
+  constructor(){super();this.N=4096;this.buf=new Float32Array(this.N);this.n=0;this.on=true;
+    this.port.onmessage=e=>{if(e.data==='stop'){this.port.postMessage({end:true,buf:this.buf.slice(0,this.n)});this.on=false;}};}
+  process(inputs){const ch=inputs[0]&&inputs[0][0];
+    if(ch&&this.on){for(let i=0;i<ch.length;i++){this.buf[this.n++]=ch[i];if(this.n===this.N){this.port.postMessage({buf:this.buf},[this.buf.buffer]);this.buf=new Float32Array(this.N);this.n=0;}}}
+    return this.on;}
+}
+registerProcessor('et-rec',Rec);`;
+
+async function startRecording(){
+  if (!window.isSecureContext || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    $('#secureAlert').style.display='block'; toast('https 주소에서 열어야 마이크를 쓸 수 있습니다', 4000); return;
+  }
+  // AudioContext는 버튼을 누른 순간 만들어야 아이폰에서 동작
+  const AC = window.AudioContext || window.webkitAudioContext;
+  const ctx = new AC();
+  let stream;
+  try{
+    stream = await navigator.mediaDevices.getUserMedia({ audio: {
+      echoCancellation:false, noiseSuppression:false, autoGainControl:false,
+      channelCount:1, sampleRate:{ideal:48000} }, video:false });
+  }catch(e){
+    ctx.close(); toast('마이크 사용이 허용되지 않았습니다. 브라우저 설정에서 마이크를 허용하세요.', 4500); return;
+  }
+  if (ctx.state === 'suspended') await ctx.resume();
+  const track = stream.getAudioTracks()[0];
+  const applied = track.getSettings ? track.getSettings() : {};
+  const src = ctx.createMediaStreamSource(stream);
+  const an = ctx.createAnalyser(); an.fftSize = 32768; an.smoothingTimeConstant = 0; an.minDecibels=-120; an.maxDecibels=0;
+  src.connect(an);
+  const mute = ctx.createGain(); mute.gain.value = 0; mute.connect(ctx.destination);
+
+  const base = await loadBaseline();
+  Object.assign(REC, { on:true, ctx, stream, track, applied, an, chunks:[], samples:0, clipCount:0, peak:0,
+    base, bandS:null, bandAcc:{ idle:{s:new Float64Array(CIR.N), n:0}, work:{s:new Float64Array(CIR.N), n:0} },
+    lvlPeak:0, lastClipAt:-99, startedAt:new Date(), t0:performance.now(), rpmTrack:[], rpmBuf:[], endResolve:null,
+    freq:new Float32Array(an.frequencyBinCount), node:null, hidden:false });
+
+  const onChunk = buf => {
+    REC.chunks.push(buf); REC.samples += buf.length;
+    let pk = 0, clip = 0;
+    for (let i=0;i<buf.length;i++){ const a = buf[i]<0?-buf[i]:buf[i]; if (a>pk) pk=a; if (a>=0.995) clip++; }
+    if (clip){ REC.clipCount += clip; REC.lastClipAt = (performance.now()-REC.t0)/1000; }
+    if (pk>REC.peak) REC.peak = pk;
+    REC.lvlPeak = Math.max(pk, REC.lvlPeak*0.85);
+  };
+  try{
+    const url = URL.createObjectURL(new Blob([WORKLET_SRC], {type:'application/javascript'}));
+    await ctx.audioWorklet.addModule(url); URL.revokeObjectURL(url);
+    const node = new AudioWorkletNode(ctx, 'et-rec', {numberOfInputs:1, numberOfOutputs:1, channelCount:1, channelCountMode:'explicit'});
+    node.port.onmessage = e => { if (e.data.buf && e.data.buf.length) onChunk(e.data.buf); if (e.data.end && REC.endResolve) REC.endResolve(); };
+    src.connect(node); node.connect(mute); REC.node = node; REC.kind='worklet';
+  }catch(err){
+    // 예전 브라우저: ScriptProcessor로 대체
+    const sp = ctx.createScriptProcessor(4096, 1, 1);
+    sp.onaudioprocess = e => { if (REC.on) onChunk(new Float32Array(e.inputBuffer.getChannelData(0))); };
+    src.connect(sp); sp.connect(mute); REC.node = sp; REC.kind='script';
+  }
+  try{ if ('wakeLock' in navigator) REC.wake = await navigator.wakeLock.request('screen'); }catch(e){}
+
+  $('#rec').classList.add('on'); resizeCanvases(); clearCanvases(); layoutCircle(); lastW = $('#circ').getBoundingClientRect().width;
+  $('#rFreq').textContent='—'; $('#rSnr').textContent='—'; $('#rWarn').textContent=''; drawCircle(null);
+  vibrate(60);
+  REC.lastAna = 0;
+  requestAnimationFrame(loop);
+}
+
+async function stopRecording(cancel){
+  if (!REC.on) return;
+  REC.on = false;
+  if (REC.kind==='worklet'){
+    await new Promise(res => { REC.endResolve = res; REC.node.port.postMessage('stop'); setTimeout(res, 600); });
+  }
+  try{ REC.node.disconnect(); }catch(e){}
+  REC.stream.getTracks().forEach(t=>t.stop());
+  try{ REC.wake && REC.wake.release(); }catch(e){}
+  const sr = REC.ctx.sampleRate; REC.ctx.close();
+  $('#rec').classList.remove('on');
+  if (cancel){ toast('측정을 취소했습니다'); return; }
+
+  const dur = REC.samples / sr;
+  if (dur < 3){ toast('녹음이 너무 짧습니다 (3초 미만)'); return; }
+  busy(true, '녹음 저장 중…');
+  // 1) 원본 먼저 저장 (설계서 13장: 분석이 실패해도 녹음은 남는다)
+  const pcm = new Float32Array(REC.samples); let o=0; for (const c of REC.chunks){ pcm.set(c,o); o+=c.length; }
+  const wav = encodeWav(pcm, sr);
+  const valid = REC.rpmTrack.map(x=>x[1]).filter(v=>v!=null);
+  const rec = {
+    id: newId(), equip: EQUIP.code, createdAt: REC.startedAt.toISOString(), updatedAt: new Date().toISOString(),
+    deviceId: settings.deviceId, appVersion: APP_VERSION, analysisVersion: ANALYSIS_VERSION,
+    source: 'app', sr, duration: Math.round(dur), durationExact: +dur.toFixed(2), bytes: wav.size,
+    fileName: tempName(REC.startedAt, Math.round(dur)), meta: null,
+    quality: { clipCount: REC.clipCount, clipRatio: +(REC.clipCount/REC.samples).toFixed(6), peakDb: +(20*Math.log10(REC.peak||1e-9)).toFixed(1),
+      applied: { echoCancellation: REC.applied.echoCancellation, noiseSuppression: REC.applied.noiseSuppression, autoGainControl: REC.applied.autoGainControl, sampleRate: REC.applied.sampleRate, capture: REC.kind } },
+    live: { rpmTrack: REC.rpmTrack, rpmMedian: median(valid), idleMedian: median(valid.filter(v=>v<1300)), workMedian: median(valid.filter(v=>v>=2050&&v<=2450)), bands: bandsToSave(), bandSpec: BAND_SPEC },
+    hasAudio: true, important: false,
+  };
+  await DB.put('audio', rec.id, { blob: wav, fileName: rec.fileName });
+  await DB.put('records', rec.id, rec);
+  REC.chunks = []; busy(false);
+  try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){}
+  openMeta(rec);
+}
+
+/* WAV 16-bit PCM mono (무손실 저장 형식) */
+function encodeWav(f32, sr){
+  const n = f32.length, buf = new ArrayBuffer(44 + n*2), v = new DataView(buf);
+  const w = (o,s)=>{ for(let i=0;i<s.length;i++) v.setUint8(o+i, s.charCodeAt(i)); };
+  w(0,'RIFF'); v.setUint32(4, 36+n*2, true); w(8,'WAVE'); w(12,'fmt '); v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+  v.setUint32(24,sr,true); v.setUint32(28,sr*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true); w(36,'data'); v.setUint32(40,n*2,true);
+  let p = 44; for (let i=0;i<n;i++,p+=2){ let s=f32[i]; s = s>1?1:s<-1?-1:s; v.setInt16(p, s<0 ? s*32768 : s*32767, true); }
+  return new Blob([buf], {type:'audio/wav'});
+}
+function median(a){ if(!a.length) return null; const s=[...a].sort((x,y)=>x-y); const m=s.length>>1; return s.length%2?s[m]:(s[m-1]+s[m])/2; }
+
+/* ---------------- 실시간 rpm (하모닉 간격, 설계서 2.2) ----------------
+   6기통 4행정: 폭발 주파수 f = rpm/20. 스마트폰은 40 Hz 아래가 약하므로
+   f, 2f, 3f… 봉우리와 그 사이 골짜기의 차이(대비)가 가장 큰 f를 찾는다. */
+function estimateRpm(freq, binHz){
+  const A = f => { const i = Math.round(f/binHz); if (i<1 || i+1>=freq.length) return -120; return Math.max(freq[i-1], freq[i], freq[i+1]); };
+  const score = f => { let s=0, k=0; for (let h=1; h<=8 && h*f<=1000; h++){ s += A(h*f) - A((h-0.5)*f); k++; } return k ? s/k : -99; };
+  let best=-99, bf=0;
+  for (let f=30; f<=135; f+=0.2){ const s=score(f); if (s>best){ best=s; bf=f; } }
+  for (let f=bf-0.2; f<=bf+0.2; f+=0.02){ const s=score(f); if (s>best){ best=s; bf=f; } }
+  return { f: bf, rpm: bf*20, snr: best };
+}
+function zoneOf(rpm){ if (rpm==null) return '엔진 소리를 찾는 중'; if (rpm<1300) return '공회전'; if (rpm>=2050 && rpm<=2450) return '작업 rpm'; if (rpm>2450) return '최고 회전 부근'; return 'rpm 변경 중'; }
+
+let rpmCtx;
+function resizeCanvases(){
+  const c=$('#cvRpm'); const dpr=Math.min(2, window.devicePixelRatio||1); const h=+c.getAttribute('height'); c.width=Math.round(c.clientWidth*dpr); c.height=Math.round(h*dpr); c.style.height=h+'px';
+  rpmCtx = c.getContext('2d');
+}
+function clearCanvases(){ rpmCtx.fillStyle='#000'; rpmCtx.fillRect(0,0,rpmCtx.canvas.width,rpmCtx.canvas.height); }
+
+/* =========================================================
+   원형 주파수 막대 (설계서 12.1, 디자인 7장)
+   40 Hz ~ 12 kHz, 1/6 옥타브 49대역, 12시에서 시계 방향, 끝 20°는 비움
+   막대 길이 = 전체(40 Hz~12 kHz) 대비 상대 dB → 자동 음량 조절 영향 없음
+   회색 = 같은 운전 영역(공회전/작업) 최근 10건 평균, 흰색 = 실시간(약 1초 평활)
+   ========================================================= */
+const CIR = { N:49, F0:40, F1:12000, SW:340, R0:92, L:50, C:150 };
+CIR.oct = Math.log2(CIR.F1/CIR.F0);
+CIR.edges = Array.from({length:CIR.N+1}, (_,i) => CIR.F0*Math.pow(2, i*CIR.oct/CIR.N));
+const BAND_SPEC = '1/6oct-40-12000-49';
+const FIG = '\u2007';
+const fix4 = n => n==null ? FIG+FIG+FIG+'—' : String(n).padStart(4, FIG);
+const cirP = (a,r) => { const t=(a-90)*Math.PI/180; return [CIR.C+r*Math.cos(t), CIR.C+r*Math.sin(t)]; };
+const cirAng = f => CIR.SW*Math.log2(f/CIR.F0)/CIR.oct;
+function buildCircle(){
+  const s = $('#circ'), NS='http://www.w3.org/2000/svg'; s.innerHTML='';
+  const mk = (t, a, px) => { const e=document.createElementNS(NS,t); for (const k in a) e.setAttribute(k,a[k]); if (px) e.dataset.px=px; s.appendChild(e); return e; };
+  mk('circle',{cx:150,cy:150,r:CIR.R0-3,fill:'none',stroke:'#2a2a30','stroke-width':1});
+  const step = CIR.SW/CIR.N, half = step*0.2; CIR.mean=[]; CIR.live=[];
+  for (let i=0;i<CIR.N;i++){
+    const a=(i+0.5)*step, am=a-half, al=a+half;
+    const [x1,y1]=cirP(am,CIR.R0), [u1,v1]=cirP(al,CIR.R0);
+    CIR.mean.push({ el:mk('line',{x1,y1,x2:x1,y2:y1,stroke:'#55555d','stroke-width':2.6}), a:am, x:x1, y:y1 });
+    CIR.live.push({ el:mk('line',{x1:u1,y1:v1,x2:u1,y2:v1,stroke:'#fff','stroke-width':2.6}), a:al });
+  }
+  for (const [f,txt,major,nudge] of [[40,'40 Hz',1,5],[100,'100 Hz',1],[200,'200 Hz',0],[500,'500 Hz',0],[1000,'1 kHz',1],[2000,'2 kHz',0],[5000,'5 kHz',0],[10000,'10 kHz',1,-3]]){
+    const a=cirAng(f), [x1,y1]=cirP(a,CIR.R0-5), [x2,y2]=cirP(a,CIR.R0-5-(major?7:4));
+    mk('line',{x1,y1,x2,y2,stroke:major?'#8a8a92':'#55555d','stroke-width':1});
+    const [x,y]=cirP(a+(nudge||0), CIR.R0-20);
+    mk('text',{x,y,fill:major?'#a0a0a8':'#6a6a72','text-anchor':'middle','dominant-baseline':'middle'}, 10).textContent = txt;
+  }
+  const T = (y,px,fill,w) => mk('text',{x:150,y,fill,'text-anchor':'middle','font-weight':w||400,style:'font-variant-numeric:tabular-nums;white-space:pre'}, px);
+  CIR.tZone=T(124,12,'#a0a0a8'); CIR.tRpm=T(163,42,'#fff',700); CIR.tAvg=T(183,12,'#a0a0a8'); CIR.tMatch=T(199,12,'#fff');
+}
+function layoutCircle(){   /* 글자는 화면 px 기준 크기로 (눈금 10px) */
+  const w = $('#circ').getBoundingClientRect().width || 300, k = 300/w;
+  $$('#circ [data-px]').forEach(e => e.setAttribute('font-size', (+e.dataset.px*k).toFixed(2)));
+}
+function bandProfile(freq, binHz){
+  const out = new Float64Array(CIR.N); let tot = 0;
+  for (let b=0;b<CIR.N;b++){
+    const i0 = Math.max(1, Math.ceil(CIR.edges[b]/binHz)), i1 = Math.min(freq.length-1, Math.floor(CIR.edges[b+1]/binHz));
+    let sum = 0;
+    if (i1 >= i0) for (let i=i0;i<=i1;i++) sum += Math.pow(10, freq[i]/10);
+    else sum = Math.pow(10, freq[Math.round(Math.sqrt(CIR.edges[b]*CIR.edges[b+1])/binHz)]/10);
+    out[b] = sum; tot += sum;
+  }
+  for (let b=0;b<CIR.N;b++) out[b] = 10*Math.log10(out[b]/(tot||1e-30) + 1e-12);
+  return out;
+}
+const zoneKey = rpm => rpm==null ? null : rpm<1300 ? 'idle' : (rpm>=2050 && rpm<=2450 ? 'work' : null);
+function bandsToSave(){
+  const o = {};
+  for (const z of ['idle','work']){ const a = REC.bandAcc[z]; if (a.n >= 8) o[z] = Array.from(a.s, v => Math.round(v/a.n*10)/10); }
+  return o;
+}
+async function loadBaseline(){
+  const recs = (await DB.all('records')).filter(r => r.meta && r.live && r.live.bands && r.live.bandSpec===BAND_SPEC).sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+  const B = {};
+  for (const z of ['idle','work']){
+    const list = recs.filter(r => r.live.bands[z]).slice(0,10);
+    if (!list.length){ B[z]=null; continue; }
+    const m = new Array(CIR.N).fill(0); for (const r of list) r.live.bands[z].forEach((v,i)=> m[i]+=v/list.length);
+    B[z] = { mean:m, n:list.length, rpm: median(list.map(r => z==='work' ? r.live.workMedian : r.live.idleMedian).filter(Boolean)) };
+  }
+  return B;
+}
+function drawCircle(rpm){
+  if (!CIR.mean) return;
+  const z = zoneKey(rpm), base = z && REC.base ? REC.base[z] : null, live = REC.bandS;
+  const len = v => Math.max(0.02, Math.min(1.08, (v+45)/40));
+  let sumAbs = 0;
+  for (let i=0;i<CIR.N;i++){
+    const g = CIR.mean[i], m = base ? base.mean[i] : null;
+    if (m==null){ g.el.setAttribute('x2',g.x); g.el.setAttribute('y2',g.y); }
+    else { const [x,y]=cirP(g.a, CIR.R0+len(m)*CIR.L); g.el.setAttribute('x2',x); g.el.setAttribute('y2',y); }
+    const l = CIR.live[i], v = live ? live[i] : -99, [x,y] = cirP(l.a, CIR.R0+len(v)*CIR.L);
+    l.el.setAttribute('x2',x); l.el.setAttribute('y2',y);
+    const d = m==null ? 0 : v-m; if (m!=null) sumAbs += Math.abs(d);
+    l.el.setAttribute('stroke', d>=10 ? '#ff4d4f' : d>=6 ? '#f6d303' : '#fff');
+  }
+  CIR.tZone.textContent = rpm==null ? '엔진 소리를 찾는 중' : 'RPM · ' + (z==='idle' ? '공회전' : z==='work' ? '작업' : '변경 중');
+  CIR.tRpm.textContent = fix4(rpm ? Math.round(rpm) : null);
+  if (base){
+    const match = Math.max(0, Math.round(100*(1 - sumAbs/CIR.N/10)));
+    CIR.tAvg.textContent = '평균 ' + fix4(base.rpm ? Math.round(base.rpm) : null) + ' · ' + base.n + '건';
+    CIR.tMatch.textContent = '평균과 일치 ' + match + '%';
+    CIR.tMatch.setAttribute('fill', match<60 ? '#ff4d4f' : match<80 ? '#f6d303' : '#fff');
+  } else {
+    CIR.tAvg.textContent = z ? '평균 없음 · 첫 기록' : '';
+    CIR.tMatch.textContent = '';
+  }
+}
+
+function loop(){
+  if (!REC.on) return;
+  const t = (performance.now()-REC.t0)/1000;
+  $('#rTime').textContent = fmtMMSS(t);
+  // 음량 막대
+  const db = 20*Math.log10(REC.lvlPeak||1e-9);
+  const pct = Math.max(0, Math.min(100, (db+60)/60*100));
+  const bar = $('#rLvl'); bar.style.width = pct+'%';
+  const clipping = t - REC.lastClipAt < 2;
+  bar.className = clipping ? 'clip' : (db > -3 ? 'hot' : '');
+  $('#rDb').textContent = (db<-90?'−∞':db.toFixed(0)) + ' dBFS';
+  const w = $('#rWarn');
+  if (clipping){ w.textContent='소리가 너무 큽니다 (잘림) — 폰을 조금 멀리 두세요'; w.className='rwarn bad'; }
+  else if (db < -50 && t>2){ w.textContent='소리가 약합니다 — 위치를 확인하세요'; w.className='rwarn warn'; }
+  else if (REC.hidden){ w.textContent='화면을 벗어났었습니다 — 녹음이 끊겼을 수 있습니다'; w.className='rwarn warn'; }
+  else { w.textContent=''; }
+
+  if (t - REC.lastAna >= 0.25){
+    REC.lastAna = t;
+    REC.an.getFloatFrequencyData(REC.freq);
+    const binHz = REC.ctx.sampleRate / REC.an.fftSize;
+    const prof = bandProfile(REC.freq, binHz);
+    if (!REC.bandS) REC.bandS = prof; else for (let i=0;i<CIR.N;i++) REC.bandS[i] = REC.bandS[i]*0.7 + prof[i]*0.3;
+    let rpm = null;
+    if (t > 0.8){
+      const est = estimateRpm(REC.freq, binHz);
+      $('#rSnr').textContent = est.snr.toFixed(0)+' dB';
+      if (est.snr >= 5){
+        REC.rpmBuf.push(est.rpm); if (REC.rpmBuf.length>5) REC.rpmBuf.shift();
+        rpm = median(REC.rpmBuf);
+        $('#rFreq').textContent = (rpm/20).toFixed(1)+' Hz';
+      } else { REC.rpmBuf = []; $('#rFreq').textContent='—'; }
+    }
+    const zk = zoneKey(rpm); if (zk){ const a = REC.bandAcc[zk]; for (let i=0;i<CIR.N;i++) a.s[i] += prof[i]; a.n++; }
+    drawCircle(rpm);
+    REC.rpmTrack.push([+t.toFixed(2), rpm ? Math.round(rpm*10)/10 : null]);
+    drawRpm(t);
+  }
+  requestAnimationFrame(loop);
+}
+function drawRpm(now){
+  const c = rpmCtx, W=c.canvas.width, H=c.canvas.height, dpr=W/c.canvas.clientWidth;
+  c.fillStyle='#000'; c.fillRect(0,0,W,H);
+  const Y = r => H - (r/2700)*H;
+  c.setLineDash([4*dpr,4*dpr]); c.strokeStyle='#3a3a3f'; c.lineWidth=1*dpr;
+  for (const g of [910,2300]){ c.beginPath(); c.moveTo(0,Y(g)); c.lineTo(W,Y(g)); c.stroke(); }
+  c.setLineDash([]); c.strokeStyle='#fff'; c.lineWidth=2*dpr; c.beginPath();
+  let pen=false;
+  for (const [t,r] of REC.rpmTrack){ if (t < now-60) continue; const x = W - (now-t)/60*W; if (r==null){ pen=false; continue; } if(!pen){ c.moveTo(x,Y(r)); pen=true; } else c.lineTo(x,Y(r)); }
+  c.stroke();
+}
+document.addEventListener('visibilitychange', () => { if (REC.on && document.hidden) REC.hidden = true; });
+let lastW = 0;
+window.addEventListener('resize', () => { if (!REC.on) return; const w = $('#circ').getBoundingClientRect().width; if (Math.abs(w-lastW) < 2) return; lastW = w; resizeCanvases(); clearCanvases(); layoutCircle(); });
+for (const ev of ['gesturestart','gesturechange','dblclick']) $('#rec').addEventListener(ev, e => e.preventDefault(), {passive:false});
+$('#rec').addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, {passive:false});
+
+$('#btnStart').addEventListener('click', startRecording);
+$('#btnRecStop').addEventListener('click', () => { vibrate([40,60,40]); stopRecording(false); });
+$('#btnRecCancel').addEventListener('click', () => { if (confirm('녹음을 버리고 취소할까요?')) stopRecording(true); });
+
+/* =========================================================
+   META — 측정 정보 → 파일 이름
+   형식: YYYYMMDD_HHMM_{L|R}_{B|A}_{N|W}_{초}s.wav
+   ========================================================= */
+let metaRec = null;
+const vMeta = $('#v-meta'); segInit(vMeta); chipsInit($('#mItems'));
+function stamp(d){ return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`; }
+function tempName(d, dur){ return `${stamp(d)}_X_X_X_${dur}s.wav`; }
+async function buildName(rec, side, timing, mode){
+  const base = `${stamp(new Date(rec.createdAt))}_${side}_${timing}_${mode}_${rec.duration}s`;
+  const names = new Set((await DB.all('records')).filter(r=>r.id!==rec.id).map(r=>r.fileName));
+  let name = base+'.wav', k=2; while (names.has(name)) name = `${base}-${k++}.wav`;
+  return name;
+}
+function openMeta(rec){
+  metaRec = rec;
+  for (const k of ['side','timing','mode']) segClear(vMeta, k, true);
+  segClear(vMeta,'confidence'); segSet(vMeta,'workType','none'); $('#mWorkBox').style.display='none';
+  $$('#mItems button').forEach(b=>b.classList.remove('sel'));
+  $('#mOperator').value = settings.operator||''; $('#mGauge').value=''; $('#mOpinion').value=''; $('#mWorkText').value='';
+  updateMetaPreview();
+  navStack.length = 1; go('meta');
+}
+async function updateMetaPreview(){
+  const s=segVal(vMeta,'side'), t=segVal(vMeta,'timing'), m=segVal(vMeta,'mode');
+  const ok = s && t && m;
+  $('#fnamePreview').textContent = metaRec ? (ok ? await buildName(metaRec,s,t,m) : `${stamp(new Date(metaRec.createdAt))}_${s||'?'}_${t||'?'}_${m||'?'}_${metaRec.duration}s.wav`) : '—';
+  $('#btnMetaSave').disabled = !ok;
+  $('#btnMetaSave').textContent = ok ? '저장' : '위치 · 작업 전후 · 모드를 고르세요';
+}
+vMeta.querySelectorAll('.seg').forEach(s => s.addEventListener('change', updateMetaPreview));
+vMeta.querySelector('.seg[data-key="workType"]').addEventListener('change', e => { $('#mWorkBox').style.display = e.detail==='none' ? 'none' : 'block'; });
+
+$('#btnMetaSave').addEventListener('click', async () => {
+  const side=segVal(vMeta,'side'), timing=segVal(vMeta,'timing'), mode=segVal(vMeta,'mode');
+  if (!(side&&timing&&mode)) return;
+  busy(true,'저장 중…');
+  const rec = await DB.get('records', metaRec.id);
+  const now = new Date().toISOString();
+  const operator = $('#mOperator').value.trim();
+  const gauge = $('#mGauge').value ? +$('#mGauge').value : null;
+  rec.meta = { side, timing, mode, hydraulic: mode==='W' ? 'ON' : 'OFF', gaugeRpm: gauge, operator };  // 작업 모드 W = 유압 ON
+  rec.fileName = await buildName(rec, side, timing, mode);
+  rec.updatedAt = now;
+  const opinion = $('#mOpinion').value.trim();
+  if (opinion){
+    const n = { id:newId('n'), createdAt:now, updatedAt:now, deviceId:settings.deviceId, equip:EQUIP.code, kind:'opinion',
+      text:opinion, confidence: segVal(vMeta,'confidence'), operator, recordId: rec.id, recordFile: rec.fileName };
+    await DB.put('notes', n.id, n); rec.opinion = opinion;
+  }
+  const wt = segVal(vMeta,'workType');
+  if (wt && wt!=='none'){
+    const m = { id:newId('m'), createdAt:now, updatedAt:now, deviceId:settings.deviceId, equip:EQUIP.code, kind:wt,
+      items: chipsVal($('#mItems')), text: $('#mWorkText').value.trim(),
+      operator, recordId: rec.id, recordFile: rec.fileName, resetBaseline:false };
+    await DB.put('maint', m.id, m);
+  }
+  await DB.put('records', rec.id, rec);
+  const a = await DB.get('audio', rec.id); if (a){ a.fileName = rec.fileName; await DB.put('audio', rec.id, a); }
+  settings.operator = operator; await saveSettings();
+  busy(false); metaRec = null; toast('저장했습니다 · '+rec.fileName, 3000);
+  navStack.length = 1; go('home', false);
+});
+
+/* ---------------- 의견 · 점검 · 정비 (단독 기록) ---------------- */
+const vLog = $('#v-log'); segInit(vLog); chipsInit($('#lItems'));
+let logLinkRec = null;
+function openLog(linkRec){
+  logLinkRec = linkRec || null;
+  segSet(vLog,'lkind','opinion'); segClear(vLog,'lconf');
+  $('#lItemsBox').style.display='none'; $('#lConfBox').style.display='block';
+  $$('#lItems button').forEach(b=>b.classList.remove('sel'));
+  $('#lText').value=''; $('#lOperator').value=settings.operator||'';
+  $('#lLinkHint').textContent = logLinkRec ? '연결된 측정: '+logLinkRec.fileName : '';
+  go('log');
+}
+vLog.querySelector('.seg[data-key="lkind"]').addEventListener('change', e => {
+  const op = e.detail==='opinion'; $('#lItemsBox').style.display = op?'none':'block'; $('#lConfBox').style.display = op?'block':'none';
+});
+$('#btnAddLog').addEventListener('click', () => openLog(null));
+$('#btnLogSave').addEventListener('click', async () => {
+  const kind = segVal(vLog,'lkind'), text = $('#lText').value.trim(), items = chipsVal($('#lItems'));
+  if (!text && !items.length){ toast('내용을 입력하세요'); return; }
+  const now = new Date().toISOString(), operator = $('#lOperator').value.trim();
+  const base = { createdAt:now, updatedAt:now, deviceId:settings.deviceId, equip:EQUIP.code, operator, text,
+    recordId: logLinkRec ? logLinkRec.id : null, recordFile: logLinkRec ? logLinkRec.fileName : null };
+  if (kind==='opinion'){ const n = {...base, id:newId('n'), kind:'opinion', confidence: segVal(vLog,'lconf')}; await DB.put('notes', n.id, n); }
+  else { const m = {...base, id:newId('m'), kind, items, resetBaseline:false}; await DB.put('maint', m.id, m); }
+  settings.operator = operator; await saveSettings();
+  toast('기록했습니다'); back();
+});
+
+/* ---------------- HISTORY ---------------- */
+let histTab = 'rec';
+$$('#v-history .tabs button').forEach(b => b.addEventListener('click', () => { histTab=b.dataset.tab; $$('#v-history .tabs button').forEach(x=>x.classList.toggle('sel',x===b)); renderHistory(); }));
+async function renderHistory(){
+  const box = $('#histList'); box.innerHTML='';
+  const recs = (await DB.all('records')).filter(r=>r.meta);
+  const notes = await DB.all('notes'), maint = await DB.all('maint');
+  let rows;
+  if (histTab==='rec') rows = recs.map(r=>({t:r.createdAt, r}));
+  else rows = [...recs.map(r=>({t:r.createdAt, r})), ...notes.map(n=>({t:n.createdAt, n})), ...maint.map(m=>({t:m.createdAt, m}))];
+  rows.sort((a,b)=>b.t.localeCompare(a.t));
+  // 메타 입력 전 녹음(앱이 중간에 닫힌 경우)도 보여준다
+  const orphan = (await DB.all('records')).filter(r=>!r.meta);
+  for (const r of orphan) box.append(el('button',{class:'item',onclick:()=>openMeta(r)},
+    el('div',{class:'t warn',text:'정보 입력 필요 · '+fmtDate(new Date(r.createdAt))}), el('div',{class:'s',text:`${r.duration} s · 눌러서 측정 정보를 입력하세요`})));
+  if (!rows.length && !orphan.length){ box.append(el('div',{class:'empty',text:'아직 기록이 없습니다'})); return; }
+  for (const x of rows){
+    if (x.r){ const r=x.r;
+      box.append(el('button',{class:'item',onclick:()=>openDetail(r.id)},
+        el('div',{class:'t',text:r.fileName}),
+        el('div',{class:'s'}, el('span',{class:'tag',text:'측정'}), `${fmtDate(new Date(r.createdAt))} · ${r.live&&(r.live.workMedian||r.live.rpmMedian)?Math.round(r.live.workMedian||r.live.rpmMedian)+' rpm · ':''}${r.meta.mode==='W'?'작업 W':'일반 N'}${r.meta.operator?' · '+r.meta.operator:''}${r.hasAudio?'':' · 사운드 없음'}`),
+        r.opinion ? el('div',{class:'o',text:r.opinion}) : null));
+    } else { const v = x.n || x.m; const kind = x.n ? '의견' : v.kind;
+      box.append(el('div',{class:'item'},
+        el('div',{class:'s'}, el('span',{class:'tag',text:kind}), `${fmtDate(new Date(v.createdAt))}${v.operator?' · '+v.operator:''}${v.hourMeter?' · '+v.hourMeter+' h':''}${v.confidence?' · '+v.confidence:''}`),
+        v.items && v.items.length ? el('div',{class:'o',text:v.items.join(', ')}) : null,
+        v.text ? el('div',{class:'o',text:v.text}) : null,
+        v.recordFile ? el('div',{class:'s',text:'↳ '+v.recordFile}) : null));
+    }
+  }
+}
+
+/* ---------------- DETAIL ---------------- */
+let audioUrl = null;
+async function openDetail(id){
+  const r = await DB.get('records', id); if (!r) return;
+  const a = await DB.get('audio', id);
+  const body = $('#detailBody'); body.innerHTML='';
+  if (audioUrl) URL.revokeObjectURL(audioUrl); audioUrl = null;
+  body.append(el('div',{class:'fname',text:r.fileName}));
+  const L = r.live || {};
+  body.append(el('div',{class:'cap',style:'margin-top:18px',text: L.workMedian ? 'WORK RPM · 작업 구간 중앙값' : 'RPM · 측정 중 중앙값'}));
+  body.append(el('div',{class:'stat'}, el('div',{}, el('span',{class:'v lg',text: (L.workMedian||L.rpmMedian) ? Math.round(L.workMedian||L.rpmMedian) : '—'}), el('span',{class:'u',text:'rpm'})),
+    L.workMedian && L.idleMedian ? el('div',{class:'refs'}, el('div',{}, el('span',{text:'공회전 '}), el('b',{text:Math.round(L.idleMedian)}))) : null));
+  if (a && a.blob){ audioUrl = URL.createObjectURL(a.blob); body.append(el('audio',{controls:'',src:audioUrl,preload:'metadata'})); }
+  else body.append(el('p',{class:'hint',text:'이 기기에는 사운드 원본이 없습니다 (이력만 받은 기록).'}));
+  const ap = (r.quality&&r.quality.applied)||{};
+  const onoff = v => v===false ? '꺼짐' : v===true ? '켜짐' : '확인 불가';
+  const dl = el('dl',{class:'kv'});
+  const add = (k,v) => dl.append(el('dt',{text:k}), el('dd',{text:v}));
+  add('측정 시각', fmtDate(new Date(r.createdAt)));
+  add('위치', r.meta.side==='L'?'왼쪽 (L)':'오른쪽 (R)');
+  add('작업 전후', r.meta.timing==='B'?'작업 전 (B)':'작업 후 (A)');
+  add('모드', r.meta.mode==='N'?'일반 (N) · 유압 OFF':'작업 (W) · 유압 ON');
+  add('게이지 rpm', r.meta.gaugeRpm!=null ? String(r.meta.gaugeRpm) : '—');
+  add('측정자', r.meta.operator||'—');
+  add('길이 · 크기', `${r.duration} s · ${r.bytes?fmtMB(r.bytes):'—'} · ${r.sr} Hz`);
+  add('최대 음량', r.quality ? r.quality.peakDb+' dBFS' : '—');
+  add('잘림(클리핑)', r.quality ? (r.quality.clipCount ? `${r.quality.clipCount} 샘플 — 다음엔 조금 멀리` : '없음') : '—');
+  add('음성 처리', `에코 ${onoff(ap.echoCancellation)} · 소음억제 ${onoff(ap.noiseSuppression)} · 자동음량 ${onoff(ap.autoGainControl)}`);
+  add('기기', `${r.deviceId} · v${r.appVersion}`);
+  body.append(el('hr'), dl);
+  // 연결된 의견·정비
+  const notes = (await DB.all('notes')).filter(n=>n.recordId===id);
+  const maint = (await DB.all('maint')).filter(m=>m.recordId===id);
+  if (notes.length || maint.length){
+    body.append(el('hr'), el('div',{class:'cap',text:'LOG · 의견 · 점검 · 정비'}));
+    for (const v of [...notes, ...maint].sort((x,y)=>x.createdAt.localeCompare(y.createdAt)))
+      body.append(el('div',{class:'item'}, el('div',{class:'s'}, el('span',{class:'tag',text: v.kind==='opinion'?'의견':v.kind}), fmtDate(new Date(v.createdAt))+(v.operator?' · '+v.operator:'')),
+        v.items&&v.items.length ? el('div',{class:'o',text:v.items.join(', ')}) : null, v.text ? el('div',{class:'o',text:v.text}) : null));
+  }
+  body.append(el('div',{class:'stack',style:'margin-top:24px'},
+    a && a.blob ? el('button',{class:'btn fill h84',text:'사운드 파일 보내기 (WAV)',onclick:()=>shareFile(new File([a.blob], r.fileName, {type:'audio/wav'}))}) : null,
+    el('button',{class:'btn h64',text:'이 측정에 의견 · 정비 추가',onclick:()=>openLog(r)}),
+    el('button',{class:'btn h52 badline',text:'이 측정 삭제',onclick:async()=>{
+      if (!confirm('이 측정과 사운드를 이 폰에서 지울까요? 되돌릴 수 없습니다.')) return;
+      await DB.del('records', id); await DB.del('audio', id); toast('삭제했습니다'); back(); }})));
+  go('detail');
+}
+
+/* =========================================================
+   보내기 · 받기 — ② 장비 데이터 파일 (설계서 6.4)
+   .zip = MTT01.engineear(JSON 이력) + audio/*.wav
+   ========================================================= */
+async function shareFile(file){
+  try{
+    if (navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:file.name}); return; }
+  }catch(e){ if (e && e.name==='AbortError') return; }
+  const url = URL.createObjectURL(file); const a = el('a',{href:url,download:file.name}); document.body.append(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 60000);
+}
+async function buildPayload(){
+  const records = (await DB.all('records')).filter(r=>r.meta);
+  return { format:'engineear', formatVersion:1, appName:'EngineTALK', appVersion:APP_VERSION, analysisVersion:ANALYSIS_VERSION,
+    exportedAt:new Date().toISOString(), exportedBy:settings.deviceId, equip:EQUIP,
+    records, maint: await DB.all('maint'), notes: await DB.all('notes'), learning:null };
+}
+const exportName = ext => `${EQUIP.code}_${stamp(new Date())}_EngineTALK.${ext}`;
+async function exportJson(){
+  const p = await buildPayload();
+  await shareFile(new File([JSON.stringify(p)], exportName('engineear'), {type:'application/json'}));
+  settings.lastExportAt = p.exportedAt; await saveSettings(); renderData();
+}
+async function exportZip(){
+  busy(true,'파일 묶는 중…');
+  try{
+    const p = await buildPayload();
+    const files = [{ name:`${EQUIP.code}.engineear`, blob:new Blob([JSON.stringify(p, null, 1)]) }];
+    for (const r of p.records){ const a = await DB.get('audio', r.id); if (a && a.blob) files.push({ name:'audio/'+r.fileName, blob:a.blob }); }
+    const zip = await makeZip(files);
+    busy(false);
+    await shareFile(new File([zip], exportName('zip'), {type:'application/zip'}));
+    settings.lastExportAt = p.exportedAt; await saveSettings(); renderData();
+  }catch(e){ busy(false); toast('보내기 실패: '+e.message, 4000); }
+}
+$('#btnExpJson').addEventListener('click', exportJson);
+$('#btnExpFull').addEventListener('click', exportZip);
+
+/* --- ZIP (압축 없이 묶기, 외부 라이브러리 없음) --- */
+const CRC_T = (()=>{ const t=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c = c&1 ? 0xEDB88320^(c>>>1) : c>>>1; t[n]=c>>>0; } return t; })();
+function crc32(u8, c=0xFFFFFFFF){ for (let i=0;i<u8.length;i++) c = CRC_T[(c^u8[i])&255]^(c>>>8); return c; }
+function dosTime(d){ return { time:(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1), date:((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate() }; }
+async function makeZip(files){
+  const enc = new TextEncoder(), parts=[], central=[]; let off=0; const {time,date} = dosTime(new Date());
+  for (const f of files){
+    const name = enc.encode(f.name), u8 = new Uint8Array(await f.blob.arrayBuffer());
+    const crc = (crc32(u8) ^ 0xFFFFFFFF) >>> 0, size = u8.length;
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0,0x04034b50,true); lh.setUint16(4,20,true); lh.setUint16(6,0x0800,true); lh.setUint16(8,0,true);
+    lh.setUint16(10,time,true); lh.setUint16(12,date,true); lh.setUint32(14,crc,true); lh.setUint32(18,size,true); lh.setUint32(22,size,true);
+    lh.setUint16(26,name.length,true); lh.setUint16(28,0,true);
+    parts.push(lh.buffer, name, f.blob);
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0,0x02014b50,true); ch.setUint16(4,20,true); ch.setUint16(6,20,true); ch.setUint16(8,0x0800,true); ch.setUint16(10,0,true);
+    ch.setUint16(12,time,true); ch.setUint16(14,date,true); ch.setUint32(16,crc,true); ch.setUint32(20,size,true); ch.setUint32(24,size,true);
+    ch.setUint16(28,name.length,true); ch.setUint32(42,off,true);
+    central.push(ch.buffer, name);
+    off += 30 + name.length + size;
+  }
+  let cd = 0; for (const c of central) cd += c.byteLength;
+  const end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0,0x06054b50,true); end.setUint16(8,files.length,true); end.setUint16(10,files.length,true); end.setUint32(12,cd,true); end.setUint32(16,off,true);
+  return new Blob([...parts, ...central, end.buffer], {type:'application/zip'});
+}
+async function readZip(blob){
+  const buf = new Uint8Array(await blob.arrayBuffer()), dv = new DataView(buf.buffer), dec = new TextDecoder();
+  let e=-1; for (let i=buf.length-22; i>=Math.max(0, buf.length-65557); i--) if (dv.getUint32(i,true)===0x06054b50){ e=i; break; }
+  if (e<0) throw new Error('zip 파일이 아닙니다');
+  const n = dv.getUint16(e+10,true); let p = dv.getUint32(e+16,true); const out=[];
+  for (let k=0;k<n;k++){
+    if (dv.getUint32(p,true)!==0x02014b50) throw new Error('zip 구조 오류');
+    const method=dv.getUint16(p+10,true), csize=dv.getUint32(p+20,true), nl=dv.getUint16(p+28,true), xl=dv.getUint16(p+30,true), cl=dv.getUint16(p+32,true), lho=dv.getUint32(p+42,true);
+    const name = dec.decode(buf.subarray(p+46, p+46+nl));
+    const start = lho + 30 + dv.getUint16(lho+26,true) + dv.getUint16(lho+28,true);
+    let data = buf.subarray(start, start+csize);
+    if (method===8){
+      if (!('DecompressionStream' in window)) throw new Error('이 브라우저는 압축된 zip을 풀 수 없습니다');
+      data = new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+    } else if (method!==0) throw new Error('지원하지 않는 zip 압축 방식');
+    if (!name.endsWith('/') && !name.startsWith('__MACOSX')) out.push({ name, data });
+    p += 46 + nl + xl + cl;
+  }
+  return out;
+}
+
+$('#btnImport').addEventListener('click', () => $('#fileImport').click());
+$('#fileImport').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value=''; if (!f) return;
+  busy(true,'파일 읽는 중…');
+  try{
+    let payload=null; const wavs = new Map();
+    const head = new Uint8Array(await f.slice(0,4).arrayBuffer());
+    if (head[0]===0x50 && head[1]===0x4b){
+      for (const z of await readZip(f)){
+        const base = z.name.split('/').pop();
+        if (/\.(engineear|json)$/i.test(base)) payload = JSON.parse(new TextDecoder().decode(z.data));
+        else if (/\.wav$/i.test(base)) wavs.set(base, z.data);
+      }
+    } else payload = JSON.parse(await f.text());
+    if (!payload || payload.format!=='engineear' || !Array.isArray(payload.records)) throw new Error('EngineTALK/EngineNOTE 데이터 파일이 아닙니다');
+    // 미리보기 계산 (설계서 6.5)
+    const plan = { records:[], maint:[], notes:[], dup:0, audio:0 };
+    for (const [store, list] of [['records',payload.records],['maint',payload.maint||[]],['notes',payload.notes||[]]]){
+      for (const x of list){
+        if (!x || typeof x.id!=='string') continue;
+        const cur = await DB.get(store, x.id);
+        if (!cur || (x.updatedAt||'') > (cur.updatedAt||'')) plan[store].push(x); else plan.dup++;
+      }
+    }
+    for (const r of payload.records){ if (r && wavs.has(r.fileName) && !(await DB.get('audio', r.id))) plan.audio++; }
+    busy(false);
+    const msg = `새로 합칠 측정 ${plan.records.length}건, 사운드 ${plan.audio}개, 정비·점검 ${plan.maint.length}건, 의견 ${plan.notes.length}건\n이미 있는 기록 ${plan.dup}건은 건너뜁니다.\n\n합칠까요?`;
+    if (!confirm(msg)) return;
+    busy(true,'합치는 중…');
+    for (const s of ['records','maint','notes']) for (const x of plan[s]){
+      if (s==='records'){ const has = await DB.get('audio', x.id); x.hasAudio = !!(has || wavs.has(x.fileName)); }
+      await DB.put(s, x.id, x);
+    }
+    for (const r of payload.records){
+      if (r && wavs.has(r.fileName) && !(await DB.get('audio', r.id))) await DB.put('audio', r.id, { blob:new Blob([wavs.get(r.fileName)],{type:'audio/wav'}), fileName:r.fileName });
+    }
+    busy(false); toast('합쳤습니다', 2500); renderData();
+  }catch(err){ busy(false); toast('불러오기 실패: '+err.message, 4500); }
+});
+
+async function renderData(){
+  const recs = (await DB.all('records')).filter(r=>r.meta);
+  const bytes = recs.reduce((s,r)=>s+(r.hasAudio&&r.bytes?r.bytes:0),0);
+  $('#expInfo').textContent = `측정 ${recs.length}건 · 사운드 약 ${fmtMB(bytes)}` + (settings.lastExportAt ? ` · 마지막 보내기 ${fmtDate(new Date(settings.lastExportAt))}` : ' · 아직 보낸 적 없음');
+  let t = '확인할 수 없음';
+  try{ if (navigator.storage && navigator.storage.estimate){ const e = await navigator.storage.estimate(); t = `사용 ${fmtMB(e.usage||0)} / 사용 가능 약 ${fmtMB(e.quota||0)}`; }
+    if (navigator.storage && navigator.storage.persisted){ t += (await navigator.storage.persisted()) ? ' · 보호됨' : ' · 보호 안 됨'; } }catch(e){}
+  if (DB.mem) t = '임시 모드 — 앱을 닫으면 사라집니다. 꼭 보내기로 백업하세요.';
+  $('#storeInfo').textContent = t;
+}
+$('#btnPersist').addEventListener('click', async () => {
+  try{ const ok = navigator.storage && navigator.storage.persist && await navigator.storage.persist(); toast(ok ? '보호를 요청했습니다' : '이 브라우저는 보호 요청을 받지 않았습니다. 홈 화면에 추가해 보세요.', 3500); }catch(e){ toast('지원하지 않는 기능입니다'); }
+  renderData();
+});
+
+/* ---------------- boot ---------------- */
+(async function(){
+  buildCircle();
+  await DB.open(); await loadSettings();
+  if (!window.isSecureContext) $('#secureAlert').style.display='block';
+  renderHome();
+})();
+</script>
+</body>
+</html>
