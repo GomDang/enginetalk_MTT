@@ -1,0 +1,2323 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#000000">
+<title>EngineTALK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;600;700&family=IBM+Plex+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#000;--bg-soft:#0a0a0a;--line:#3a3a3f;--track:#1e1e22;
+  --fg:#fff;--soft:#d8d8e0;--mute:#a0a0a8;--dim:#6a6a72;
+  --cta:#f0f0fa;--on-cta:#000;
+  --ok:#fff;--warn:#f6d303;--bad:#ff4d4f;
+  --lat:'Barlow Semi Condensed','IBM Plex Sans KR',system-ui,sans-serif;
+  --ko:'IBM Plex Sans KR',system-ui,-apple-system,sans-serif;
+  --g:20px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+/* v0.9.3: 안드로이드 스크롤 수정 — html·body 둘 다에 overflow-x:hidden을 주면 body가 따로 스크롤 상자가 되고,
+   body의 overscroll-behavior:none이 손가락 스크롤을 페이지로 넘기지 못하게 막는다. body에만 두고(→ 화면 전체에 적용),
+   당겨서 새로고침 막기는 html(화면 전체)에 둔다 */
+html{overscroll-behavior-y:none}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--ko);font-size:16px;line-height:1.5}
+body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);overflow-x:hidden;overflow-x:clip}
+button,input,textarea,select{font:inherit;color:inherit}
+.view{display:none;max-width:720px;margin:0 auto;padding:0 var(--g) 120px}
+.view.on{display:block}
+.num{font-family:var(--lat);font-variant-numeric:tabular-nums;letter-spacing:1px}
+.cap{font-family:var(--lat);font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--mute)}
+.mute{color:var(--mute)}.soft{color:var(--soft)}.warn{color:var(--warn)}.bad{color:var(--bad)}
+h2{font-size:26px;font-weight:700;letter-spacing:-.5px;margin:20px 0 4px}
+hr{border:0;border-top:1px solid var(--line);margin:20px 0}
+
+/* header */
+.hdr{display:flex;justify-content:space-between;align-items:center;height:72px;border-bottom:1px solid var(--line);margin:0 calc(-1*var(--g)) 0;padding:0 var(--g);gap:12px}
+.wm b{display:block;font-family:var(--lat);font-weight:700;font-size:22px;letter-spacing:1.8px;line-height:1}
+.wm span{font-family:var(--lat);font-size:12px;letter-spacing:1.2px;color:var(--mute)}
+.eq{text-align:right}.eq b{display:block;font-family:var(--lat);font-size:15px;letter-spacing:1.2px;line-height:1.1}
+.eq span{font-family:var(--lat);font-size:11px;letter-spacing:1px;color:var(--mute)}
+.back{width:64px;height:64px;margin-left:-14px;background:none;border:0;font-size:30px;color:var(--fg)}
+.hdr h1{flex:1;font-size:20px;margin:0}
+
+/* stat readout */
+.stat{display:flex;align-items:flex-end;flex-wrap:wrap;gap:4px 14px;margin:6px 0 2px}
+.stat .v{font-family:var(--lat);font-variant-numeric:tabular-nums;font-weight:700;line-height:.9;letter-spacing:1px}
+.v.hero{font-size:76px}.v.lg{font-size:56px}.v.xl{font-size:92px}
+.stat .u{font-family:var(--lat);font-size:20px;color:var(--mute);margin-left:4px}
+.refs{font-family:var(--lat);font-variant-numeric:tabular-nums;font-size:14px;line-height:1.35;padding-bottom:6px;white-space:nowrap}
+.refs span{color:var(--mute)}.refs b{font-weight:400;color:var(--soft)}
+.status{font-size:30px;font-weight:700;letter-spacing:-.5px;line-height:1.15;margin:22px 0 8px}
+.v.warn{color:var(--warn)}.v.bad{color:var(--bad)}
+.dev{font-size:13px;margin-top:2px}.dev.warn{color:var(--warn)}.dev.bad{color:var(--bad)}
+.ro+.ro{margin-top:16px}
+/* 시동 리포트 (v0.7) */
+.sv{font-size:40px;font-weight:700;line-height:1.15;margin:6px 0 2px}
+.sv.ok{color:var(--fg)}.sv.bad{color:var(--bad)}.sv.warn{color:var(--warn)}.sv.na{color:var(--mute)}
+.tl{display:flex;height:30px;border-radius:8px;overflow:hidden;border:1px solid var(--line);margin:14px 0 4px}
+.tl i{display:block;height:100%}
+.tl .w{background:#1a1a1e}.tl .c{background:#55555d}.tl .g{background:var(--warn)}.tl .r{background:#fff}.tl .x{background:var(--bad)}
+.tlk{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--mute)}
+.tlk i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.sitem{border-top:1px solid var(--line);padding:14px 0}
+.sitem .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.sitem .h span{font-size:20px;color:var(--fg);font-weight:700;line-height:1.3}
+.sitem .h span small{display:block;font-size:15px;color:var(--soft);font-weight:400;margin-top:4px;margin-left:36px}
+.sitem .n{font-style:normal}
+.chip{font-size:13px;font-weight:700;border-radius:999px;padding:2px 10px;border:1px solid var(--line);white-space:nowrap}
+.chip.ok{border-color:var(--fg)}.chip.warn{color:#000;background:var(--warn);border-color:var(--warn)}.chip.bad{color:#fff;background:var(--bad);border-color:var(--bad)}.chip.na{color:var(--mute)}
+.sitem .v{font-family:var(--lat);font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px}
+.sitem .v small{font-size:15px;color:var(--mute);font-weight:500;margin-left:4px}
+.sitem .ref{font-size:15px;color:var(--soft);font-weight:400;margin-top:2px}
+.sitem p{margin:6px 0 0;font-size:15px;line-height:1.5;color:var(--fg);font-weight:600}
+.todo{background:#f2f2f5;color:#000;border-radius:16px;padding:16px 18px;margin-top:18px}
+.todo h3{margin:0 0 8px;font-size:20px;font-weight:700;color:#000}
+.todo ol{margin:0;padding-left:22px;line-height:1.6;font-size:15.5px;color:#111}
+.todo li+li{margin-top:4px}
+.sect{font-size:20px;font-weight:700;color:var(--fg);margin:26px 0 10px;line-height:1.3}
+.sect.big{font-size:26px;margin-top:30px}
+.sitem .n{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--fg);color:#000;font-family:var(--lat);font-size:17px;font-weight:700;margin-right:8px;vertical-align:2px;line-height:1}
+.sect small{display:block;font-size:13px;font-weight:400;color:var(--mute);margin-top:2px}
+.unk{font-size:13.5px;color:var(--mute);line-height:1.6;padding-left:18px;margin:6px 0 0}
+.rule{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}
+.rule b{font-family:var(--lat);font-variant-numeric:tabular-nums;font-size:18px;text-align:right}
+.rule b.warn{color:var(--warn)}.rule b.bad{color:var(--bad)}
+.rule small{grid-column:1/-1;color:var(--mute);font-size:13px}
+.env{font-size:15px;line-height:1.55}
+.env .loc{font-size:19px;font-weight:700}
+.env .loc span{font-family:var(--lat);font-weight:400;font-size:14px;color:var(--mute);margin-left:6px}
+.env .wx{font-family:var(--lat);font-variant-numeric:tabular-nums;font-size:16px;color:var(--soft);margin-top:4px}
+.env .wx b{font-size:22px;color:var(--fg);font-weight:700}
+.env .st{color:var(--mute);font-size:14px;margin-top:6px}.env .st.warn{color:var(--warn)}
+.env .acts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.env .acts .btn{width:auto;padding:0 18px;flex:1}
+.env .loc2{font-size:15px;color:var(--soft);margin-top:2px}
+.env .loc2 span{font-family:var(--lat);font-size:14px;color:var(--mute);margin-left:6px}
+.env .ask{font-size:17px;font-weight:700;color:var(--warn);line-height:1.4}
+.sites h4{font-size:13px;color:var(--mute);font-weight:600;margin:16px 0 8px;letter-spacing:.3px}
+.sites .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sites button{min-height:56px;border:1px solid var(--line);background:#000;border-radius:14px;font-size:16px;font-weight:600;line-height:1.2;padding:6px 8px;text-align:left}
+.sites button small{display:block;font-size:12px;color:var(--mute);font-weight:400;margin-top:2px}
+.sites button.custom{grid-column:1/-1;text-align:center;border-style:dashed}
+
+/* buttons */
+.btn{display:flex;align-items:center;justify-content:center;width:100%;border-radius:44px;font-family:var(--ko);font-weight:700;font-size:20px;border:1px solid var(--fg);background:transparent;color:var(--fg);cursor:pointer;user-select:none}
+.btn.fill{background:var(--cta);color:var(--on-cta);border-color:var(--cta)}
+.btn.h88{height:88px;font-size:22px}.btn.h76{height:76px;font-size:21px}.btn.h84{height:84px}.btn.h64{height:64px;font-size:18px}.btn.h52{height:52px;font-size:16px;border-radius:32px}
+.btn:active{opacity:.7}.btn:disabled{opacity:.35}
+.btn.badline{border-color:var(--bad);color:var(--bad)}
+.stack>*+*{margin-top:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* menu */
+.menu{margin-top:24px;border-top:1px solid var(--line)}
+.menu button{display:flex;align-items:center;gap:16px;width:100%;height:68px;background:none;border:0;border-bottom:1px solid var(--line);font-size:19px;font-weight:600;text-align:left;padding:0}
+.menu button i{font-style:normal;font-family:var(--lat);color:var(--dim);width:28px;font-size:15px;letter-spacing:1px}
+.menu button em{margin-left:auto;font-style:normal;color:var(--mute)}
+
+.panel{background:var(--bg-soft);border:1px solid var(--line);border-radius:16px;padding:16px}
+.alert{border:1px solid var(--warn);border-radius:16px;padding:14px 16px;margin:16px 0}
+.alert .cap{color:var(--warn)}
+.prog{height:3px;background:var(--track);border-radius:2px;overflow:hidden;margin-top:10px}.prog i{display:block;height:100%;background:var(--fg)}
+
+/* forms */
+.fld{margin:22px 0 0}
+.fld>label,.fld>.lb{display:block;font-size:15px;color:var(--soft);margin-bottom:8px;font-weight:600}
+.seg{display:grid;gap:8px}.seg.c2{grid-template-columns:1fr 1fr}.seg.c3{grid-template-columns:1fr 1fr 1fr}
+.seg button{min-height:62px;border:1px solid var(--line);background:var(--bg-soft);border-radius:14px;font-size:18px;font-weight:600;line-height:1.2;padding:6px}
+.seg button small{display:block;font-family:var(--lat);font-size:13px;letter-spacing:1px;color:var(--mute);font-weight:400}
+.seg button.sel{border-color:var(--fg);background:var(--fg);color:#000}.seg button.sel small{color:#333}
+.seg.need button:not(.sel){border-color:var(--warn)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{min-height:52px;padding:0 16px;border:1px solid var(--line);background:var(--bg-soft);border-radius:26px;font-size:16px}
+.chips button.sel{background:var(--fg);color:#000;border-color:var(--fg)}
+input[type=text],input[type=number],textarea{width:100%;min-height:62px;background:var(--bg-soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:19px;color:var(--fg);outline:none}
+textarea{min-height:120px;resize:vertical;line-height:1.45}
+input:focus,textarea:focus{border-color:var(--fg)}
+.fname{font-family:var(--lat);font-size:18px;letter-spacing:.3px;overflow-wrap:anywhere;padding:14px 16px;border:1px dashed var(--line);border-radius:14px;margin-top:8px}
+.actbar{position:fixed;left:0;right:0;bottom:0;padding:12px var(--g) calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#000 22%);z-index:5}
+.actbar>div{max-width:680px;margin:0 auto}
+.hint{font-size:14px;color:var(--mute);margin-top:6px}
+
+/* list */
+.tabs{display:flex;gap:8px;margin:16px 0}
+.tabs button{flex:1;height:52px;border-radius:26px;border:1px solid var(--line);background:none;font-size:16px;font-weight:600}
+.tabs button.sel{border-color:var(--fg);background:var(--fg);color:#000}
+.item{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:16px 0}
+.item .t{font-family:var(--lat);font-size:18px;letter-spacing:.5px;word-break:break-all}
+.item .s{font-size:14px;color:var(--mute);margin-top:2px}
+.item .o{font-size:15px;color:var(--soft);margin-top:6px;white-space:pre-wrap}
+.tag{display:inline-block;font-family:var(--lat);font-size:12px;letter-spacing:1px;border:1px solid var(--line);border-radius:10px;padding:1px 8px;margin-right:6px;color:var(--soft)}
+.empty{color:var(--mute);padding:40px 0;text-align:center}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;font-size:16px}.kv dt{color:var(--mute)}.kv dd{margin:0}
+audio{width:100%;margin:12px 0}
+
+/* recording overlay */
+#rec{position:fixed;inset:0;background:#000;z-index:20;display:none;flex-direction:column;padding:calc(env(safe-area-inset-top) + 12px) var(--g) calc(env(safe-area-inset-bottom) + 14px);overflow:hidden}
+#rec.on{display:flex}
+#rec{touch-action:pan-y;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}   /* v0.9.3: pan-y = 위아래 스크롤만 허용, 확대·두 번 탭 확대는 CSS로 막음 (안드로이드에서 JS 터치 대기 없이) */
+#rec .cv-wrap,#rec canvas,#rec svg{pointer-events:none}
+#cvRpm{height:55px!important;max-height:55px}   /* v0.6.2: 차트 높이를 CSS로 고정 (어떤 경우에도 커지지 않게) */
+#rec{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}   /* 작은 화면에서도 아래로 밀려나면 스크롤로 닿게 */
+#btnRecStop{flex:none}
+.rtop .t small{font-size:12px;color:var(--mute);font-weight:400;margin-left:10px;letter-spacing:0}
+.rsit > span{white-space:nowrap}
+.circ-wrap{display:flex;justify-content:center;margin-top:4px}
+#circ{display:block;width:min(100%,340px,max(220px,calc(100vh - 400px)));aspect-ratio:1/1}
+#circ text{font-family:var(--lat)}
+.legend{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--mute)}
+.legend i{display:inline-block;width:10px;height:10px;margin-right:4px;vertical-align:-1px}
+.rtop{display:flex;align-items:center;justify-content:space-between}
+.rtop .t{font-family:var(--lat);font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:1px}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--fg);margin-right:10px;vertical-align:2px;animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:.15}}
+.rtop .btn{width:auto;padding:0 22px}
+.rsit{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
+.rsit b{font-size:26px;font-weight:700;letter-spacing:-.3px;white-space:nowrap}
+.rsit > span{font-size:13px;color:var(--mute);display:flex;align-items:center;gap:6px;text-align:right}
+.phone-ico{flex:none}
+.sitlbl{display:inline-block;border:1px solid var(--line);border-radius:10px;padding:2px 10px;font-size:14px;margin-left:6px}
+.dirguide{display:flex;align-items:center;gap:14px;margin-top:14px;color:var(--soft);font-size:15px;line-height:1.4}
+.meter{display:flex;align-items:center;gap:12px;margin:10px 0 4px}
+.meter .bar{flex:1;height:14px;background:var(--track);border-radius:7px;overflow:hidden;position:relative}
+.meter .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--fg);width:0}
+.meter .bar i.hot{background:var(--warn)}.meter .bar i.clip{background:var(--bad)}
+.meter .num{width:96px;text-align:right;font-size:16px}
+.rwarn{min-height:24px;font-size:16px;font-weight:600}
+canvas{display:block;width:100%;border:1px solid var(--line);border-radius:12px;background:#000}
+.cv-wrap{margin-top:10px}
+.cv-wrap .cap{margin-bottom:4px;display:flex;justify-content:space-between}
+#rec .grow{flex:1;min-height:8px}
+
+/* toast + modal */
+#toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--cta);color:#000;padding:14px 22px;border-radius:30px;font-weight:700;font-size:16px;z-index:50;display:none;max-width:90vw;text-align:center}
+#busy{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:60;display:none;align-items:center;justify-content:center;font-size:20px;font-weight:700}
+
+/* =========================================================
+   읽기 쉬운 글자 규칙 (v0.8, 디자인 문서 5장 "글자 위계")
+   ① 화면 제목 24px 굵게  ② 구역 제목 20px(큰 구역 26px) 흰색 굵게 + 아래 설명 15px
+   ③ 항목 제목 20px 흰색 굵게 (순서가 있으면 번호 원)  ④ 참고 글(기준·평소 범위·설명) 15px 밝은 회색
+   ⑤ 뜻 문장 15px 흰색 굵게  ⑥ 읽어야 하는 글은 14px 아래로 내리지 않는다 (원형 막대 눈금 제외)
+   ========================================================= */
+.hdr h1{font-size:24px;font-weight:700}
+.rot{font-size:20px;font-weight:700;line-height:1.3}
+.rot small{display:block;font-size:15px;color:var(--soft);font-weight:400}
+.cap{font-size:16px;color:var(--soft);font-weight:600;letter-spacing:1px}
+.hint{font-size:15px;color:var(--soft);line-height:1.5}
+.refs{font-size:16px}.refs span{color:var(--soft)}.refs b{color:var(--fg);font-weight:600}
+.stat .u{color:var(--soft)}
+.dev{font-size:15px;font-weight:600}
+.fld>label,.fld>.lb{font-size:20px;color:var(--fg);font-weight:700;margin-bottom:10px;line-height:1.3}
+.fld>label small,.fld>.lb small{display:block;font-size:15px;color:var(--soft);font-weight:400;margin-top:2px}
+.no{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--fg);color:#000;font-family:var(--lat);font-size:17px;font-weight:700;margin-right:8px;vertical-align:2px;line-height:1;font-style:normal}
+.seg button small{font-size:14px;color:var(--soft)}
+.rule{font-size:17px;font-weight:700}
+.rule b{font-size:20px}
+.rule small{font-size:15px;color:var(--soft);font-weight:400}
+.env .loc span,.env .loc2 span{font-size:15px;color:var(--soft)}
+.env .st{font-size:15px;color:var(--soft)}
+.sites h4{font-size:17px;color:var(--fg);font-weight:700;letter-spacing:0}
+.sites button small{font-size:14px;color:var(--soft)}
+.item .s{font-size:15px;color:var(--soft)}
+.tag{font-size:13px;color:var(--fg)}
+.kv dt{color:var(--soft)}
+.empty{color:var(--soft)}
+.legend,.tlk{font-size:14px;color:var(--soft)}
+.rsit > span{font-size:15px;color:var(--soft)}
+.rtop .t small{font-size:13px;color:var(--soft)}
+.menu button i{color:var(--soft)}
+.menu button em{color:var(--soft)}
+.unk{font-size:15px;color:var(--soft)}
+.sect small{font-size:15px;color:var(--soft)}
+.sitem .v small{color:var(--soft)}
+.chip{font-size:14px}
+.dirguide{font-size:15px}
+.wm span,.eq span{font-size:12px;color:var(--soft)}
+.status{font-size:30px}
+
+/* AI 학습 · 저온 방치 (v0.9) */
+.score{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap}
+.score b{font-family:var(--lat);font-size:22px;font-variant-numeric:tabular-nums}
+.score .lvl{font-size:15px;font-weight:700;border-radius:999px;padding:2px 12px;border:1px solid var(--fg)}
+.score .lvl.warn{background:var(--warn);color:#000;border-color:var(--warn)}.score .lvl.bad{background:var(--bad);color:#fff;border-color:var(--bad)}.score .lvl.na{border-color:var(--line);color:var(--soft)}
+.score small{font-size:15px;color:var(--soft);flex-basis:100%}
+.lcard{border-top:1px solid var(--line);padding:14px 0}
+.lcard .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:20px;font-weight:700}
+.lcard .h small{font-size:15px;color:var(--soft);font-weight:400;white-space:nowrap}
+.lcard .v{font-family:var(--lat);font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:4px}
+.lcard .v small{font-size:15px;color:var(--soft);font-weight:500;margin-left:6px}
+.lcard p{margin:4px 0 0;font-size:15px;color:var(--soft)}
+.lcard p b{color:var(--fg)}
+.lbar{height:6px;background:var(--track);border-radius:3px;overflow:hidden;margin-top:8px}.lbar i{display:block;height:100%;background:var(--fg)}
+.spark{display:block;width:100%;height:auto;margin-top:8px}
+.soak{border-radius:16px;padding:16px 18px;margin:16px 0 4px}
+.soak.warn{background:var(--warn);color:#000}.soak.bad{background:var(--bad);color:#fff}
+.soak h3{margin:0 0 4px;font-size:22px;font-weight:700}
+.soak .l{font-size:16px;font-weight:600;line-height:1.5}
+.soak ol{margin:8px 0 0;padding-left:20px;font-size:15px;line-height:1.55}
+.soak .src{font-size:13.5px;margin-top:8px;opacity:.85}
+
+/* 기록 선택 삭제 (v0.9.1) */
+.hdr .hbtn.badline{border-color:var(--bad);color:var(--bad)}
+.hdr .hbtn{width:auto;height:48px;padding:0 18px;font-size:16px;border-radius:24px}
+.item.pick{position:relative;padding-left:46px}
+.item.pick::before{content:"";position:absolute;left:4px;top:18px;width:26px;height:26px;border-radius:50%;border:2px solid var(--soft)}
+.item.pick.on::before{background:var(--bad);border-color:var(--bad)}
+.item.pick.on::after{content:"";position:absolute;left:13px;top:23px;width:7px;height:12px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg)}
+.item.pick.off{opacity:.45}
+.item.pick.off::before{border-style:dashed}
+#histBar{display:none}
+#histBar.on{display:block}
+#histBar .row2 .btn{height:64px;font-size:18px}
+.btn.badfill{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn.badfill:disabled{opacity:.35}
+</style>
+</head>
+<body>
+
+<!-- ============ HOME ============ -->
+<section class="view on" id="v-home">
+  <div class="hdr">
+    <div class="wm"><b>ENGINETALK</b><span>LANDER · 현장</span></div>
+    <div class="eq"><b>UNIMAT JUNIOR</b><span>PLASSER &amp; THEURER</span></div>
+  </div>
+
+  <div id="secureAlert" class="alert" style="display:none">
+    <div class="cap">MIC NOT AVAILABLE</div>
+    <div>이 주소에서는 마이크를 쓸 수 없습니다. <b>https://</b> 주소로 열어야 합니다. 도움말(06)을 보세요.</div>
+  </div>
+
+  <div id="soakBox"></div>
+  <div class="status" id="homeStatus">기준 불러오는 중</div>
+  <div id="homeReadouts"></div>
+  <div class="hint num" id="homeFile"></div>
+  <div class="prog"><i id="homeProg" style="width:0"></i></div>
+  <div class="hint" id="homeProgTxt"></div>
+  <div class="hint" id="homeSrc"></div>
+
+  <div class="stack" style="margin-top:28px">
+    <button class="btn fill h76" data-sit="start">시동 측정</button>
+    <button class="btn fill h76" data-sit="idle">공회전 측정</button>
+    <button class="btn fill h76" data-sit="work">작업 RPM 측정</button>
+    <button class="btn h84" id="btnAddLog">의견 · 점검 · 정비 기록</button>
+  </div>
+  <div class="dirguide"><svg class="phone-ico" width="64" height="40" viewBox="0 0 64 40" aria-hidden="true"><rect x="2" y="8" width="40" height="24" rx="5" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="38" y="16" width="4" height="8" rx="1" fill="currentColor"/><path d="M48 20h12M54 14l6 6-6 6" fill="none" stroke="#f6d303" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div>폰을 눕혀 화면은 위로, <b>아래쪽(USB-C 단자)을 엔진 쪽으로</b> 향하게 드세요. 측정마다 같은 방향.</div></div>
+
+  <div class="menu">
+    <button data-go="history"><i>03</i>측정 기록 · 이력<em>›</em></button>
+    <button data-go="data"><i>04</i>보내기 · 받기<em>›</em></button>
+    <button data-go="learn"><i>05</i>엔진 학습 상태<em>›</em></button>
+    <button data-go="help"><i>06</i>도움말 · 녹음 요령<em>›</em></button>
+  </div>
+  <p class="hint" style="margin-top:20px">EngineTALK v0.9.3 · 저장 위치: 이 폰의 브라우저</p>
+</section>
+
+<!-- ============ META (after stop) ============ -->
+<section class="view" id="v-meta">
+  <div class="hdr"><h1>측정 정보 입력<span class="sitlbl" id="metaSit"></span></h1><button class="btn hbtn badline" id="metaDel">삭제</button></div>
+  <p class="hint" style="margin-top:14px" id="metaIntro">녹음은 이미 안전하게 저장되었습니다. 아래 번호가 붙은 세 가지를 고르면 파일 이름이 정해집니다.</p>
+
+  <div class="fld"><div class="lb"><i class="no">1</i>측정 쪽<small>엔진 기준 왼쪽 / 오른쪽</small></div>
+    <div class="seg c2 need" data-key="side">
+      <button data-v="L">왼쪽<small>L · LEFT</small></button>
+      <button data-v="R">오른쪽<small>R · RIGHT</small></button>
+    </div></div>
+  <div class="fld"><div class="lb"><i class="no">2</i>작업 전 · 후<small>냉간 / 열간</small></div>
+    <div class="seg c2 need" data-key="timing">
+      <button data-v="B">작업 전<small>B · BEFORE · 냉간</small></button>
+      <button data-v="A">작업 후<small>A · AFTER · 열간</small></button>
+    </div></div>
+  <div class="fld"><div class="lb"><i class="no">3</i>작업 모드<small>유압 OFF / ON</small></div>
+    <div class="seg c2 need" data-key="mode">
+      <button data-v="N">일반<small>N · NORMAL<br>유압 OFF</small></button>
+      <button data-v="W">작업<small>W · WORKING<br>유압 ON</small></button>
+    </div></div>
+
+  <div class="fld"><div class="lb">파일 이름</div>
+    <div class="fname" id="fnamePreview">—</div></div>
+
+  <div class="fld"><div class="lb">위치 · 날씨<small>GPS로 자동 · 지하는 목록에서 선택</small></div>
+    <div class="panel env" id="envBox"></div></div>
+
+  <hr>
+  <div class="fld"><label for="mOperator">측정자<small>선택</small></label>
+    <input type="text" id="mOperator" placeholder="이름" autocomplete="name"></div>
+  <div class="fld"><label for="mGauge">게이지 rpm<small>선택 · 계기판에 보이는 값</small></label>
+    <input type="number" id="mGauge" inputmode="numeric" placeholder="예: 2200"></div>
+  <div class="fld"><label for="mOpinion">측정자 의견<small>선택 · 키보드의 마이크로 말해도 됩니다</small></label>
+    <textarea id="mOpinion" placeholder="예: 오른쪽에서 평소보다 날카로운 소리. 키보드의 마이크 버튼으로 말로 입력해도 됩니다."></textarea>
+    <div class="fld" style="margin-top:10px"><div class="lb">확신 정도</div>
+      <div class="seg c3" data-key="confidence">
+        <button data-v="확실">확실</button><button data-v="추정">추정</button><button data-v="느낌">느낌</button>
+      </div></div>
+  </div>
+
+  <div class="fld"><div class="lb">점검 · 정비<small>선택 · 한 일이 있을 때만</small></div>
+    <div class="seg c3" data-key="workType">
+      <button data-v="none">없음</button><button data-v="점검">점검</button><button data-v="정비">정비</button>
+    </div>
+    <div id="mWorkBox" style="display:none">
+      <div class="fld"><div class="lb">항목<small>여러 개 고를 수 있음</small></div><div class="chips" id="mItems"></div></div>
+      <div class="fld"><label for="mWorkText">내용</label>
+        <textarea id="mWorkText" placeholder="예: 발전기 벨트 장력 조정, 텐셔너 이상 없음"></textarea></div>
+    </div>
+  </div>
+
+  <div class="actbar"><div><button class="btn fill h88" id="btnMetaSave" disabled>저장</button></div></div>
+</section>
+
+<!-- ============ LOG ADD ============ -->
+<section class="view" id="v-log">
+  <div class="hdr"><button class="back" data-back>‹</button><h1>의견 · 점검 · 정비 기록</h1></div>
+  <div class="fld"><div class="lb">종류</div>
+    <div class="seg c3" data-key="lkind">
+      <button data-v="opinion">의견</button><button data-v="점검">점검</button><button data-v="정비">정비</button>
+    </div></div>
+  <div class="fld" id="lItemsBox" style="display:none"><div class="lb">항목<small>여러 개 고를 수 있음</small></div><div class="chips" id="lItems"></div></div>
+  <div class="fld" id="lConfBox"><div class="lb">확신 정도</div>
+    <div class="seg c3" data-key="lconf">
+      <button data-v="확실">확실</button><button data-v="추정">추정</button><button data-v="느낌">느낌</button>
+    </div></div>
+  <div class="fld"><label for="lText">내용</label>
+    <textarea id="lText" placeholder="확실하지 않아도 남겨 주세요. 키보드의 마이크 버튼으로 말로 입력할 수 있습니다."></textarea></div>
+  <div class="fld"><label for="lOperator">작성자<small>선택</small></label>
+    <input type="text" id="lOperator" placeholder="이름"></div>
+  <div class="hint" id="lLinkHint"></div>
+  <div class="actbar"><div><button class="btn fill h88" id="btnLogSave">기록 저장</button></div></div>
+</section>
+
+<!-- ============ HISTORY ============ -->
+<section class="view" id="v-history">
+  <div class="hdr"><button class="back" data-back>‹</button><h1>측정 기록 · 이력</h1><button class="btn hbtn" id="histPick">선택</button></div>
+  <p class="hint" id="histPickHint" style="display:none">지울 기록을 누르세요. 내장 분석 자료는 지울 수 없습니다.</p>
+  <div class="tabs">
+    <button data-tab="rec" class="sel">측정</button>
+    <button data-tab="all">전체 이력</button>
+  </div>
+  <div id="histList"></div>
+  <div class="actbar" id="histBar"><div class="row2"><button class="btn" id="histCancel">취소</button><button class="btn badfill" id="histDel" disabled>삭제</button></div></div>
+</section>
+
+<!-- ============ DETAIL ============ -->
+<section class="view" id="v-learn">
+  <div class="hdr"><button class="back" data-back>‹</button><h1>엔진 학습 상태</h1></div>
+  <div id="learnBody"></div>
+</section>
+
+<section class="view start-view" id="v-start">
+  <div class="hdr"><button class="back" id="startBack" data-back>‹</button><h1>시동측정 리포트</h1><button class="btn hbtn badline" id="startDel">삭제</button></div>
+  <div id="startBody"></div>
+  <div class="stack" style="margin-top:22px"><button class="btn fill h84" id="btnStartNext">측정 정보 입력</button></div>
+</section>
+
+<section class="view" id="v-detail">
+  <div class="hdr"><button class="back" data-back>‹</button><h1>측정 상세</h1></div>
+  <div id="detailBody"></div>
+</section>
+
+<!-- ============ DATA ============ -->
+<section class="view" id="v-data">
+  <div class="hdr"><button class="back" data-back>‹</button><h1>보내기 · 받기</h1></div>
+  <h2>보내기</h2>
+  <p class="hint">다른 작업자의 EngineTALK, 또는 PC의 EngineNOTE로 보냅니다. 카카오톡·메일·파일 앱으로 공유할 수 있습니다.</p>
+  <div class="stack" style="margin-top:14px">
+    <button class="btn fill h84" id="btnExpFull">이력 + 사운드 보내기 (.zip)</button>
+    <button class="btn h64" id="btnExpJson">이력만 보내기 (작은 파일)</button>
+  </div>
+  <p class="hint" id="expInfo"></p>
+  <hr>
+  <h2>받기</h2>
+  <p class="hint">받은 .zip 파일을 고르면, 겹치지 않는 기록만 합칩니다.</p>
+  <div class="stack" style="margin-top:14px">
+    <button class="btn h84" id="btnImport">파일 불러오기</button>
+    <input type="file" id="fileImport" accept=".zip,.engineear,.json,application/zip,application/json" hidden>
+  </div>
+  <hr>
+  <h2>GitHub 기준 파일</h2>
+  <p class="hint">이 폰에 쌓인 측정을 <b>baseline.engineear</b> 파일로 만듭니다. 이 파일을 GitHub 저장소의 index.html 옆에 올려 두면, 앱을 새로 열거나 저장 공간이 비었을 때 자동으로 불러와 기준이 이어집니다. 공개 저장소용이라 측정자 이름·의견·정비 내용 글·위도와 경도는 빠지고(장소 이름(지상/지하)·동 이름·날씨는 남음), 사운드도 넣지 않습니다.</p>
+  <div class="stack" style="margin-top:14px"><button class="btn h64" id="btnExpBase">기준 파일 만들기 (GitHub용)</button></div>
+  <p class="hint" id="baseInfo"></p>
+  <hr>
+  <h2>이 폰의 저장 공간</h2>
+  <p class="hint" id="storeInfo">확인 중…</p>
+  <div class="stack" style="margin-top:10px"><button class="btn h52" id="btnPersist">저장 데이터 보호 요청</button></div>
+  <p class="hint">아이폰은 오래 열지 않으면 브라우저 데이터를 지울 수 있습니다. 홈 화면에 추가하고, 정기적으로 보내기로 백업하세요.</p>
+</section>
+
+<!-- ============ HELP ============ -->
+<section class="view" id="v-help">
+  <div class="hdr"><button class="back" data-back>‹</button><h1>도움말 · 녹음 요령</h1></div>
+  <h2>폰에서 여는 방법</h2>
+  <p>마이크는 <b>https://</b> 주소에서만 켜집니다. 파일 앱이나 카톡에서 이 HTML 파일을 바로 열면 녹음이 안 됩니다. https 주소(예: GitHub Pages)에 올려 두고, 사파리·크롬에서 연 뒤 <b>홈 화면에 추가</b>하세요.</p>
+  <h2>원음 그대로 녹음</h2>
+  <p>이 앱은 에코 제거·소음 억제·자동 음량 조절을 끄도록 요청하고, 압축하지 않은 WAV(16-bit)로 저장합니다. 폰 기종에 따라 일부 처리가 꺼지지 않을 수 있어, 측정 상세에 실제 적용 상태를 기록합니다.</p>
+  <p><b>클리핑</b>은 편집이 아니라 소리가 마이크 한계를 넘어 잘리는 현상입니다. 측정 중 음량 막대가 빨갛게 되면 폰을 엔진에서 조금 멀리 두세요.</p>
+  <h2>측정 세 가지</h2>
+  <p>홈에서 지금 상황에 맞는 버튼을 누릅니다. <b>공회전 측정</b>은 공회전(계기판 약 1000, 실측 약 910 rpm), <b>작업 RPM 측정</b>은 작업 rpm(실측 약 2300), <b>시동 측정</b>은 키를 돌리기 전에 시작해 시동이 걸리고 안정될 때까지 녹음합니다. 공회전과 작업은 각각 따로 20~30초씩 녹음하세요.</p>
+  <p>앱은 고른 상황의 rpm 범위(공회전 840~1000, 작업 2100~2500)에서만 rpm을 찾습니다. 그래서 다른 rpm의 줄에 끌려 숫자가 튀지 않습니다. 소리가 그 범위의 엔진 소리로 보이지 않으면 숫자 대신 <b>"범위 밖"</b>이 나오고, 측정의 절반 이상이 범위 밖이거나 중앙값이 기준에서 8% 넘게 벗어나면 그 측정은 <b>기준(최근 10회)에서 자동으로 빠집니다.</b> 이동 준비처럼 rpm이 정해지지 않은 상태는 지금 버전에서는 측정하지 않습니다.</p>
+  <p><b>경적</b>이 울리면 앱이 알아채고 그 순간과 뒤 약 1초는 rpm과 소리 평균 계산에서 뺍니다(화면에 "경적 · 분석 제외"). 녹음 파일에는 그대로 남습니다.</p>
+  <p><b>시동 측정</b>은 측정 종료를 누르면 바로 <b>시동측정 리포트</b>가 나옵니다. 앱이 소리로 시동 성공·실패를 판단하고, 평소 시동과 비교한 다섯 가지(배터리·스타터의 크랭킹 속도, 크랭킹 중 속도 변화, 착화까지 시간, 연료 공급 패턴, 시동 후 안정)를 보여 줍니다. 실패하면 배기 연기 색을 고르세요. 원인에 맞춘 참고 안내가 나옵니다. 키를 돌리기 몇 초 전에 시작해, 시동 후 10초 이상(실패면 크랭킹을 멈출 때까지) 녹음하세요.</p>
+  <h2>녹음 요령</h2>
+  <p><b>폰 방향:</b> 폰을 눕혀 화면은 위로, 아래쪽(아이폰 USB-C 단자, 마이크가 있는 쪽)을 엔진 쪽으로 향하게 듭니다. 화면을 보면서도 음성메모 때와 같은 방향이 됩니다. 마이크가 땅을 향하면 엔진 소리가 약해지고 바닥 반사음이 섞여, 원형 막대 모양이 기준과 달라집니다.</p>
+  <p>엔진 블록에서 50 cm~1 m, 매번 같은 자리·같은 방향. 냉각팬 바로 앞, 배기구, 에어밸브 배기구 근처는 피합니다. 측정 중 화면을 끄거나 다른 앱으로 가면 녹음이 끊길 수 있습니다. 작업 모드 W는 유압 ON, 일반 N은 유압 OFF를 뜻합니다.</p>
+  <h2>AI 학습</h2>
+  <p>앱은 측정할 때마다 이 엔진의 <b>평소 rpm·공회전 흔들림·소리 모양(49대역)</b>을 조건별로 배웁니다. rpm은 측정 종류 × 작업 모드(N/W) × 작업 전후(B/A), 소리 모양은 측정 종류 × 작업 모드 × 측정 쪽(L/R)으로 나눠 최근 10회의 평균과 흔들림을 계산합니다.</p>
+  <p>4회까지는 정해 둔 규칙(작업 ±1%, 공회전 ±3% 등)으로 비교하고, 5회부터 학습한 범위를 섞어 쓰며, 10회면 학습한 범위로만 비교합니다. 이 엔진이 평소 아주 일정하면 범위가 좁아져 더 작은 변화도 잡습니다.</p>
+  <p><b>평소와 다른 정도</b>는 숫자 하나로 보여 줍니다. 2 미만이면 평소 범위 안, 2~3.5는 조금 다름, 3.5 이상은 많이 다름입니다. 소리 모양은 측정마다 일정한 대역에 무게를 크게 둡니다. 자세한 학습 상태는 홈의 <b>05 엔진 학습 상태</b>에서 봅니다. 평소 데이터만으로 배우는 이상 탐지이며, 고장을 진단하지는 않습니다.</p>
+  <h2>저온 방치 경고</h2>
+  <p>마지막으로 엔진이 돈 측정이 지상(차량기지 등)이었고 12시간 넘게 지났으면, 앱이 그동안의 외기 최저 기온을 날씨 서비스에서 가져옵니다. 최저 0 ℃ 이하면 홈에 <b>저온 방치 주의</b>, 48시간 넘게 지나고 최저 −10 ℃ 이하면 <b>저온 방치 경고</b>가 나옵니다(2026-01 혹한기 사례 기준, 임시값). 지하 유치는 외기와 달라 경고하지 않습니다. 이때 시동 측정을 하면 방치 시간과 최저 기온이 시동 기록에 함께 저장되어, 추운 날의 시동 기준을 쌓는 데 쓰입니다.</p>
+  <h2>기준은 어디서 오나요</h2>
+  <p>기준은 같은 측정(공회전 / 작업 RPM)과 같은 작업 모드(N 일반 / W 작업)의 <b>최근 10회 측정</b>입니다. v0.5.0까지 앱으로 녹음한 측정은 상황 구분이 없어서 기준에 넣지 않습니다. 앱에는 2026-10-07~10-15에 분석한 녹음 7회의 rpm 값이 들어 있어서, 이 폰에 기록이 없어도 처음부터 비교를 시작합니다. 새 측정이 쌓이면 오래된 것부터 최근 10회에서 빠집니다.</p>
+  <p>원형 막대의 회색 평균(소리 모양)은 이 앱으로 녹음한 측정에서만 만들어집니다. 예전 분석 자료에는 이 값이 없어서, 이 폰이나 기준 파일에 앱 측정이 생긴 뒤부터 회색 막대가 나타납니다.</p>
+  <h2>다시 열었더니 기록이 없어졌을 때</h2>
+  <p>기록은 GitHub가 아니라 이 폰의 브라우저에 저장됩니다. GitHub에 새 index.html을 올리는 것만으로는 지워지지 않습니다. 대신 이럴 때 비어 보입니다.</p>
+  <p>· 아이폰에서 <b>홈 화면 아이콘을 지우고 다시 추가</b>한 경우 (아이콘마다 저장 공간이 따로라서, 아이콘을 지우면 기록도 지워집니다)<br>· 홈 화면 아이콘과 사파리 탭을 번갈아 연 경우<br>· 저장소 주소(사용자 이름)가 바뀐 경우, 개인 정보 보호 브라우징, 사파리 방문 기록·웹사이트 데이터 지우기</p>
+  <p>새 버전을 올린 뒤에는 아이콘을 다시 만들지 말고, 앱을 완전히 닫았다가 같은 아이콘으로 다시 여세요. 그리고 가끔 <b>기준 파일 만들기</b>로 GitHub에 올려 두면, 기록이 비어도 기준이 자동으로 돌아옵니다.</p>
+  <h2>위치 · 날씨</h2>
+  <p>측정을 시작하면 앱이 GPS로 위치를 잡고, 측정 시각의 기온·체감 온도·습도·풍속과 지난 24시간·96시간 최저 기온을 가져와 측정 기록에 넣습니다.</p>
+  <p><b>차량기지(지상)</b>: GPS가 잡히고 목록의 차량기지 2 km 안이면 그 차량기지를 자동으로 고릅니다. 날씨는 목록의 차량기지 좌표로 가져와 매번 같은 지점과 비교됩니다.</p>
+  <p><b>지하 본선</b>: GPS를 쓸 수 없거나 위치 오차가 200 m보다 크면 "GPS 정보를 사용할 수 없습니다. 현재 위치를 선택해주세요"와 함께 장소 목록이 나옵니다. 고른 장소의 좌표로 날씨를 가져옵니다. 지하 측정의 기온은 터널이 아니라 <b>바깥 공기(참고)</b>입니다.</p>
+  <p>목록에 없는 곳은 이름을 입력하세요. 지상이면 GPS로 날씨를 가져오고, GPS가 안 되면 날씨 없이 저장합니다. 자동으로 고른 장소가 틀리면 "장소 바꾸기"를 누르세요.</p>
+  <p>날씨는 Open-Meteo(기상청 KMA 모델)에서 가져오며, 관측소 실측이 아니라 약 1.5 km 격자 값입니다. 체감 온도는 기상청 방식(5~9월 여름철 식, 그 밖에는 겨울철 식)으로 계산합니다. 인터넷이 안 되면 다음에 앱을 열 때 측정 시각 기준으로 다시 채웁니다. GitHub 기준 파일에는 위도·경도를 넣지 않습니다.</p>
+  <h2>측정 화면의 원형 막대</h2>
+  <p>원 둘레의 막대는 주파수 대역별 소리 크기입니다. 12시(40 Hz)에서 시작해 시계 방향으로 높은 소리(12 kHz)까지 갑니다. 1시~6시는 엔진 본체 소리, 6시 이후는 베어링·누설 같은 이상음 영역입니다.</p>
+  <p>회색 막대는 같은 운전 영역(공회전 또는 작업)의 최근 10회 평균, 흰 막대는 지금 소리입니다. 평균보다 6 dB 이상 크면 노랑, 10 dB 이상이면 빨강으로 바뀝니다. 원 가운데의 "평균과 일치"는 두 모양이 얼마나 닮았는지를 보여주는 참고값입니다.</p>
+  <h2>파일 이름</h2>
+  <p class="num" style="font-size:18px">20261018_0130_R_B_N_ID_30s.wav</p>
+  <p>날짜 · 시각 · 좌우(L/R) · 작업 전후(B/A) · 모드(N/W) · 측정(ID 공회전 / WK 작업 RPM / ST 시동) · 길이(초)</p>
+</section>
+
+<!-- ============ RECORDING OVERLAY ============ -->
+<div id="rec">
+  <div class="rtop">
+    <div class="t"><span class="dot"></span><span id="rTime">00:00</span><small id="rVer"></small></div>
+    <button class="btn h52" id="btnRecCancel">취소</button>
+  </div>
+  <div class="rsit"><b id="rSit">공회전 측정</b><span><svg class="phone-ico" width="44" height="28" viewBox="0 0 64 40" aria-hidden="true"><rect x="2" y="8" width="40" height="24" rx="5" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="38" y="16" width="4" height="8" rx="1" fill="currentColor"/><path d="M48 20h12M54 14l6 6-6 6" fill="none" stroke="#f6d303" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>USB-C → 엔진</span></div>
+  <div class="circ-wrap"><svg id="circ" viewBox="0 0 300 300" aria-label="주파수 대역별 소리 크기"></svg></div>
+  <div class="legend"><span><i style="background:#55555d"></i>최근 10회 평균</span><span><i style="background:#fff"></i>실시간</span><span><i style="background:var(--warn)"></i>+6 dB</span><span><i style="background:var(--bad)"></i>+10 dB</span></div>
+  <div class="refs" style="display:flex;gap:18px;justify-content:center;margin-top:6px"><div><span>폭발 주파수 </span><b id="rFreq">—</b></div><div><span>상태 </span><b id="rSnr">—</b></div></div>
+  <div class="meter"><div class="bar"><i id="rLvl"></i></div><div class="num" id="rDb">− dBFS</div></div>
+  <div class="rwarn" id="rWarn"></div>
+  <div class="cv-wrap"><div class="cap"><span>RPM · 최근 60초</span><span id="rTarget">910 · 2300</span></div><canvas id="cvRpm" height="55" data-h="55"></canvas></div>
+  <div class="grow"></div>
+  <button class="btn fill h88" id="btnRecStop">측정 종료</button>
+</div>
+
+<div id="toast"></div>
+<div id="busy">처리 중…</div>
+
+<script>
+'use strict';
+/* =========================================================
+   EngineTALK v0.7 — 착륙선 (현장 앱)
+   통합설계서: EngineTALK_NOTE_통합설계서.md
+   ========================================================= */
+const APP_VERSION = '0.9.3';
+const ANALYSIS_VERSION = 'rt-0.6';
+/* 측정 상황 (v0.6): 고른 상황의 rpm 범위에서만 찾는다. aliasMax: 다른 배수 간격이 이만큼 더 맞으면 "범위 밖" (2026-10-17 녹음으로 정함) */
+const SIT = {
+  start: { label:'시동', btn:'시동 측정', code:'ST' },
+  idle:  { label:'공회전', btn:'공회전 측정', code:'ID', lo:840, hi:1000, target:910, aliasMax:1.0 },
+  work:  { label:'작업 RPM', btn:'작업 RPM 측정', code:'WK', lo:2100, hi:2500, target:2300, aliasMax:-1.5 },
+};
+const OUT_DEV = 0.08;   /* 측정 중앙값이 기준 rpm에서 8% 넘게 벗어나면 기준에서 뺀다 */
+const EQUIP = { code: 'MTT01', name: 'UNIMAT JUNIOR' };
+/* 내장 기준 (2026-10-07 ~ 10-15 분석 자료, features_log.csv · engine_features.py v1)
+   표준 측정(공회전 게이지 1000 → 작업 2200/2300 버튼)만 넣는다. 단계 녹음의 중간 단계는 넣지 않는다.
+   [시각, 파일, 위치, 작업 전후, 모드, 공회전 중앙값, 공회전 p10, 공회전 p90, 작업 중앙값, 메모] */
+const SEED_RUNS = [
+  ['2026-10-07T12:00:00+09:00','20261007left-1000-2200.m4a','L',null,'N',912.5,908.8,917.5,2302.5,'연간 점검 직후'],
+  ['2026-10-07T12:05:00+09:00','20261007right-1000-2200.m4a','R',null,'N',912.5,910.0,915.0,2302.6,'연간 점검 직후'],
+  ['2026-10-07T12:10:00+09:00','20261007left-working-1000-2200.m4a','L',null,'W',908.4,895.2,920.5,2301.9,'연간 점검 직후'],
+  ['2026-10-07T12:15:00+09:00','20261007right-working-1000-2200.m4a','R',null,'W',912.1,885.5,934.9,2300.1,'연간 점검 직후'],
+  ['2026-10-09T01:06:00+09:00','20261008right1000-100-2500.m4a','R','B','N',912.5,909.5,913.9,null,'첫 작업 전 단계 녹음 (작업 rpm은 레버 단계라 제외)'],
+  ['2026-10-15T11:00:00+09:00','20261015left-normal-1000-2300.m4a','L',null,'N',913.8,906.0,926.7,2304.0,'흰 연기(연한) 관찰일'],
+  ['2026-10-15T11:05:00+09:00','20261015right-normal-1000-2300.m4a','R',null,'N',913.7,909.3,916.4,2304.4,'흰 연기(연한) 관찰일'],
+];
+const SEED = SEED_RUNS.map(([t,f,side,timing,mode,idle,p10,p90,work,note],i)=>({
+  id:'seed-'+(i+1), seed:true, equip:'MTT01', createdAt:new Date(t).toISOString(), updatedAt:'2026-10-16T00:00:00.000Z',
+  source:'analysis', fileName:f, duration:null, hasAudio:false, seedNote:note,
+  meta:{ side, timing, mode, hydraulic: mode==='W'?'ON':'OFF', operator:'' },
+  live:{ idleMedian:idle, idleP10:p10, idleP90:p90, workMedian:work, rpmMedian:work||idle } }));
+
+/* 규칙 (통합설계서 5.6, 디자인 3.2) — 임시값 */
+const RULE = { idle:910, work:2300, workWarn:1, workBad:2, idleWarn:3, idleBad:5.5, shakeWarn:30, window:10 };
+const ITEMS = ['엔진오일','냉각수','연료필터','에어필터','오일필터','팬벨트','발전기 벨트','텐셔너','배터리','스타터','터보차저','연료라인 에어빼기','유압유','기어유','기타'];
+
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+function el(tag, props, ...kids){
+  const e = document.createElement(tag);
+  if (props) for (const k in props){
+    if (k === 'class') e.className = props[k];
+    else if (k === 'text') e.textContent = props[k];
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), props[k]);
+    else e.setAttribute(k, props[k]);
+  }
+  for (const c of kids.flat()) if (c != null) e.append(c.nodeType ? c : document.createTextNode(String(c)));
+  return e;
+}
+const pad = (n, w=2) => String(n).padStart(w, '0');
+const fmtDate = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const fmtMMSS = s => `${pad(Math.floor(s/60))}:${pad(Math.floor(s%60))}`;
+const fmtMB = b => (b/1048576).toFixed(1) + ' MB';
+function toast(msg, ms=2400){ const t=$('#toast'); t.textContent=msg; t.style.display='block'; clearTimeout(toast._t); toast._t=setTimeout(()=>t.style.display='none', ms); }
+function busy(on, msg){ const b=$('#busy'); b.textContent=msg||'처리 중…'; b.style.display=on?'flex':'none'; }
+function vibrate(p){ try{ navigator.vibrate && navigator.vibrate(p); }catch(e){} }
+
+/* ---------------- storage (IndexedDB 'engineear', 설계서 6.2) ---------------- */
+const DB = {
+  db: null, mem: null,
+  async open(){
+    if (!('indexedDB' in window)) { this.mem = {kv:new Map(),records:new Map(),audio:new Map(),maint:new Map(),notes:new Map()}; return; }
+    try{
+      this.db = await new Promise((res, rej) => {
+        const r = indexedDB.open('engineear', 1);
+        r.onupgradeneeded = () => { const d=r.result; for (const s of ['kv','records','audio','maint','notes']) if(!d.objectStoreNames.contains(s)) d.createObjectStore(s); };
+        r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+      });
+    }catch(e){ this.mem = {kv:new Map(),records:new Map(),audio:new Map(),maint:new Map(),notes:new Map()}; toast('저장소를 열 수 없어 임시 모드로 동작합니다. 꼭 보내기로 백업하세요.', 5000); }
+  },
+  tx(store, mode, fn){
+    if (this.mem) return Promise.resolve(fn(null));
+    return new Promise((res, rej) => { const t=this.db.transaction(store, mode); const s=t.objectStore(store); let out; Promise.resolve(fn(s)).then(v=>out=v); t.oncomplete=()=>res(out); t.onerror=()=>rej(t.error); t.onabort=()=>rej(t.error); });
+  },
+  async get(store, key){ if(this.mem) return this.mem[store].get(key); return this.tx(store,'readonly',s=>new Promise(r=>{const q=s.get(key); q.onsuccess=()=>r(q.result);})); },
+  async put(store, key, val){ if(this.mem){ this.mem[store].set(key,val); return; } return this.tx(store,'readwrite',s=>{ s.put(val,key); }); },
+  async del(store, key){ if(this.mem){ this.mem[store].delete(key); return; } return this.tx(store,'readwrite',s=>{ s.delete(key); }); },
+  async all(store){ if(this.mem) return [...this.mem[store].values()]; return this.tx(store,'readonly',s=>new Promise(r=>{const q=s.getAll(); q.onsuccess=()=>r(q.result);})); },
+};
+let settings = { deviceId:null, operator:'', lastExportAt:null };
+async function loadSettings(){
+  const s = await DB.get('kv','settings'); if (s) Object.assign(settings, s);
+  if (!settings.deviceId) { settings.deviceId = Math.random().toString(36).slice(2,8); await saveSettings(); }
+}
+const saveSettings = () => DB.put('kv','settings', {...settings});
+const newId = tag => `${settings.deviceId}${tag||''}-${Date.now()}`;
+
+/* ---------------- 기준: 같은 작업 모드의 최근 10회 (설계서 5.4) ---------------- */
+async function allRecords(){ const own = (await DB.all('records')).filter(r=>r.meta); return settings.useSeed===false ? own : own.concat(SEED); }
+async function getRecord(id){ return SEED.find(r=>r.id===id) || DB.get('records', id); }
+/* 기준에 넣는 측정: 내장 분석 자료, 또는 v0.6 이후 같은 상황으로 측정했고 범위 밖·직접 뺌이 아닌 것 */
+function inBaseline(r, zone){
+  if (r.seed) return true;
+  if (!r.situation || r.situation!==zone) return false;
+  return !(r.live && r.live.excluded) && !r.excludedManual;
+}
+function lastRuns(recs, mode, zone, before){
+  return recs.filter(r => r.meta && (!mode || r.meta.mode===mode) && r.live && r.live[zone+'Median']!=null && inBaseline(r, zone) && (!before || r.createdAt < before))
+    .sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0, RULE.window);
+}
+function runStats(recs, mode, zone, before){
+  const l = lastRuns(recs, mode, zone, before); if (!l.length) return { n:0, list:[] };
+  const v = l.map(r=>r.live[zone+'Median']); return { n:l.length, mean:v.reduce((a,b)=>a+b,0)/v.length, list:l };
+}
+const maturityOf = n => n>=10 ? '기준 완성' : n>=5 ? '임시 기준' : n>=1 ? '기준 수집 중' : '기준 없음';
+function devClass(zone, pct){ const a=Math.abs(pct); return zone==='work' ? (a>=RULE.workBad?'bad':a>=RULE.workWarn?'warn':'') : (a>=RULE.idleBad?'bad':a>=RULE.idleWarn?'warn':''); }
+const modeLabel = m => m==='W' ? 'W 작업 모드' : 'N 일반 모드';
+
+/* =========================================================
+   AI 학습 (v0.9, 설계서 7.6) — 정상 데이터만으로 이 엔진의 평소 모습을 배운다
+   ① 정상 범위: 조건별 최근 10회의 평균과 흔들림(표준편차)
+      rpm 조건 = 측정 종류 × 작업 모드(N/W) × 작업 전후(B/A)   (내장 자료처럼 B/A가 없는 기록은 양쪽 모두에 씀)
+      소리 모양 조건 = 측정 종류 × 작업 모드 × 측정 쪽(L/R)
+   학습 비중 w: 4회 이하 0 (규칙만) → 10회 1 (학습만). 주의 폭 = (1−w)·규칙 폭 + w·max(3σ, 3 rpm)
+   ② 평소와 다른 정도 S: 주의 경계가 2가 되도록 맞춘 점수. rpm·흔들림·소리 모양(가중 RMS) 중 가장 큰 값
+   ③ 믿을 만한 소리: 대역마다 흔들림이 작을수록 무게를 크게 (1/(σ+0.5))
+   ⑤ 스스로 채점: 기준에 넣기 전의 모델로 "평소 범위 안"을 맞혔는지
+   ========================================================= */
+const LEARN = { minN:5, fullN:10, window:10, k:3, floorRpm:3, floorBand:1.5, sWarn:2, sBad:3.5, bandMinN:3 };
+const STD = a => { if (a.length<2) return null; const m=a.reduce((x,y)=>x+y,0)/a.length; return Math.sqrt(a.reduce((x,y)=>x+(y-m)*(y-m),0)/(a.length-1)); };
+const MEAN = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : null;
+const sameTiming = (r, t) => !t || !r.meta.timing || r.meta.timing===t;
+const learnW = n => n < LEARN.minN ? 0 : Math.min(1, (n-(LEARN.minN-1))/(LEARN.fullN-(LEARN.minN-1)));
+const bandHz = i => Math.sqrt(CIR.edges[i]*CIR.edges[i+1]);
+const fmtHz = f => f>=1000 ? (f/1000).toFixed(f>=10000?0:1)+' kHz' : Math.round(f)+' Hz';
+function learnZone(all, zone, mode, timing, side, before){
+  const ok = r => r.meta && r.meta.mode===mode && r.live && inBaseline(r, zone) && (!before || r.createdAt < before);
+  const R = all.filter(r => ok(r) && r.live[zone+'Median']!=null && sameTiming(r, timing)).sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0, LEARN.window);
+  const v = R.map(r=>r.live[zone+'Median']), n = v.length, mean = MEAN(v), sd = STD(v), w = learnW(n);
+  const target = zone==='work' ? RULE.work : RULE.idle;
+  const priorWarn = target*(zone==='work'?RULE.workWarn:RULE.idleWarn)/100, ratio = zone==='work' ? RULE.workBad/RULE.workWarn : RULE.idleBad/RULE.idleWarn;
+  const learnedWarn = sd!=null ? Math.max(LEARN.k*sd, LEARN.floorRpm) : priorWarn;
+  const warnHalf = (1-w)*priorWarn + w*learnedWarn;
+  // 흔들림 (공회전 · 일반 N)
+  let shake = null;
+  if (zone==='idle' && mode==='N'){
+    const sv = R.filter(r=>r.live.idleP90!=null).map(r=>r.live.idleP90-r.live.idleP10), sm = MEAN(sv), ss = STD(sv), sw = learnW(sv.length);
+    const learnedT = sm!=null ? sm + Math.max(LEARN.k*(ss||0), 6) : RULE.shakeWarn;
+    shake = { n: sv.length, mean: sm, sd: ss, w: sw, warnT: (1-sw)*RULE.shakeWarn + sw*learnedT };
+  }
+  // 소리 모양 (측정 쪽별)
+  const B = all.filter(r => ok(r) && r.live.bands && r.live.bands[zone] && r.live.bandSpec===BAND_SPEC && (!side || r.meta.side===side))
+    .sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0, LEARN.window);
+  let bands = null;
+  if (B.length >= 2){
+    const m = [], sdv = [], wt = [];
+    for (let i=0;i<CIR.N;i++){ const x = B.map(r=>r.live.bands[zone][i]); m.push(MEAN(x)); const d = STD(x); sdv.push(d); wt.push(1/((d||3)+0.5)); }
+    bands = { n: B.length, mean: m, sd: sdv, wt };
+  }
+  return { zone, mode, timing, side, n, mean, sd, w, priorWarn, learnedWarn, warnHalf, badHalf: warnHalf*ratio, target, shake, bands };
+}
+function modelFor(all, r, zone){ return learnZone(all, zone, r.meta.mode, r.meta.timing, r.meta.side, r.createdAt); }
+function anomalyOf(r, zone, M){
+  const L = r.live || {}, out = { parts:[], S:null, level:'na' };
+  const x = L[zone+'Median'];
+  if (x!=null && M.n >= 1){
+    const z = 2*Math.abs(x-M.mean)/M.warnHalf;
+    out.parts.push({ k: zone==='work'?'작업 rpm':'공회전 rpm', z, txt:`${x.toFixed(1)} rpm · 평소 ${M.mean.toFixed(1)} ± ${M.warnHalf.toFixed(0)}` });
+  }
+  if (M.shake && M.shake.n >= 1 && L.idleP90!=null){
+    const sh = L.idleP90-L.idleP10, base = M.shake.mean||0, z = sh<=base ? 0 : 2*(sh-base)/Math.max(1, M.shake.warnT-base);
+    out.parts.push({ k:'공회전 흔들림', z, txt:`${Math.round(sh)} rpm · 평소 ${Math.round(base)} · 주의 ${Math.round(M.shake.warnT)}` });
+  }
+  if (M.bands && M.bands.n >= LEARN.bandMinN && L.bands && L.bands[zone]){
+    let num=0, den=0; const each=[];
+    for (let i=0;i<CIR.N;i++){ const d = L.bands[zone][i]-M.bands.mean[i], sd = Math.max(M.bands.sd[i]||LEARN.floorBand, LEARN.floorBand), zb = Math.abs(d)/sd;
+      num += M.bands.wt[i]*zb*zb; den += M.bands.wt[i]; each.push({ i, d, zb }); }
+    const z = Math.sqrt(num/den);
+    each.sort((a,b)=>b.zb-a.zb);
+    const top = each.filter(e=>Math.abs(e.d)>=3).slice(0,2).map(e=>`${fmtHz(bandHz(e.i))} ${e.d>0?'+':'−'}${Math.abs(e.d).toFixed(1)} dB`);
+    out.parts.push({ k:'소리 모양', z, txt: top.length ? '가장 다른 곳: '+top.join(', ') : '대역마다 평소 흔들림 안' });
+  }
+  if (out.parts.length){
+    out.parts.sort((a,b)=>b.z-a.z); out.S = out.parts[0].z;
+    out.level = M.n < LEARN.minN ? 'na' : out.S >= LEARN.sBad ? 'bad' : out.S >= LEARN.sWarn ? 'warn' : 'ok';
+  }
+  return out;
+}
+const levelText = { ok:'평소 범위 안', warn:'평소와 조금 다름', bad:'평소와 많이 다름', na:'학습 중 (판단은 규칙으로)' };
+function scoreEl(A, M){
+  if (A.S==null) return null;
+  return el('div',{class:'score'}, el('span',{style:'font-size:15px;color:var(--soft)',text:'평소와 다른 정도'}), el('b',{text:A.S.toFixed(1)}),
+    el('span',{class:'lvl '+(A.level==='ok'?'':A.level),text:levelText[A.level]}),
+    el('small',{text:`${A.parts[0].k}: ${A.parts[0].txt} · 학습 ${M.n}회 (2 미만 평소 · 3.5 이상 많이 다름)`}));
+}
+/* ⑤ 스스로 채점: 각 측정을 기준에 넣기 전의 모델로 평가 */
+function selfScore(all){
+  const recs = all.filter(r => !r.seed && r.situation && r.situation!=='start' && r.live && r.live[r.situation+'Median']!=null && inBaseline(r, r.situation))
+    .sort((a,b)=>a.createdAt.localeCompare(b.createdAt));
+  const res = [];
+  for (const r of recs){ const M = modelFor(all, r, r.situation); if (M.n < LEARN.minN) continue; const A = anomalyOf(r, r.situation, M); res.push({ r, hit: A.S < LEARN.sWarn, S: A.S }); }
+  return res.slice(-10);
+}
+
+/* ---------------- 저온 방치 경고 (v0.9, 설계서 4.2) ----------------
+   마지막으로 엔진이 돈 측정 이후 시간이 지났고, 그 장소가 지상이면 그동안의 외기 최저 기온을 날씨 서비스에서 가져와 경고 */
+const SOAK = { warnH:12, warnC:0, badH:48, badC:-10, refreshMin:60 };
+function lastRun(all){
+  const ran = r => !r.seed && r.meta && (r.situation!=='start' || (r.live && r.live.start && (r.live.start.outcome||r.live.start.auto)==='success'));
+  return all.filter(ran).sort((a,b)=>b.createdAt.localeCompare(a.createdAt))[0] || null;
+}
+async function fetchSoak(lat, lon, since){
+  const pd = Math.min(92, Math.max(1, Math.ceil((Date.now()-since)/864e5)+1));
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m&past_days=${pd}&forecast_days=1&timezone=Asia%2FSeoul&models=kma_seamless`;
+  let d = null;
+  for (const u of [url, url.replace('&models=kma_seamless','')]){ try{ const r = await fetch(u); if (r.ok){ d = await r.json(); if (d && d.hourly) break; } }catch(e){} }
+  if (!d || !d.hourly) throw new Error('weather');
+  const t = d.hourly.time.map(x => Date.parse(x.length===16 ? x+':00+09:00' : x)), T = d.hourly.temperature_2m, now = Date.now();
+  let mn = null, cur = null, best = 1e15;
+  for (let i=0;i<t.length;i++){ if (T[i]==null) continue; if (t[i] >= since && t[i] <= now) mn = mn==null ? T[i] : Math.min(mn, T[i]); const dd = Math.abs(t[i]-now); if (dd < best){ best = dd; cur = T[i]; } }
+  return { minC: mn, nowC: cur };
+}
+async function renderSoak(all){
+  const box = $('#soakBox'); if (!box) return;
+  const r = lastRun(all);
+  const env = r && r.env;
+  if (!r || !env || env.underground!==false || env.lat==null){ box.innerHTML=''; return; }
+  const since = Date.parse(r.createdAt), hours = (Date.now()-since)/36e5;
+  if (hours < SOAK.warnH){ box.innerHTML=''; return; }
+  let c = settings.soak;
+  if (!c || c.recId!==r.id || (Date.now()-Date.parse(c.fetchedAt))/6e4 > SOAK.refreshMin){
+    try{ const w = await fetchSoak(env.lat, env.lon, since); c = { recId:r.id, fetchedAt:new Date().toISOString(), ...w }; settings.soak = c; await saveSettings(); }
+    catch(e){ if (!c || c.recId!==r.id){ box.innerHTML=''; return; } }
+  }
+  c.hours = hours; c.site = siteLabel(env) || env.dong || '마지막 측정 장소';
+  const level = (hours >= SOAK.badH && c.minC!=null && c.minC <= SOAK.badC) ? 'bad' : (c.minC!=null && c.minC <= SOAK.warnC) ? 'warn' : null;
+  settings.soakNow = { at:new Date().toISOString(), lastRunAt:r.createdAt, hours:+hours.toFixed(1), minC:c.minC, nowC:c.nowC, level, site:c.site };
+  box.innerHTML='';
+  if (!level) return;
+  const h = hours >= 48 ? `${Math.floor(hours/24)}일 ${Math.round(hours%24)}시간` : `${Math.round(hours)}시간`;
+  box.append(el('div',{class:'soak '+level},
+    el('h3',{text: level==='bad' ? '저온 방치 경고' : '저온 방치 주의'}),
+    el('div',{class:'l',text:`마지막 운전 후 ${h} · ${c.site}`}),
+    el('div',{class:'l',text:`그동안 최저 ${c.minC.toFixed(1)} ℃ · 지금 ${c.nowC!=null?c.nowC.toFixed(1):'—'} ℃ (외기)`}),
+    el('ol',{}, ...(level==='bad' ? [
+        '시동 전에 엔진과 흡기를 데울 준비를 하세요(열풍기 등). 흡기 예열 장치가 있다면 확인하세요.',
+        '배터리 전압을 확인하세요. 크랭킹은 한 번에 짧게, 쉬었다가 다시 하세요.',
+        '시동 측정으로 녹음하세요. 실패하면 시동측정 리포트의 안내를 따르세요.']
+      : ['엔진이 차갑습니다. 시동이 평소보다 늦을 수 있습니다.', '배터리 상태를 확인하고, 크랭킹은 짧게 끊어서 하세요.', '시동 측정으로 녹음해 두면 추운 날의 시동 기준이 쌓입니다.']).map(t=>el('li',{text:t}))),
+    el('div',{class:'src',text:`기준(임시): ${SOAK.warnH}시간 이상 + 최저 ${SOAK.warnC} ℃ 이하 = 주의, ${SOAK.badH}시간 이상 + 최저 ${SOAK.badC} ℃ 이하 = 경고. 근거: 2026-01 혹한기 사례(지상 4일 유치, 약 −12 ℃, 시동 실패). 날씨 서비스(Open-Meteo)의 외기 값입니다.`})));
+}
+
+/* ---------------- 엔진 학습 상태 화면 (④) ---------------- */
+function spark(points, color){   /* points: [{x,y}] → 작은 선 그래프 (y: 감지 가능한 가장 작은 변화, 낮을수록 좋음) */
+  if (points.length < 2) return null;
+  const W=340, H=90, P=26, ys=points.map(p=>p.y), y0=0, y1=Math.max(...ys)*1.1, xs=points.length-1;
+  const X = i => P + i*(W-P-8)/xs, Y = v => H-18 - (v-y0)/(y1-y0)*(H-30);
+  const d = points.map((p,i)=>`${i?'L':'M'}${X(i).toFixed(1)} ${Y(p.y).toFixed(1)}`).join(' ');
+  const svg = `<svg class="spark" viewBox="0 0 ${W} ${H}" role="img" aria-label="감지 가능한 변화가 줄어드는 그래프">
+    <line x1="${P}" y1="${H-18}" x2="${W-8}" y2="${H-18}" stroke="#3a3a3f"/>
+    <text x="0" y="${Y(ys[0])+4}" fill="#d8d8e0" font-size="12">${ys[0].toFixed(0)}</text>
+    <text x="0" y="${Y(ys[ys.length-1])+4}" fill="#fff" font-size="12">${ys[ys.length-1].toFixed(0)}</text>
+    <path d="${d}" fill="none" stroke="${color}" stroke-width="2.5"/>
+    <circle cx="${X(xs)}" cy="${Y(ys[ys.length-1])}" r="4" fill="${color}"/>
+    <text x="${P}" y="${H-3}" fill="#d8d8e0" font-size="12">1회</text><text x="${W-8}" y="${H-3}" fill="#d8d8e0" font-size="12" text-anchor="end">${points.length}회</text></svg>`;
+  const d2 = document.createElement('div'); d2.innerHTML = svg; return d2.firstChild;
+}
+async function renderLearn(){
+  const all = await allRecords(), body = $('#learnBody'); body.innerHTML='';
+  const used = all.filter(r => r.live && ((r.seed) || (r.situation && r.situation!=='start' && inBaseline(r, r.situation))));
+  const own = all.filter(r => !r.seed);
+  body.append(el('div',{class:'sect big'}, `학습한 측정 ${used.length}회`, el('small',{text:`이 폰·기준 파일 ${used.filter(r=>!r.seed).length}회 + 내장 분석 ${used.filter(r=>r.seed).length}회 · 시동 측정 ${own.filter(r=>r.situation==='start').length}회`})));
+  body.append(el('p',{class:'hint',text:'앱이 측정할 때마다 이 엔진의 평소 rpm·흔들림·소리 모양을 조건별로 배웁니다. 5회부터 학습한 범위를 쓰기 시작하고, 10회면 규칙 대신 학습한 범위로 비교합니다. 평소 데이터만으로 배우는 이상 탐지이며, 고장을 진단하지는 않습니다.'}));
+  // ① 조건별 정상 범위
+  body.append(el('div',{class:'sect'}, '조건별 정상 범위', el('small',{text:'측정 종류 × 작업 모드 × 작업 전후 · 최근 10회'})));
+  let no = 0;
+  for (const zone of ['idle','work']) for (const mode of ['N','W']) for (const timing of ['B','A']){
+    const M = learnZone(all, zone, mode, timing, null, null);
+    if (!M.n && mode==='W') continue;
+    no++;
+    const name = `${zone==='work'?'작업 rpm':'공회전 rpm'} · ${mode==='W'?'작업 W':'일반 N'} · ${timing==='B'?'작업 전(냉간)':'작업 후(열간)'}`;
+    body.append(el('div',{class:'lcard'},
+      el('div',{class:'h'}, el('span',{}, el('i',{class:'no',text:String(no)}), name), el('small',{text:`${M.n}/10회`})),
+      el('div',{class:'lbar'}, el('i',{style:`width:${Math.min(100,M.n*10)}%`})),
+      M.n ? el('div',{class:'v'}, `${M.mean.toFixed(0)} ± ${M.warnHalf.toFixed(0)}`, el('small',{text:'rpm'})) : el('div',{class:'v'}, '—'),
+      el('p',{}, M.n ? `주의 폭: 규칙 ±${M.priorWarn.toFixed(0)} → 지금 ±${M.warnHalf.toFixed(0)} rpm (학습 비중 ${Math.round(M.w*100)}%)` : '아직 측정이 없습니다.',
+        M.shake && M.shake.n ? ` · 흔들림 평소 ${Math.round(M.shake.mean)} rpm, 주의 ${Math.round(M.shake.warnT)}` : '')));
+  }
+  // 감지할 수 있는 가장 작은 변화
+  body.append(el('div',{class:'sect'}, '감지할 수 있는 가장 작은 변화', el('small',{text:'측정이 쌓일수록 줄어들면 학습이 되고 있는 것입니다 (주의 폭, rpm)'})));
+  for (const zone of ['idle','work']){
+    const seq = all.filter(r => r.meta && r.meta.mode==='N' && r.live && r.live[zone+'Median']!=null && inBaseline(r, zone)).sort((a,b)=>a.createdAt.localeCompare(b.createdAt));
+    const pts = seq.map(r => ({ y: learnZone(all, zone, 'N', r.meta.timing, null, new Date(Date.parse(r.createdAt)+1).toISOString()).warnHalf }));
+    const sp = spark(pts, '#fff');
+    body.append(el('div',{class:'lcard'}, el('div',{class:'h'}, el('span',{text: zone==='work'?'작업 rpm · 일반 N':'공회전 rpm · 일반 N'}), el('small',{text: pts.length ? `±${pts[0].y.toFixed(0)} → ±${pts[pts.length-1].y.toFixed(0)} rpm` : '측정 없음'})), sp || el('p',{text:'측정이 2회 이상이면 그래프가 나옵니다.'})));
+  }
+  // ③ 믿을 만한 소리
+  body.append(el('div',{class:'sect'}, '믿을 만한 소리', el('small',{text:'측정마다 일정한 대역은 무게를 크게, 들쭉날쭉한 대역은 작게 둡니다'})));
+  let best = null;
+  for (const zone of ['idle','work']) for (const side of ['L','R']){ const M = learnZone(all, zone, 'N', null, side, null); if (M.bands && (!best || M.bands.n > best.M.bands.n)) best = { zone, side, M }; }
+  if (!best || best.M.bands.n < LEARN.bandMinN) body.append(el('p',{class:'hint',text:`앱으로 녹음한 같은 조건(측정 종류·모드·측정 쪽)의 측정이 ${LEARN.bandMinN}회 이상이면 나옵니다. 내장 분석 자료에는 소리 모양이 없습니다.`}));
+  else {
+    const idx = best.M.bands.sd.map((d,i)=>({i,d})).filter(x=>x.d!=null && bandHz(x.i) < 8000);
+    const st = [...idx].sort((a,b)=>a.d-b.d).slice(0,5), ns = [...idx].sort((a,b)=>b.d-a.d).slice(0,3);
+    body.append(el('div',{class:'lcard'}, el('div',{class:'h'}, el('span',{text:`${best.zone==='work'?'작업 rpm':'공회전'} · 일반 N · ${best.side==='L'?'왼쪽':'오른쪽'}`}), el('small',{text:`${best.M.bands.n}회`})),
+      el('p',{}, el('b',{text:'일정한 소리: '}), st.map(x=>`${fmtHz(bandHz(x.i))} ±${x.d.toFixed(1)} dB`).join(' · ')),
+      el('p',{}, el('b',{text:'들쭉날쭉한 소리: '}), ns.map(x=>`${fmtHz(bandHz(x.i))} ±${x.d.toFixed(1)} dB`).join(' · '))));
+  }
+  // ⑤ 스스로 채점
+  const sc = selfScore(all);
+  body.append(el('div',{class:'sect'}, '스스로 채점', el('small',{text:'새 측정을 기준에 넣기 전에 "평소 범위 안"으로 맞혔는지 (학습 5회 이후)'})));
+  body.append(el('div',{class:'lcard'}, el('div',{class:'v'}, sc.length ? `${sc.filter(x=>x.hit).length} / ${sc.length}` : '—', el('small',{text:'최근 맞힌 수'})),
+    el('p',{text: sc.length ? '지금까지 측정은 모두 정상 상태로 보고 채점합니다. 많이 맞힐수록 오경보가 적다는 뜻입니다. 점검 결과 입력이 생기면 이상 사례도 채점합니다.' : '조건별 학습이 5회를 넘은 측정부터 채점합니다.'})));
+  // 조건 범위 (기온)
+  const tb = r => r.env && r.env.tempC!=null ? (r.env.tempC >= 10 ? 'w' : r.env.tempC >= 0 ? 'c' : 'f') : null;
+  const cnt = (f) => own.filter(f).length;
+  body.append(el('div',{class:'sect'}, '아직 부족한 조건', el('small',{text:'측정 시각의 외기 온도 기준'})));
+  const rows = [['따뜻 (10 ℃ 이상)','w'],['서늘 (0~10 ℃)','c'],['추움 (0 ℃ 미만)','f']].map(([t,k]) => {
+    const a = cnt(r=>tb(r)===k && r.situation && r.situation!=='start'), b = cnt(r=>tb(r)===k && r.situation==='start');
+    return el('div',{class:'rule'}, el('span',{text:t}), el('b',{class: a+b ? '' : 'warn', text:`${a+b}회`}), el('small',{text:`공회전·작업 ${a}회 · 시동 ${b}회` + (a+b ? '' : ' — 이 조건의 측정이 필요합니다')}));
+  });
+  body.append(el('div',{}, ...rows));
+  body.append(el('p',{class:'hint',style:'margin-top:14px',text:'기온에 따른 보정과 시동 특성 학습은 기온이 다른 날의 측정이 쌓이면 다음 단계에서 시작합니다.'}));
+}
+
+/* ---------------- navigation ---------------- */
+const navStack = ['home'];
+function go(name, push=true){
+  $$('.view').forEach(v => v.classList.remove('on'));
+  $('#v-'+name).classList.add('on');
+  if (push && navStack[navStack.length-1] !== name) navStack.push(name);
+  window.scrollTo(0,0);
+  if (name==='home') renderHome();
+  if (name!=='history' && PICK.on){ PICK.on=false; PICK.sel.clear(); $('#histPick').textContent='선택'; $('#histBar').classList.remove('on'); $('#histPickHint').style.display='none'; }
+  if (name==='history') renderHistory();
+  if (name==='data') renderData();
+  if (name==='learn') renderLearn();
+}
+function back(){ navStack.pop(); go(navStack[navStack.length-1] || 'home', false); }
+$$('[data-back]').forEach(b => b.addEventListener('click', back));
+$$('[data-go]').forEach(b => b.addEventListener('click', () => go(b.dataset.go)));
+
+/* segmented buttons */
+function segInit(root){
+  root.querySelectorAll('.seg').forEach(seg => seg.addEventListener('click', e => {
+    const b = e.target.closest('button'); if(!b) return;
+    seg.querySelectorAll('button').forEach(x=>x.classList.toggle('sel', x===b));
+    seg.classList.remove('need');
+    seg.dispatchEvent(new CustomEvent('change', {detail:b.dataset.v}));
+  }));
+}
+const segVal = (root, key) => { const b = root.querySelector(`.seg[data-key="${key}"] button.sel`); return b ? b.dataset.v : null; };
+function segSet(root, key, v){ const seg=root.querySelector(`.seg[data-key="${key}"]`); seg.querySelectorAll('button').forEach(x=>x.classList.toggle('sel', x.dataset.v===v)); if (v!=null) seg.classList.remove('need'); }
+function segClear(root, key, need){ const seg=root.querySelector(`.seg[data-key="${key}"]`); seg.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); seg.classList.toggle('need', !!need); }
+function chipsInit(box){ box.innerHTML=''; for (const it of ITEMS) box.append(el('button',{text:it,onclick:e=>e.currentTarget.classList.toggle('sel')})); }
+const chipsVal = box => $$('#'+box.id+' button.sel').map(b=>b.textContent);
+
+/* ---------------- HOME ---------------- */
+function readout(label, value, size, refs, note, cls){
+  return el('div',{class:'ro'},
+    el('div',{class:'rot'}, label[0], el('small',{text:label[1]})),
+    el('div',{class:'stat'}, el('div',{}, el('span',{class:'v '+size+(cls?' '+cls:''),text:value}), el('span',{class:'u',text:'rpm'})),
+      el('div',{class:'refs'}, ...refs.map(([k,v])=>el('div',{}, el('span',{text:k+' '}), el('b',{text:v}))))),
+    note ? el('div',{class:'dev '+(cls||''),text:note}) : null);
+}
+async function renderHome(){
+  const all = await allRecords();
+  const own = all.filter(r=>!r.seed).sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+  const latestOf = z => own.find(r=>r.situation===z && r.live && r.live[z+'Median']!=null) || null;
+  const latest = own.find(r=>r.situation && r.situation!=='start' && r.live && (r.live.workMedian!=null || r.live.idleMedian!=null)) || null;
+  const mode = latest ? latest.meta.mode : 'N';
+  const box = $('#homeReadouts'); box.innerHTML='';
+  for (const zone of ['work','idle']){
+    const lz = latestOf(zone) && latestOf(zone).meta.mode===mode ? latestOf(zone) : null;
+    const cur = lz ? lz.live[zone+'Median'] : null;
+    const M = lz ? modelFor(all, lz, zone) : learnZone(all, zone, mode, null, null, null);
+    const nominal = zone==='work' ? RULE.work : RULE.idle;
+    const cond = lz ? `${modeLabel(mode)} · ${lz.meta.timing==='A'?'작업 후':'작업 전'}` : modeLabel(mode);
+    const label = [zone==='work' ? '작업 rpm' : '공회전 rpm', cond];
+    const refs = [['기준', String(nominal)]];
+    let big='—', note=null, cls='', scoreBox=null;
+    if (M.n) refs.push([`평소 (학습 ${M.n}회)`, `${M.mean.toFixed(0)} ± ${M.warnHalf.toFixed(0)}`]);
+    if (cur!=null){
+      big = String(Math.round(cur));
+      const A = anomalyOf(lz, zone, M);
+      if (A.S!=null){ cls = A.level==='bad'?'bad':A.level==='warn'?'warn':''; scoreBox = scoreEl(A, M); }
+      if (zone==='idle' && mode==='N' && lz.live.idleP90!=null) refs.push(['흔들림', Math.round(lz.live.idleP90 - lz.live.idleP10)+' rpm']);
+      if (lz.live.excluded){ cls='bad'; note = lz.live.excludeReason + ' — 기준에서 뺐습니다.'; scoreBox = null; }
+    } else if (M.n) big = String(Math.round(M.mean));
+    const ro = readout(cur!=null ? [label[0], label[1]+' · 최근 측정'] : [label[0], label[1]+' · 학습한 평소 값'], big, zone==='work'?'hero':'lg', refs, note, cls);
+    if (scoreBox) ro.append(scoreBox);
+    box.append(ro);
+  }
+  const nMode = runStats(all, mode, 'work').n;
+  const nN = runStats(all,'N','work').n, nW = runStats(all,'W','work').n;
+  $('#homeStatus').textContent = latest ? `${maturityOf(nMode)} · ${modeLabel(mode)}` : (nMode ? '내장 기준으로 시작' : '첫 측정을 기다립니다');
+  $('#homeProg').style.width = Math.min(100, nMode*10) + '%';
+  $('#homeProgTxt').textContent = `AI 학습 = 같은 측정·모드·작업 전후의 최근 10회 · 일반 N ${nN}/10회 · 작업 W ${nW}/10회 · 자세히는 05 엔진 학습 상태`;
+  const cnt = f => all.filter(f).length;
+  $('#homeSrc').textContent = `기준 자료: 이 폰 ${cnt(r=>!r.seed&&!r.fromBaseline)}회 · 기준 파일 ${cnt(r=>r.fromBaseline)}회 · 내장 분석 ${cnt(r=>r.seed)}회`;
+  $('#homeFile').textContent = latest ? '최근 측정 · ' + latest.fileName : '';
+  renderSoak(all).catch(()=>{});
+}
+
+/* =========================================================
+   위치 · 날씨 (설계서 4장) — 측정 시작과 함께 뒤에서 수집
+   장소 목록: site_Parking_MTT.csv (2026-10-17, 30곳) → [PST_ID, 이름, 호선, GPS가능(1=지상), 주소, nx, ny, 위도, 경도]
+   GPS 수신(오차 200 m 이내) → 차량기지 2 km 안이면 자동 선택, 아니면 GPS 좌표
+   GPS 불가·오차 큼(지하) → 목록에서 선택. 날씨는 장소 좌표로 조회
+   날씨: Open-Meteo (models=kma_seamless, 실패 시 기본 모델), 시간별 값을 측정 시각으로 보간
+   체감 온도: 기상청 방식 (5~9월 여름철 식, 그 밖에는 겨울철 식: 기온 10 ℃ 이하·풍속 4.8 km/h 이상일 때)
+   ========================================================= */
+const SITE_ROWS = [
+  ["ST-8-817", "가락시장역", 8, 0, "서울특별시 송파구 가락본동", 62, 125, 37.492888, 127.118398],
+  ["ST-5-548", "강동역", 5, 0, "서울특별시 강동구 성내2동", 62, 126, 37.535804, 127.132481],
+  ["ST-7-727", "건대입구역", 7, 0, "서울특별시 광진구 화양동", 61, 126, 37.540786, 127.071011],
+  ["DP-5-01", "고덕차량기지", 5, 1, "서울특별시 강동구 고덕2동", 63, 127, 37.5646, 127.1717],
+  ["DP-2-01", "군자차량기지", 2, 1, "서울특별시 성동구 용답동", 61, 127, 37.5585, 127.0555],
+  ["ST-5-549", "길동역", 5, 0, "서울특별시 강동구 길동", 63, 126, 37.537801, 127.140004],
+  ["ST-7-735", "내방역", 7, 0, "서울특별시 서초구 방배1동", 60, 125, 37.487618, 126.993513],
+  ["ST-6-625", "대흥역", 6, 0, "서울특별시 마포구 대흥동", 59, 126, 37.547771, 126.942069],
+  ["DP-7-01", "도봉차량기지", 7, 1, "경기도 의정부시 장암동", 61, 130, 37.698, 127.0525],
+  ["DP-8-01", "모란차량기지", 8, 1, "경기도 성남시 중원구 도촌동", 62, 124, 37.423, 127.13],
+  ["DP-5-02", "방화기지", 5, 1, "서울특별시 강서구 방화2동", 57, 127, 37.579, 126.802],
+  ["ST-5-510", "방화역", 5, 0, "서울특별시 강서구 방화3동", 57, 127, 37.577446, 126.812741],
+  ["ST-8-804", "별내역", 8, 0, "경기도 남양주시 별내동", 62, 128, 37.64232, 127.1276],
+  ["ST-7-742", "보라매역", 7, 0, "서울특별시 영등포구 신길6동", 59, 125, 37.499872, 126.920428],
+  ["ST-6-642", "상월곡역", 6, 0, "서울특별시 성북구 월곡2동", 61, 128, 37.606377, 127.048491],
+  ["ST-2-228", "서울대입구역", 2, 0, "서울특별시 관악구 낙성대동", 59, 125, 37.481247, 126.952739],
+  ["ST-7-711", "수락산역", 7, 0, "서울특별시 노원구 상계1동", 61, 129, 37.67785, 127.055315],
+  ["DP-6-01", "신내차량기지", 6, 1, "서울특별시 중랑구 신내1동", 62, 128, 37.6165, 127.105],
+  ["ST-2-211-4", "신설동역", 2, 0, "서울특별시 동대문구 용신동", 61, 127, 37.574747, 127.024932],
+  ["DP-2-02", "신정차량기지", 2, 1, "서울특별시 양천구 신정3동", 58, 126, 37.515, 126.849],
+  ["ST-8-810", "암사역", 8, 0, "서울특별시 강동구 암사2동", 62, 126, 37.55021, 127.127562],
+  ["ST-5-530", "애오개역", 5, 0, "서울특별시 마포구 아현동", 59, 126, 37.553736, 126.95682],
+  ["ST-5-540", "왕십리역", 5, 0, "서울특별시 성동구 행당1동", 61, 127, 37.56184, 127.037059],
+  ["ST-6-610", "응암역", 6, 0, "서울특별시 은평구 신사1동", 59, 127, 37.598605, 126.915577],
+  ["ST-8-814", "잠실역", 8, 0, "서울특별시 송파구 잠실6동", 62, 126, 37.514692, 127.104338],
+  ["DP-4-01", "진접차량기지", 4, 1, "경기도 남양주시 진접읍", 63, 130, 37.7195, 127.195],
+  ["DP-7-02", "천왕차량기지", 7, 1, "서울특별시 구로구 오류2동", 57, 125, 37.483, 126.84],
+  ["ST-7-717", "태릉입구역", 7, 0, "서울특별시 노원구 공릉1동", 61, 128, 37.618294, 127.075397],
+  ["ST-5-556", "하남풍산역", 5, 0, "경기도 하남시 덕풍3동", 64, 126, 37.552034, 127.203864],
+  ["ST-5-517", "화곡역", 5, 0, "서울특별시 강서구 화곡1동", 57, 126, 37.541513, 126.840461]
+];
+const SITES = SITE_ROWS.map(([id,name,line,gps,addr,nx,ny,lat,lon]) => { const w = addr.split(/\s+/); return { id, name, line, ground: gps===1, addr, nx, ny, lat, lon, dong: w[w.length-1], gu: w.length>2 ? w[w.length-2] : null }; });
+const SITE_MATCH_M = 2000;   /* GPS와 차량기지 좌표 차이 허용 (목록 좌표가 최대 약 1 km 어긋날 수 있음) */
+const GPS_ACC_MAX = 200;     /* 이보다 오차가 크면 지하·실내의 추정 위치로 보고 목록 선택 */
+const ENV_LOCATING = 'GPS 정보로 날씨 정보를 수집합니다…';
+const siteRef = st => ({ id: st.id, name: st.name, line: st.line, underground: !st.ground, dong: st.dong, gu: st.gu });
+const siteLabel = env => env && env.site ? `${env.site.name}(${env.underground===true?'지하':env.underground===false?'지상':'직접 입력'})` : null;
+function getPosition(){
+  return new Promise((res, rej) => {
+    if (!('geolocation' in navigator)) return rej({code:0});
+    navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy:true, timeout:15000, maximumAge:60000 });
+  });
+}
+function distM(a1,o1,a2,o2){ const R=6371000, t=Math.PI/180, x=(o2-o1)*t*Math.cos((a1+a2)/2*t), y=(a2-a1)*t; return Math.sqrt(x*x+y*y)*R; }
+function wetBulbStull(T, RH){
+  return T*Math.atan(0.151977*Math.sqrt(RH+8.313659)) + Math.atan(T+RH) - Math.atan(RH-1.676331) + 0.00391838*Math.pow(RH,1.5)*Math.atan(0.023101*RH) - 4.686035;
+}
+function feelsLikeKMA(T, RH, windMs, when){
+  if (T==null) return { v:null, method:null };
+  const m = when.getMonth()+1;
+  if (m>=5 && m<=9 && RH!=null){ const Tw = wetBulbStull(T, RH); return { v: -0.2442 + 0.55399*Tw + 0.45535*T - 0.0022*Tw*Tw + 0.00278*Tw*T + 3.0, method:'여름철' }; }
+  const V = (windMs||0)*3.6;
+  if (T<=10 && V>=4.8){ const p = Math.pow(V,0.16); return { v: 13.12 + 0.6215*T - 11.37*p + 0.3965*p*T, method:'겨울철' }; }
+  return { v:T, method:'기온과 같음' };
+}
+const r1 = v => v==null || isNaN(v) ? null : Math.round(v*10)/10;
+async function fetchWeather(lat, lon, at){
+  const pd = Math.min(92, Math.max(5, Math.ceil((Date.now()-at.getTime())/864e5) + 5));
+  const base = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m&past_days=${pd}&forecast_days=2&timezone=Asia%2FSeoul&wind_speed_unit=ms`;
+  let j = null, model = 'kma_seamless';
+  for (const url of [base+'&models=kma_seamless', base]){
+    try{ const r = await fetch(url); if (!r.ok) throw 0; const d = await r.json(); if (d && d.hourly && (d.hourly.temperature_2m||[]).some(v=>v!=null)){ j = d; break; } }catch(e){}
+    model = 'best_match';
+  }
+  if (!j) throw new Error('weather');
+  const H = j.hourly, tms = H.time.map(t => Date.parse(t.length===16 ? t+':00+09:00' : t));
+  const T = H.temperature_2m, RH = H.relative_humidity_2m||[], W = H.wind_speed_10m||[], t0 = at.getTime();
+  const interp = arr => { for (let i=0;i<tms.length-1;i++) if (tms[i]<=t0 && t0<=tms[i+1]){ const a=arr[i], b=arr[i+1]; if (a==null) return b; if (b==null) return a; return a + (b-a)*(t0-tms[i])/(tms[i+1]-tms[i]); } return null; };
+  const minWin = h => { const v = []; for (let i=0;i<tms.length;i++) if (tms[i] > t0-h*3600e3 && tms[i] <= t0 && T[i]!=null) v.push(T[i]); const c = interp(T); if (c!=null) v.push(c); return v.length ? Math.min(...v) : null; };
+  const tempC = interp(T), rh = interp(RH), wind = interp(W);
+  if (tempC==null) throw new Error('weather-time');
+  const fl = feelsLikeKMA(tempC, rh, wind, at);
+  return { tempC:r1(tempC), feelsC:r1(fl.v), feelsMethod:fl.method, rh: rh==null?null:Math.round(rh), windMs:r1(wind), min24C:r1(minWin(24)), min96C:r1(minWin(96)), wxModel:model, wxSource:'Open-Meteo' };
+}
+async function lookupDong(lat, lon){   /* 목록 밖 GPS 위치만 OpenStreetMap으로 동 이름 조회 */
+  const key = lat.toFixed(3)+','+lon.toFixed(3);
+  settings.geoCache = settings.geoCache || {};
+  if (settings.geoCache[key]) return { ...settings.geoCache[key], dongSource:'OpenStreetMap' };
+  const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=16&accept-language=ko&addressdetails=1`);
+  if (!r.ok) throw new Error('geo');
+  const a = (await r.json()).address || {};
+  const cand = [a.quarter, a.suburb, a.neighbourhood, a.city_district, a.village, a.town, a.hamlet].filter(Boolean);
+  const dong = cand.find(v => /[동읍면리가]$/.test(v)) || cand[0] || null;
+  const gu = [a.borough, a.city_district, a.county, a.city].filter(Boolean).find(v => /[구군시]$/.test(v)) || null;
+  const out = { dong, gu };
+  const keys = Object.keys(settings.geoCache); if (keys.length > 60) delete settings.geoCache[keys[0]];
+  settings.geoCache[key] = out; await saveSettings();
+  return { ...out, dongSource:'OpenStreetMap' };
+}
+async function fillEnv(env){
+  const miss = [];
+  if (env.lat!=null && env.tempC==null && !env.noWeather){ try{ Object.assign(env, await fetchWeather(env.lat, env.lon, new Date(env.at))); }catch(e){ miss.push('날씨'); } }
+  if (!env.dong){
+    if (env.site && env.site.dong){ env.dong = env.site.dong; env.gu = env.site.gu; env.dongSource = '장소 목록'; }
+    else if (env.lat!=null){ try{ Object.assign(env, await lookupDong(env.lat, env.lon)); }catch(e){ miss.push('동 이름'); } }
+  }
+  env.status = miss.length ? 'pending' : 'ok';
+  env.msg = miss.length ? `${miss.join(' · ')} 정보를 받지 못했습니다. 인터넷이 될 때 다시 채웁니다.` : (env.noWeather ? 'GPS를 쓸 수 없어 날씨 없이 저장합니다.' : '');
+  env.fetchedAt = new Date().toISOString();
+  return env;
+}
+async function collectEnv(at){
+  const env = { at: at.toISOString(), status:'locating' };
+  let p = null;
+  try{ p = await getPosition(); }catch(e){ env.gpsMsg = e && e.code===1 ? '위치 권한 거부' : 'GPS 수신 안 됨'; }
+  if (p){
+    const acc = Math.round(p.coords.accuracy||0), la = +p.coords.latitude.toFixed(5), lo = +p.coords.longitude.toFixed(5);
+    env.gpsLat = la; env.gpsLon = lo; env.gpsAccM = acc;
+    if (acc > GPS_ACC_MAX){ env.gpsMsg = `위치 오차 ${acc} m`; p = null; }
+  }
+  if (!p){ env.status = 'choose'; return env; }
+  const near = SITES.filter(st => st.ground).map(st => ({ st, d: distM(env.gpsLat, env.gpsLon, st.lat, st.lon) })).sort((a,b)=>a.d-b.d)[0];
+  if (near && near.d <= SITE_MATCH_M){
+    Object.assign(env, { site: siteRef(near.st), underground:false, lat: near.st.lat, lon: near.st.lon, posSource:'gps-site', siteDistM: Math.round(near.d) });
+    rememberSite(near.st.id);
+  } else Object.assign(env, { lat: env.gpsLat, lon: env.gpsLon, underground:false, posSource:'gps' });
+  return fillEnv(env);
+}
+function rememberSite(id){ settings.recentSites = [id, ...(settings.recentSites||[]).filter(x=>x!==id)].slice(0,3); saveSettings(); }
+async function applySite(env, st){
+  const e = { at: env.at, gpsMsg: env.gpsMsg||null, gpsLat: env.gpsLat, gpsLon: env.gpsLon, gpsAccM: env.gpsAccM,
+    site: siteRef(st), underground: !st.ground, lat: st.lat, lon: st.lon, posSource:'select' };
+  rememberSite(st.id);
+  return fillEnv(e);
+}
+async function applyCustom(env){
+  const name = (prompt('목록에 없는 장소의 이름을 입력하세요') || '').trim(); if (!name) return null;
+  const e = { at: env.at, site: { id:null, name, custom:true }, posSource:'custom' };
+  try{
+    const p = await getPosition();
+    if ((p.coords.accuracy||0) <= GPS_ACC_MAX){ Object.assign(e, { lat:+p.coords.latitude.toFixed(5), lon:+p.coords.longitude.toFixed(5), gpsAccM:Math.round(p.coords.accuracy||0), underground:false }); return fillEnv(e); }
+  }catch(_){}
+  Object.assign(e, { underground:null, noWeather:true });
+  return fillEnv(e);
+}
+const fmtLat = v => v==null ? '' : Number(v).toFixed(4);
+function siteList(onPick){
+  const box = el('div',{class:'sites'});
+  const btn = st => el('button',{onclick:()=>onPick(st)}, st.name, el('small',{text: st.ground ? `${st.line}호선 · 지상` : `${st.line}호선 · 지하`}));
+  const recent = (settings.recentSites||[]).map(id => SITES.find(x=>x.id===id)).filter(Boolean);
+  if (recent.length) box.append(el('h4',{text:'최근 선택'}), el('div',{class:'grid'}, ...recent.map(btn)));
+  box.append(el('h4',{text:'차량기지'}), el('div',{class:'grid'}, ...SITES.filter(x=>x.ground).sort((a,b)=>a.name.localeCompare(b.name,'ko')).map(btn)));
+  const lines = [...new Set(SITES.filter(x=>!x.ground).map(x=>x.line))].sort((a,b)=>a-b);
+  for (const ln of lines) box.append(el('h4',{text:`${ln}호선 역 (지하)`}), el('div',{class:'grid'}, ...SITES.filter(x=>!x.ground && x.line===ln).sort((a,b)=>a.name.localeCompare(b.name,'ko')).map(btn)));
+  box.append(el('div',{class:'grid',style:'margin-top:12px'}, el('button',{class:'custom',text:'목록에 없음 · 이름 입력',onclick:()=>onPick('custom')})));
+  return box;
+}
+function envView(env, opts={}){
+  const box = el('div',{});
+  if (!env || env.status==='locating'){ box.append(el('div',{class:'st',text:ENV_LOCATING})); return box; }
+  if (env.status==='choose'){
+    box.append(el('div',{class:'ask',text:'GPS 정보를 사용할 수 없습니다. 현재 위치를 선택해주세요'}));
+    if (env.gpsMsg) box.append(el('div',{class:'st',text:`(${env.gpsMsg})`}));
+    if (opts.onChoose) box.append(siteList(opts.onChoose));
+    if (opts.onRetry) box.append(el('div',{class:'acts'}, el('button',{class:'btn h52',text:'GPS 다시 시도',onclick:opts.onRetry})));
+    return box;
+  }
+  const lbl = siteLabel(env);
+  if (lbl) box.append(el('div',{class:'loc',text:lbl}));
+  if (env.dong || env.lat!=null){
+    const line = el(lbl?'div':'div',{class: lbl ? 'loc2' : 'loc'}, env.dong || '동 이름 없음');
+    if (env.lat!=null) line.append(el('span',{text:`(${fmtLat(env.lat)}, ${fmtLat(env.lon)})`}));
+    box.append(line);
+  }
+  if (env.tempC!=null){
+    if (env.underground) box.append(el('div',{class:'st',text:'외기(참고) · 지하 측정이라 터널 온도와 다릅니다'}));
+    box.append(el('div',{class:'wx'}, el('b',{text:env.tempC.toFixed(1)}), ' ℃ · 체감 ', el('b',{text:env.feelsC!=null?env.feelsC.toFixed(1):'—'}), ' ℃'));
+    box.append(el('div',{class:'wx',text:`습도 ${env.rh!=null?env.rh:'—'}% · 풍속 ${env.windMs!=null?env.windMs.toFixed(1):'—'} m/s`}));
+    box.append(el('div',{class:'wx',text:`최저 24시간 ${env.min24C!=null?env.min24C.toFixed(1):'—'} ℃ · 96시간 ${env.min96C!=null?env.min96C.toFixed(1):'—'} ℃`}));
+  }
+  const notes = [];
+  if (env.posSource==='gps-site') notes.push(`GPS로 자동 선택 · 목록 좌표와 ${env.siteDistM} m`);
+  else if (env.posSource==='select') notes.push('목록에서 선택' + (env.gpsMsg ? ` (${env.gpsMsg})` : ''));
+  else if (env.posSource==='gps') notes.push('GPS 위치 · 목록의 차량기지 2 km 밖');
+  else if (env.posSource==='custom') notes.push('직접 입력한 장소');
+  if (env.msg) notes.push(env.msg);
+  if (env.tempC!=null) notes.push(`Open-Meteo${env.wxModel==='kma_seamless'?' (기상청 KMA 모델)':''} · 체감 ${env.feelsMethod||''} 식`);
+  if (notes.length) box.append(el('div',{class:'st'+(env.status==='ok'?'':' warn'),text:notes.join(' · ')}));
+  const acts = el('div',{class:'acts'});
+  if (opts.onRetry && env.status==='pending') acts.append(el('button',{class:'btn h52',text:'다시 가져오기',onclick:opts.onRetry}));
+  if (opts.onChange) acts.append(el('button',{class:'btn h52',text:'장소 바꾸기',onclick:opts.onChange}));
+  if (acts.childNodes.length) box.append(acts);
+  return box;
+}
+async function saveEnvFor(id, env){
+  const cur = await DB.get('records', id); if (!cur) return env;
+  cur.env = env; cur.updatedAt = new Date().toISOString(); await DB.put('records', id, cur); return env;
+}
+async function retryEnvFor(id){
+  const r = await DB.get('records', id); if (!r) return null;
+  let env = r.env;
+  if (!env || env.status==='choose' || env.lat==null && !env.site) env = await collectEnv(new Date(r.createdAt));
+  else env = await fillEnv(env);
+  return saveEnvFor(id, env);
+}
+/* 위치·날씨 칸 공통 동작 (측정 정보 화면, 측정 상세) */
+function envHandlers(getId, getEnv, draw){
+  return {
+    onRetry: async () => { draw({ status:'locating' }); draw(await retryEnvFor(getId())); },
+    onChoose: async pick => {
+      const base = getEnv() || { at: new Date().toISOString() };
+      draw({ status:'locating' });
+      const env = pick==='custom' ? await applyCustom(base) : await applySite(base, pick);
+      if (!env){ draw(base); return; }
+      draw(await saveEnvFor(getId(), env));
+    },
+    onChange: () => { const e = getEnv() || {}; draw({ ...e, status:'choose', gpsMsg: '장소를 다시 고릅니다' }, true); },
+  };
+}
+async function retryPendingEnv(){   /* 앱을 열 때 인터넷이 되면 비어 있는 날씨·동 이름을 채운다 */
+  if (!navigator.onLine) return;
+  const list = (await DB.all('records')).filter(r => r.env && r.env.status==='pending' && r.env.lat!=null).slice(0,5);
+  for (const r of list){ try{ await retryEnvFor(r.id); }catch(e){} await new Promise(z=>setTimeout(z,1100)); }
+}
+
+/* =========================================================
+   RECORDING — 원음 그대로 (처리 끔 요청 + PCM 직접 수집 → WAV)
+   ========================================================= */
+const REC = { on:false };
+const AUDIO = { ctx:null, worklet:false };   /* 앱 전체에서 하나만 쓰는 오디오 엔진 */
+const WORKLET_SRC = `
+class Rec extends AudioWorkletProcessor{
+  constructor(){super();this.N=4096;this.buf=new Float32Array(this.N);this.n=0;this.on=true;
+    this.port.onmessage=e=>{if(e.data==='stop'){this.port.postMessage({end:true,buf:this.buf.slice(0,this.n)});this.on=false;}};}
+  process(inputs){const ch=inputs[0]&&inputs[0][0];
+    if(ch&&this.on){for(let i=0;i<ch.length;i++){this.buf[this.n++]=ch[i];if(this.n===this.N){this.port.postMessage({buf:this.buf},[this.buf.buffer]);this.buf=new Float32Array(this.N);this.n=0;}}}
+    return this.on;}
+}
+registerProcessor('et-rec',Rec);`;
+
+async function startRecording(sit){
+  sit = SIT[sit] ? sit : 'idle';
+  if (!window.isSecureContext || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    $('#secureAlert').style.display='block'; toast('https 주소에서 열어야 마이크를 쓸 수 있습니다', 4000); return;
+  }
+  if (REC.on) return;
+  // AudioContext는 버튼을 누른 순간 만들거나 깨워야 아이폰에서 동작.
+  // v0.6.1: 측정마다 새로 만들고 닫으면 아이폰에서 두 번째 측정부터 소리가 안 들어오는 경우가 있어 하나를 계속 쓴다.
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AUDIO.ctx || AUDIO.ctx.state==='closed'){ AUDIO.ctx = new AC(); AUDIO.worklet = false; }
+  const ctx = AUDIO.ctx;
+  const resumeP = ctx.resume().catch(()=>{});   /* 버튼을 누른 순간(같은 동작 안)에 깨운다 */
+  let stream;
+  try{
+    stream = await navigator.mediaDevices.getUserMedia({ audio: {
+      echoCancellation:false, noiseSuppression:false, autoGainControl:false,
+      channelCount:1, sampleRate:{ideal:48000} }, video:false });
+  }catch(e){
+    toast('마이크 사용이 허용되지 않았습니다. 브라우저 설정에서 마이크를 허용하세요.', 4500); return;
+  }
+  await resumeP;
+  if (ctx.state !== 'running'){ try{ await ctx.resume(); }catch(e){} }
+  const envStartedAt = new Date();
+  const envP = collectEnv(envStartedAt).catch(() => ({ at: envStartedAt.toISOString(), status:'no-location', msg:'위치·날씨를 가져오지 못했습니다.' }));
+  const track = stream.getAudioTracks()[0];
+  const applied = track.getSettings ? track.getSettings() : {};
+  const src = ctx.createMediaStreamSource(stream);
+  const an = ctx.createAnalyser(); an.fftSize = 32768; an.smoothingTimeConstant = 0; an.minDecibels=-120; an.maxDecibels=0;
+  src.connect(an);
+  const mute = ctx.createGain(); mute.gain.value = 0; mute.connect(ctx.destination);
+
+  const base = await loadBaseline();
+  Object.assign(REC, { on:true, ctx, stream, track, applied, an, src, mute, resumeTried:0, chunks:[], samples:0, clipCount:0, peak:0,
+    envP, base, bandS:null, bandAcc:{ idle:{s:new Float64Array(CIR.N), n:0}, work:{s:new Float64Array(CIR.N), n:0} },
+    lvlPeak:0, lastClipAt:-99, startedAt:new Date(), t0:performance.now(), rpmTrack:[], rpmBuf:[], endResolve:null,
+    freq:new Float32Array(an.frequencyBinCount), node:null, hidden:false,
+    sit, sr: ctx.sampleRate, ring:new Float32Array(Math.round(ctx.sampleRate)), ringPos:0, ringFill:0, chunkSamples:0,
+    hornUntil:-1, horns:[], aliasBuf:[], nAna:0, nOut:0, nHornSkip:0, lastRpm:null, bandPend:[] });
+
+  const onChunk = buf => {
+    REC.chunks.push(buf); REC.samples += buf.length;
+    ringPush(buf); hornCheck(buf);
+    let pk = 0, clip = 0;
+    for (let i=0;i<buf.length;i++){ const a = buf[i]<0?-buf[i]:buf[i]; if (a>pk) pk=a; if (a>=0.995) clip++; }
+    if (clip){ REC.clipCount += clip; REC.lastClipAt = (performance.now()-REC.t0)/1000; }
+    if (pk>REC.peak) REC.peak = pk;
+    REC.lvlPeak = Math.max(pk, REC.lvlPeak*0.85);
+  };
+  try{
+    if (!AUDIO.worklet){
+      const url = URL.createObjectURL(new Blob([WORKLET_SRC], {type:'application/javascript'}));
+      await ctx.audioWorklet.addModule(url); URL.revokeObjectURL(url); AUDIO.worklet = true;
+    }
+    const node = new AudioWorkletNode(ctx, 'et-rec', {numberOfInputs:1, numberOfOutputs:1, channelCount:1, channelCountMode:'explicit'});
+    node.port.onmessage = e => { if (e.data.buf && e.data.buf.length) onChunk(e.data.buf); if (e.data.end && REC.endResolve) REC.endResolve(); };
+    src.connect(node); node.connect(mute); REC.node = node; REC.kind='worklet';
+  }catch(err){
+    // 예전 브라우저: ScriptProcessor로 대체
+    const sp = ctx.createScriptProcessor(4096, 1, 1);
+    sp.onaudioprocess = e => { if (REC.on) onChunk(new Float32Array(e.inputBuffer.getChannelData(0))); };
+    src.connect(sp); sp.connect(mute); REC.node = sp; REC.kind='script';
+  }
+  try{ if ('wakeLock' in navigator) REC.wake = await navigator.wakeLock.request('screen'); }catch(e){}
+
+  $('#rec').classList.add('on'); resizeCanvases(); clearCanvases(); layoutCircle(); lastW = $('#circ').getBoundingClientRect().width;
+  $('#rFreq').textContent='—'; $('#rSnr').textContent='—'; $('#rWarn').textContent=''; drawCircle(null);
+  $('#rSit').textContent = SIT[sit].btn; $('#rVer').textContent = 'v'+APP_VERSION; $('#rTarget').textContent = SIT[sit].target ? String(SIT[sit].target) : '녹음만';
+  $('#rec .cv-wrap').style.display = sit==='start' ? 'none' : '';
+  vibrate(60);
+  REC.lastAna = 0;
+  requestAnimationFrame(loop);
+}
+
+async function stopRecording(cancel){
+  if (!REC.on) return;
+  REC.on = false;
+  if (REC.kind==='worklet'){
+    await new Promise(res => { REC.endResolve = res; REC.node.port.postMessage('stop'); setTimeout(res, 600); });
+  }
+  for (const n of [REC.src, REC.an, REC.node, REC.mute]){ try{ n && n.disconnect(); }catch(e){} }
+  REC.stream.getTracks().forEach(t=>t.stop());
+  try{ REC.wake && REC.wake.release(); }catch(e){}
+  const sr = REC.ctx.sampleRate;
+  try{ REC.ctx.suspend(); }catch(e){}   /* 닫지 않고 재워 둔다 (다음 측정에서 다시 깨움) */
+  commitBands(Infinity);
+  $('#rec').classList.remove('on');
+  if (cancel){ toast('측정을 취소했습니다'); return; }
+
+  const dur = REC.samples / sr;
+  if (dur < 3){ toast('녹음이 너무 짧습니다 (3초 미만)'); return; }
+  busy(true, '녹음 저장 중…');
+  // 1) 원본 먼저 저장 (설계서 13장: 분석이 실패해도 녹음은 남는다)
+  const pcm = new Float32Array(REC.samples); let o=0; for (const c of REC.chunks){ pcm.set(c,o); o+=c.length; }
+  const wav = encodeWav(pcm, sr);
+  const valid = REC.rpmTrack.map(x=>x[1]).filter(v=>v!=null);
+  const idleV = REC.sit==='idle' ? valid : [], workV = REC.sit==='work' ? valid : [];
+  const idleMid = idleV.length>=8 ? median(idleV) : null;
+  const idleCore = idleMid==null ? [] : idleV.filter(v => Math.abs(v-idleMid) <= 60);   /* 공회전 ↔ 작업 오르내림 구간은 흔들림에서 뺀다 */
+  const qtl = (a,q) => { if (a.length<8) return null; const t=[...a].sort((x,y)=>x-y); return t[Math.round(q*(t.length-1))]; };
+  const bandsSaved = bandsToSave(), match = {};
+  for (const z of ['idle','work']) if (bandsSaved[z] && REC.base && REC.base[z] && REC.base[z].mean){
+    let sm=0; bandsSaved[z].forEach((v,i)=> sm += Math.abs(v-REC.base[z].mean[i])); match[z] = Math.max(0, Math.round(100*(1-sm/CIR.N/10)));
+  }
+  /* 범위 밖 판정 (v0.6): 분석한 구간의 절반 이상이 범위 밖이거나, 중앙값이 기준에서 8% 넘게 벗어남 */
+  let excluded = false, excludeReason = null;
+  const S = SIT[REC.sit], zMed = REC.sit==='idle' ? (idleCore.length>=8 ? median(idleCore) : idleMid) : REC.sit==='work' && workV.length>=8 ? median(workV) : null;
+  if (S.target){
+    const outFrac = REC.nAna ? REC.nOut/REC.nAna : 1;
+    if (zMed==null || outFrac > 0.5){ excluded = true; excludeReason = `${S.label} 범위(${S.lo}~${S.hi} rpm)의 엔진 소리를 찾지 못했습니다 (범위 밖 ${Math.round(outFrac*100)}%)`; }
+    else if (Math.abs(zMed/S.target-1) > OUT_DEV){ excluded = true; excludeReason = `중앙값 ${Math.round(zMed)} rpm이 기준 ${S.target}에서 ${(Math.abs(zMed/S.target-1)*100).toFixed(1)}% 벗어났습니다`; }
+  }
+  const soak = REC.sit==='start' && settings.soakNow && (Date.now()-Date.parse(settings.soakNow.at)) < 6*36e5 ? { ...settings.soakNow } : null;
+  const rec = {
+    id: newId(), equip: EQUIP.code, situation: REC.sit, soak, createdAt: REC.startedAt.toISOString(), updatedAt: new Date().toISOString(),
+    deviceId: settings.deviceId, appVersion: APP_VERSION, analysisVersion: ANALYSIS_VERSION,
+    source: 'app', sr, duration: Math.round(dur), durationExact: +dur.toFixed(2), bytes: wav.size,
+    fileName: tempName(REC.startedAt, Math.round(dur), REC.sit), meta: null,
+    quality: { clipCount: REC.clipCount, clipRatio: +(REC.clipCount/REC.samples).toFixed(6), peakDb: +(20*Math.log10(REC.peak||1e-9)).toFixed(1),
+      applied: { echoCancellation: REC.applied.echoCancellation, noiseSuppression: REC.applied.noiseSuppression, autoGainControl: REC.applied.autoGainControl, sampleRate: REC.applied.sampleRate, capture: REC.kind } },
+    live: { rpmTrack: REC.rpmTrack, rpmMedian: median(valid), idleMedian: idleCore.length>=8 ? median(idleCore) : idleMid, workMedian: workV.length>=8 ? median(workV) : null,
+      idleP10: qtl(idleCore,.1), idleP90: qtl(idleCore,.9), bands: bandsSaved, bandSpec: BAND_SPEC, match,
+      excluded, excludeReason, horns: REC.horns.filter(h => h[0] < dur - 0.3).map(h=>[+h[0].toFixed(2), +h[1].toFixed(2)]), nAna: REC.nAna, nOut: REC.nOut, nHornSkip: REC.nHornSkip },
+    hasAudio: true, important: false,
+    env: { at: REC.startedAt.toISOString(), status:'locating' },
+  };
+  await DB.put('audio', rec.id, { blob: wav, fileName: rec.fileName });
+  await DB.put('records', rec.id, rec);
+  const envP = REC.envP;
+  envP.then(async env => {
+    if (metaRec && metaRec.id===rec.id && !metaEnvView){ metaRec.env = env; renderMetaEnv(); }
+    const cur = await DB.get('records', rec.id); if (!cur) return;
+    cur.env = env; cur.updatedAt = new Date().toISOString(); await DB.put('records', rec.id, cur);
+  });
+  if (REC.sit==='start'){
+    busy(true, '시동 분석 중…');
+    await new Promise(r => setTimeout(r, 30));
+    try{ rec.live.start = analyzeStart(pcm, sr, rec.live.horns); }catch(e){ rec.live.start = { found:false, reason:'분석 중 오류: '+e.message }; }
+    const cur = await DB.get('records', rec.id); if (cur){ cur.live.start = rec.live.start; await DB.put('records', rec.id, cur); }
+  }
+  REC.chunks = []; busy(false);
+  try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){}
+  if (REC.sit==='start'){ openStartReport(rec, true); return; }
+  openMeta(rec);
+}
+
+/* WAV 16-bit PCM mono (무손실 저장 형식) */
+function encodeWav(f32, sr){
+  const n = f32.length, buf = new ArrayBuffer(44 + n*2), v = new DataView(buf);
+  const w = (o,s)=>{ for(let i=0;i<s.length;i++) v.setUint8(o+i, s.charCodeAt(i)); };
+  w(0,'RIFF'); v.setUint32(4, 36+n*2, true); w(8,'WAVE'); w(12,'fmt '); v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+  v.setUint32(24,sr,true); v.setUint32(28,sr*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true); w(36,'data'); v.setUint32(40,n*2,true);
+  let p = 44; for (let i=0;i<n;i++,p+=2){ let s=f32[i]; s = s>1?1:s<-1?-1:s; v.setInt16(p, s<0 ? s*32768 : s*32767, true); }
+  return new Blob([buf], {type:'audio/wav'});
+}
+function median(a){ if(!a.length) return null; const s=[...a].sort((x,y)=>x-y); const m=s.length>>1; return s.length%2?s[m]:(s[m-1]+s[m])/2; }
+
+/* ---------------- 실시간 rpm (v0.6, 설계서 2.2 · 5.9) ----------------
+   6기통 4행정: 폭발 주파수 f = rpm/20. 이 엔진 소리에는 크랭크 회전(rpm/60) 간격의 줄이 촘촘해서
+   전체 범위를 찾으면 ½·1.5·2·2.5배 간격에 끌려 숫자가 튄다(2026-10-17 녹음 확인).
+   → 고른 상황(공회전/작업)의 범위에서만 찾는다 (PC 분석 engine_features.py와 같은 방식)
+   ① 최근 1초 PCM, Hann 창, 65536점 FFT (0.73 Hz 칸 + 보간)
+   ② 주변 ±12 Hz 중앙값을 바닥으로 뺀 돌출 스펙트럼
+   ③ 폭발 하모닉 1~12차(40~600 Hz)의 평균 돌출이 가장 큰 f
+   ④ 다른 배수(½, ⅔, ¾, 4/3, 1.5, 2배) 간격이 더 잘 맞으면 "범위 밖"
+   ⑤ 경적(약 403 Hz, 6·7·8차 2415·2815·3220 Hz)이 울린 순간과 뒤 1.2초는 계산하지 않음 */
+const FFTN = 65536, ANA_H = 12, ANA_FMAX = 600;
+const FFT = (() => {
+  const cache = {};
+  function plan(n){
+    if (cache[n]) return cache[n];
+    const lv = Math.log2(n), rev = new Uint32Array(n), cos = new Float64Array(n/2), sin = new Float64Array(n/2);
+    for (let i=0;i<n;i++){ let r=0, x=i; for (let b=0;b<lv;b++){ r=(r<<1)|(x&1); x>>=1; } rev[i]=r>>>0; }
+    for (let i=0;i<n/2;i++){ cos[i]=Math.cos(2*Math.PI*i/n); sin[i]=-Math.sin(2*Math.PI*i/n); }
+    return cache[n] = { rev, cos, sin, re:new Float64Array(n), im:new Float64Array(n), win:{} };
+  }
+  /* 실수 입력 x(길이 m ≤ n, Hann 창 적용) → 0..maxBin 까지 진폭 dB (20·log10(|X|/m)) */
+  return function mag(x, n, maxBin){
+    const pl = plan(n), { rev, cos, sin, re, im } = pl, m = x.length;
+    let w = pl.win[m]; if (!w){ w = pl.win[m] = new Float32Array(m); for (let i=0;i<m;i++) w[i] = 0.5 - 0.5*Math.cos(2*Math.PI*i/(m-1)); }
+    re.fill(0); im.fill(0);
+    for (let i=0;i<m;i++) re[rev[i]] = x[i] * w[i];
+    for (let size=2; size<=n; size<<=1){
+      const half=size>>1, step=n/size;
+      for (let st=0; st<n; st+=size) for (let j=0,k=0; j<half; j++, k+=step){
+        const a=st+j, b=a+half, tr=re[b]*cos[k]-im[b]*sin[k], ti=re[b]*sin[k]+im[b]*cos[k];
+        re[b]=re[a]-tr; im[b]=im[a]-ti; re[a]+=tr; im[a]+=ti;
+      }
+    }
+    const out = new Float32Array(maxBin+1);
+    for (let i=0;i<=maxBin;i++) out[i] = 20*Math.log10(Math.hypot(re[i],im[i])/m + 1e-12);
+    return out;
+  };
+})();
+function ringPush(buf){
+  const R = REC.ring, n = R.length;
+  for (let i=0;i<buf.length;i++){ R[REC.ringPos++] = buf[i]; if (REC.ringPos===n) REC.ringPos = 0; }
+  REC.ringFill = Math.min(n, REC.ringFill + buf.length);
+}
+function ringLast(){ const R = REC.ring, n = R.length, o = new Float32Array(n); o.set(R.subarray(REC.ringPos)); o.set(R.subarray(0, REC.ringPos), n-REC.ringPos); return o; }
+/* 경적 감지: 녹음 조각(약 85 ms)마다. 2415·2815·3220 Hz 중 두 곳 이상이 주변보다 15 dB 넘게 돌출 */
+const HORN_F = [2415, 2815, 3220], HORN_DB = 15, HORN_DB_KEEP = 8, HORN_HOLD = 1.2, HORN_PRE = 0.5;   /* 울리는 중에는 8 dB까지 경적으로 본다 (끝부분 잔향) */
+function hornCheck(buf){
+  const t1 = (REC.chunkSamples += buf.length) / REC.sr;
+  if (buf.length < 2048) return;
+  const n = 4096, x = buf.length >= n ? buf.subarray(buf.length-n) : buf, bin = REC.sr/n, maxBin = Math.ceil(3500/bin);
+  const L = FFT(x, n, maxBin), pr = [];
+  for (const f of HORN_F){
+    let pk=-999; const ring=[];
+    for (let i=Math.ceil((f-200)/bin); i<=Math.floor((f+200)/bin); i++){
+      const d = Math.abs(i*bin - f);
+      if (d < 30) pk = Math.max(pk, L[i]); else if (d > 60) ring.push(L[i]);
+    }
+    pr.push(pk - median(ring));
+  }
+  pr.sort((a,b)=>b-a);
+  const active = (REC.chunkSamples - buf.length) / REC.sr < REC.hornUntil - HORN_HOLD + 0.1;
+  if (pr[1] > HORN_DB || (active && pr[1] > HORN_DB_KEEP)){
+    const t0 = t1 - x.length/REC.sr, last = REC.horns[REC.horns.length-1];
+    if (last && t0 - last[1] < 0.5) last[1] = t1; else REC.horns.push([t0, t1]);
+    REC.hornUntil = t1 + HORN_HOLD;
+  }
+}
+/* 소리 평균(대역)은 0.5초 늦게 반영: 경적이 울리기 직전 조각도 빼기 위해 */
+function commitBands(upTo){
+  const keep = [];
+  for (const [t, prof] of REC.bandPend){
+    if (t > upTo){ keep.push([t, prof]); continue; }
+    if (REC.horns.some(h => t > h[0]-HORN_PRE && t < h[1]+HORN_HOLD)) continue;
+    const a = REC.bandAcc[REC.sit]; for (let i=0;i<CIR.N;i++) a.s[i] += prof[i]; a.n++;
+  }
+  REC.bandPend = keep;
+}
+function promSpectrum(L, bin){   /* 주변 ±12 Hz 중앙값을 뺀 돌출 (정렬 창을 밀어 가며 계산) */
+  const k = Math.round(12/bin), n = L.length, P = new Float32Array(n), w = [];
+  const ins = v => { let lo=0, hi=w.length; while (lo<hi){ const m=(lo+hi)>>1; if (w[m]<v) lo=m+1; else hi=m; } w.splice(lo,0,v); };
+  const del = v => { let lo=0, hi=w.length; while (lo<hi){ const m=(lo+hi)>>1; if (w[m]<v) lo=m+1; else hi=m; } w.splice(lo,1); };
+  for (let j=0; j<=Math.min(n-1,k); j++) ins(L[j]);
+  for (let i=0;i<n;i++){
+    P[i] = Math.max(0, L[i] - w[w.length>>1]);
+    if (i+k+1 < n) ins(L[i+k+1]);
+    if (i-k >= 0) del(L[i-k]);
+  }
+  return P;
+}
+function combScore(P, bin, f){
+  let s=0, c=0;
+  for (let h=1; h<=ANA_H; h++){ const hf=h*f; if (hf<40) continue; if (hf>ANA_FMAX) break;
+    const x=hf/bin, i=Math.floor(x), t=x-i; s += P[i]*(1-t) + P[i+1]*t; c++; }
+  return c ? s/c : 0;
+}
+function combNear(P, bin, rpm){ let b=-1; for (let d=-0.006; d<=0.0061; d+=0.001) b = Math.max(b, combScore(P, bin, rpm*(1+d)/20)); return b; }
+function analyzeRpm(x, sr, S){
+  const bin = sr/FFTN, P = promSpectrum(FFT(x, FFTN, Math.ceil((ANA_FMAX*1.01+15)/bin)), bin);
+  let bf=0, bs=-1;
+  for (let f=S.lo/20; f<=S.hi/20; f+=0.05){ const v=combScore(P,bin,f); if (v>bs){ bs=v; bf=f; } }
+  for (let f=bf-0.05; f<=bf+0.05; f+=0.005){ const v=combScore(P,bin,f); if (v>bs){ bs=v; bf=f; } }
+  const rpm = bf*20, own = combNear(P, bin, rpm);
+  let alias = -99;
+  for (const q of [0.5, 2/3, 0.75, 4/3, 1.5, 2]){ const r=rpm*q; if (r>=550 && r<=2800) alias = Math.max(alias, combNear(P, bin, r)); }
+  return { rpm, score: bs, aliasDiff: alias - own };
+}
+
+let rpmCtx;
+function resizeCanvases(){
+  const c=$('#cvRpm'); const dpr=Math.min(2, window.devicePixelRatio||1); const h=+c.dataset.h||55;   /* c.height를 바꾸면 height 속성도 바뀌므로 원래 높이는 data-h에 둔다 (v0.6.1: 다시 측정할 때마다 차트가 커지던 문제) */ c.width=Math.round(c.clientWidth*dpr); c.height=Math.round(h*dpr); c.style.height=h+'px';
+  rpmCtx = c.getContext('2d');
+}
+function clearCanvases(){ rpmCtx.fillStyle='#000'; rpmCtx.fillRect(0,0,rpmCtx.canvas.width,rpmCtx.canvas.height); }
+
+/* =========================================================
+   원형 주파수 막대 (설계서 12.1, 디자인 7장)
+   40 Hz ~ 12 kHz, 1/6 옥타브 49대역, 12시에서 시계 방향, 끝 20°는 비움
+   막대 길이 = 전체(40 Hz~12 kHz) 대비 상대 dB → 자동 음량 조절 영향 없음
+   회색 = 같은 운전 영역(공회전/작업) 최근 10회 평균, 흰색 = 실시간(약 1초 평활)
+   ========================================================= */
+const CIR = { N:49, F0:40, F1:12000, SW:340, R0:92, L:50, C:150 };
+CIR.oct = Math.log2(CIR.F1/CIR.F0);
+CIR.edges = Array.from({length:CIR.N+1}, (_,i) => CIR.F0*Math.pow(2, i*CIR.oct/CIR.N));
+const BAND_SPEC = '1/6oct-40-12000-49';
+const FIG = ' ';
+const fix4 = n => n==null ? FIG+FIG+FIG+'—' : String(n).padStart(4, FIG);
+const cirP = (a,r) => { const t=(a-90)*Math.PI/180; return [CIR.C+r*Math.cos(t), CIR.C+r*Math.sin(t)]; };
+const cirAng = f => CIR.SW*Math.log2(f/CIR.F0)/CIR.oct;
+function buildCircle(){
+  const s = $('#circ'), NS='http://www.w3.org/2000/svg'; s.innerHTML='';
+  const mk = (t, a, px) => { const e=document.createElementNS(NS,t); for (const k in a) e.setAttribute(k,a[k]); if (px) e.dataset.px=px; s.appendChild(e); return e; };
+  mk('circle',{cx:150,cy:150,r:CIR.R0-3,fill:'none',stroke:'#2a2a30','stroke-width':1});
+  const step = CIR.SW/CIR.N, half = step*0.2; CIR.mean=[]; CIR.live=[];
+  for (let i=0;i<CIR.N;i++){
+    const a=(i+0.5)*step, am=a-half, al=a+half;
+    const [x1,y1]=cirP(am,CIR.R0), [u1,v1]=cirP(al,CIR.R0);
+    CIR.mean.push({ el:mk('line',{x1,y1,x2:x1,y2:y1,stroke:'#55555d','stroke-width':2.6}), a:am, x:x1, y:y1 });
+    CIR.live.push({ el:mk('line',{x1:u1,y1:v1,x2:u1,y2:v1,stroke:'#fff','stroke-width':2.6}), a:al });
+  }
+  for (const [f,txt,major,nudge] of [[40,'40 Hz',1,5],[100,'100 Hz',1],[200,'200 Hz',0],[500,'500 Hz',0],[1000,'1 kHz',1],[2000,'2 kHz',0],[5000,'5 kHz',0],[10000,'10 kHz',1,-3]]){
+    const a=cirAng(f), [x1,y1]=cirP(a,CIR.R0-5), [x2,y2]=cirP(a,CIR.R0-5-(major?7:4));
+    mk('line',{x1,y1,x2,y2,stroke:major?'#8a8a92':'#55555d','stroke-width':1});
+    const [x,y]=cirP(a+(nudge||0), CIR.R0-20);
+    mk('text',{x,y,fill:major?'#a0a0a8':'#6a6a72','text-anchor':'middle','dominant-baseline':'middle'}, 10).textContent = txt;
+  }
+  const T = (y,px,fill,w) => mk('text',{x:150,y,fill,'text-anchor':'middle','font-weight':w||400,style:'font-variant-numeric:tabular-nums;white-space:pre'}, px);
+  CIR.tZone=T(124,12,'#a0a0a8'); CIR.tRpm=T(163,42,'#fff',700); CIR.tAvg=T(183,12,'#a0a0a8'); CIR.tMatch=T(199,12,'#fff');
+}
+function layoutCircle(){   /* 글자는 화면 px 기준 크기로 (눈금 10px) */
+  const w = $('#circ').getBoundingClientRect().width || 300, k = 300/w;
+  $$('#circ [data-px]').forEach(e => e.setAttribute('font-size', (+e.dataset.px*k).toFixed(2)));
+}
+function bandProfile(freq, binHz){
+  const out = new Float64Array(CIR.N); let tot = 0;
+  for (let b=0;b<CIR.N;b++){
+    const i0 = Math.max(1, Math.ceil(CIR.edges[b]/binHz)), i1 = Math.min(freq.length-1, Math.floor(CIR.edges[b+1]/binHz));
+    let sum = 0;
+    if (i1 >= i0) for (let i=i0;i<=i1;i++) sum += Math.pow(10, freq[i]/10);
+    else sum = Math.pow(10, freq[Math.round(Math.sqrt(CIR.edges[b]*CIR.edges[b+1])/binHz)]/10);
+    out[b] = sum; tot += sum;
+  }
+  for (let b=0;b<CIR.N;b++) out[b] = 10*Math.log10(out[b]/(tot||1e-30) + 1e-12);
+  return out;
+}
+function bandsToSave(){
+  const o = {};
+  for (const z of ['idle','work']){ const a = REC.bandAcc[z]; if (a.n >= 8) o[z] = Array.from(a.s, v => Math.round(v/a.n*10)/10); }
+  return o;
+}
+async function loadBaseline(){   /* 측정 중에는 작업 모드를 아직 모르므로 운전영역만 맞춘 최근 10회 */
+  const all = await allRecords();
+  const bandRecs = all.filter(r => r.live && r.live.bands && r.live.bandSpec===BAND_SPEC).sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+  const B = {};
+  for (const z of ['idle','work']){
+    const list = bandRecs.filter(r => r.live.bands[z] && inBaseline(r, z)).slice(0, RULE.window);
+    let m = null;
+    if (list.length){ m = new Array(CIR.N).fill(0); for (const r of list) r.live.bands[z].forEach((v,i)=> m[i]+=v/list.length); }
+    const st = runStats(all, null, z);   /* 측정 중에는 작업 모드를 아직 모름 → 같은 측정 상황만 맞춘 최근 10회 */
+    B[z] = { mean:m, nBand:list.length, rpm: st.n ? st.mean : null, nRpm: st.n };
+  }
+  return B;
+}
+function drawCircle(rpm){
+  if (!CIR.mean) return;
+  const z = REC.sit==='idle' || REC.sit==='work' ? REC.sit : null, base = z && REC.base ? REC.base[z] : null, live = REC.bandS;
+  const len = v => Math.max(0.02, Math.min(1.08, (v+45)/40));
+  let sumAbs = 0;
+  for (let i=0;i<CIR.N;i++){
+    const g = CIR.mean[i], m = base && base.mean ? base.mean[i] : null;
+    if (m==null){ g.el.setAttribute('x2',g.x); g.el.setAttribute('y2',g.y); }
+    else { const [x,y]=cirP(g.a, CIR.R0+len(m)*CIR.L); g.el.setAttribute('x2',x); g.el.setAttribute('y2',y); }
+    const l = CIR.live[i], v = live ? live[i] : -99, [x,y] = cirP(l.a, CIR.R0+len(v)*CIR.L);
+    l.el.setAttribute('x2',x); l.el.setAttribute('y2',y);
+    const d = m==null ? 0 : v-m; if (m!=null) sumAbs += Math.abs(d);
+    l.el.setAttribute('stroke', d>=10 ? '#ff4d4f' : d>=6 ? '#f6d303' : '#fff');
+  }
+  const st = REC.rpmState;
+  CIR.tZone.textContent = REC.sit==='start' ? '시동 녹음 중' : st==='horn' ? '경적 · 분석 제외' : st==='out' ? `${SIT[REC.sit].label} 범위 밖` : rpm==null ? '엔진 소리를 찾는 중' : 'RPM · ' + SIT[REC.sit].label;
+  CIR.tZone.setAttribute('fill', st==='out' ? '#f6d303' : '#a0a0a8');
+  CIR.tRpm.textContent = REC.sit==='start' ? fmtMMSS((performance.now()-REC.t0)/1000) : fix4(rpm ? Math.round(rpm) : null);
+  CIR.tRpm.setAttribute('fill', st==='horn' ? '#55555d' : '#fff');
+  if (base && (base.mean || base.rpm)){
+    CIR.tAvg.textContent = base.rpm ? `최근 ${base.nRpm}회 평균 ` + fix4(Math.round(base.rpm)) : '';
+    if (base.mean){
+      const match = Math.max(0, Math.round(100*(1 - sumAbs/CIR.N/10)));
+      CIR.tMatch.textContent = '평균과 일치 ' + match + '%';
+      CIR.tMatch.setAttribute('fill', match<60 ? '#ff4d4f' : match<80 ? '#f6d303' : '#fff');
+    } else { CIR.tMatch.textContent = '소리 평균은 이번 측정부터'; CIR.tMatch.setAttribute('fill', '#a0a0a8'); }
+  } else {
+    CIR.tAvg.textContent = z ? '평균 없음 · 첫 기록' : '';
+    CIR.tMatch.textContent = '';
+  }
+}
+
+function loop(){
+  if (!REC.on) return;
+  const t = (performance.now()-REC.t0)/1000;
+  $('#rTime').textContent = fmtMMSS(t);
+  // 음량 막대
+  const db = 20*Math.log10(REC.lvlPeak||1e-9);
+  const pct = Math.max(0, Math.min(100, (db+60)/60*100));
+  const bar = $('#rLvl'); bar.style.width = pct+'%';
+  const clipping = t - REC.lastClipAt < 2;
+  bar.className = clipping ? 'clip' : (db > -3 ? 'hot' : '');
+  $('#rDb').textContent = (db<-90?'−∞':db.toFixed(0)) + ' dBFS';
+  const w = $('#rWarn');
+  const silent = t > 2.5 && REC.peak === 0;
+  if (silent && REC.ctx.state !== 'running' && REC.resumeTried < 3){ REC.resumeTried++; REC.ctx.resume().catch(()=>{}); }
+  if (silent){ w.textContent='마이크 소리가 들어오지 않습니다 — 취소하고 다시 시작하세요. 계속되면 앱을 완전히 닫았다가 여세요'; w.className='rwarn bad'; }
+  else if (clipping){ w.textContent='소리가 너무 큽니다 (잘림) — 폰을 조금 멀리 두세요'; w.className='rwarn bad'; }
+  else if (db < -50 && t>2){ w.textContent='소리가 약합니다 — 위치를 확인하세요'; w.className='rwarn warn'; }
+  else if (REC.hidden){ w.textContent='화면을 벗어났었습니다 — 녹음이 끊겼을 수 있습니다'; w.className='rwarn warn'; }
+  else { w.textContent=''; }
+
+  if (t - REC.lastAna >= 0.25){
+    REC.lastAna = t;
+    REC.an.getFloatFrequencyData(REC.freq);
+    const binHz = REC.ctx.sampleRate / REC.an.fftSize;
+    const prof = bandProfile(REC.freq, binHz);
+    const tA = REC.chunkSamples / REC.sr;          /* 분석 창의 끝 = 받은 소리의 끝 */
+    const horn = tA < REC.hornUntil;
+    if (!horn){ if (!REC.bandS) REC.bandS = prof; else for (let i=0;i<CIR.N;i++) REC.bandS[i] = REC.bandS[i]*0.7 + prof[i]*0.3; }
+    const S = SIT[REC.sit];
+    let rpm = null, use = false;
+    if (horn){ REC.rpmState = 'horn'; REC.nHornSkip++; rpm = REC.lastRpm; $('#rSnr').textContent = '경적 · 분석 제외'; }
+    else if (S.target && REC.ringFill >= REC.ring.length){
+      const a = analyzeRpm(ringLast(), REC.sr, S);
+      REC.nAna++;
+      REC.aliasBuf.push(a.aliasDiff); if (REC.aliasBuf.length > 8) REC.aliasBuf.shift();
+      const out = REC.aliasBuf.length >= 4 && median(REC.aliasBuf) > S.aliasMax;
+      if (REC.aliasBuf.length < 4){ REC.rpmState = 'wait'; $('#rSnr').textContent = '확인 중'; $('#rFreq').textContent='—'; }
+      else if (a.score < 2){ REC.rpmState = 'weak'; REC.rpmBuf = []; $('#rSnr').textContent = '엔진 소리 약함'; $('#rFreq').textContent='—'; }
+      else if (out){ REC.rpmState = 'out'; REC.nOut++; REC.rpmBuf = []; REC.lastRpm = null; $('#rSnr').textContent = '범위 밖'; $('#rFreq').textContent='—'; }
+      else {
+        REC.rpmState = 'ok'; use = true;
+        REC.rpmBuf.push(a.rpm); if (REC.rpmBuf.length > 6) REC.rpmBuf.shift();
+        rpm = median(REC.rpmBuf); REC.lastRpm = rpm;
+        $('#rFreq').textContent = (rpm/20).toFixed(1)+' Hz'; $('#rSnr').textContent = '정상 분석';
+      }
+    } else if (S.target){ REC.rpmState = 'wait'; $('#rSnr').textContent = '준비 중'; }
+    else { REC.rpmState = 'start'; $('#rSnr').textContent = REC.horns.length ? `경적 ${REC.horns.length}회` : '녹음 중'; }
+    if (use) REC.bandPend.push([tA, prof]);
+    commitBands(tA - HORN_PRE);
+    drawCircle(REC.rpmState==='ok' || REC.rpmState==='horn' ? rpm : null);
+    REC.rpmTrack.push([+t.toFixed(2), use ? Math.round(rpm*10)/10 : null]);
+    if (S.target) drawRpm(t);
+  }
+  requestAnimationFrame(loop);
+}
+function drawRpm(now){
+  const c = rpmCtx, W=c.canvas.width, H=c.canvas.height, dpr=W/c.canvas.clientWidth;
+  c.fillStyle='#000'; c.fillRect(0,0,W,H);
+  const Y = r => H - (r/2700)*H;
+  c.setLineDash([4*dpr,4*dpr]); c.strokeStyle='#3a3a3f'; c.lineWidth=1*dpr;
+  for (const g of [SIT[REC.sit].target || 910]){ c.beginPath(); c.moveTo(0,Y(g)); c.lineTo(W,Y(g)); c.stroke(); }
+  c.setLineDash([]); c.strokeStyle='#fff'; c.lineWidth=2*dpr; c.beginPath();
+  let pen=false;
+  for (const [t,r] of REC.rpmTrack){ if (t < now-60) continue; const x = W - (now-t)/60*W; if (r==null){ pen=false; continue; } if(!pen){ c.moveTo(x,Y(r)); pen=true; } else c.lineTo(x,Y(r)); }
+  c.stroke();
+}
+document.addEventListener('visibilitychange', () => { if (REC.on && document.hidden) REC.hidden = true; });
+let lastW = 0;
+window.addEventListener('resize', () => { if (!REC.on) return; const w = $('#circ').getBoundingClientRect().width; if (Math.abs(w-lastW) < 2) return; lastW = w; resizeCanvases(); clearCanvases(); layoutCircle(); });
+for (const ev of ['gesturestart','gesturechange','dblclick']) $('#rec').addEventListener(ev, e => e.preventDefault(), {passive:false});
+/* v0.9.3: 두 손가락 확대 막기는 아이폰에서만 JS로 (안드로이드는 CSS touch-action:pan-y가 막음).
+   passive:false 터치 리스너가 있으면 안드로이드 크롬은 손가락이 움직일 때마다 JS(측정 중 FFT로 바쁨)를 기다려 스크롤이 끊긴다 */
+if ('ongesturestart' in window) $('#rec').addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, {passive:false});
+
+$$('[data-sit]').forEach(b => b.addEventListener('click', () => startRecording(b.dataset.sit)));
+$('#btnRecStop').addEventListener('click', () => { vibrate([40,60,40]); stopRecording(false); });
+$('#btnRecCancel').addEventListener('click', () => { if (confirm('녹음을 버리고 취소할까요?')) stopRecording(true); });
+
+/* =========================================================
+   시동 분석 (v0.7, 설계서 5.10) — 측정 종료 후 녹음 전체를 한 번에 분석
+   ① 소리 크기(0.25초) : 녹음 시작 1.5초의 바닥 소리보다 10 dB 커지면 스타터 연결
+   ② 크랭킹 속도 : 600~3000 Hz 소리 크기의 맥동 간격 (6기통 → 크랭크 1바퀴에 압축 3회, rpm = 20 / 간격)
+   ③ 운전 확인 : 폭발 하모닉 돌출 점수 (650~1400 rpm 범위, 8 이상이 1초 넘게 이어지면 연속 운전)
+   ④ 착화 : 크랭킹 속도가 1.25배 넘게 오르기 시작한 때 (없으면 연속 운전 1초 전)
+   기준(평소): 정상 시동 3회(10-09, 10-15, 10-17, 외기 약 14 ℃) + 시동 불량 동영상 8개(10-05 분석)
+   ========================================================= */
+const START_REF = { crankOk:195, crankSlow:170, ignOk:4, ignLate:8, runOk:8, idleFirst:990, trendPct:15, shakeRpm:60, sagPct:5, runThr:8 };
+function biquad(x, sr, type, f0, q=0.707){
+  const w=2*Math.PI*f0/sr, cs=Math.cos(w), al=Math.sin(w)/(2*q); let b0,b1,b2;
+  if (type==='hp'){ b0=(1+cs)/2; b1=-(1+cs); b2=(1+cs)/2; } else { b0=(1-cs)/2; b1=1-cs; b2=(1-cs)/2; }
+  const a0=1+al, a1=-2*cs, a2=1-al, y=new Float32Array(x.length); let x1=0,x2=0,y1=0,y2=0;
+  for (let i=0;i<x.length;i++){ const v=(b0*x[i]+b1*x1+b2*x2-a1*y1-a2*y2)/a0; x2=x1; x1=x[i]; y2=y1; y1=v; y[i]=v; }
+  return y;
+}
+function analyzeStart(pcm, sr, horns){
+  const dur = pcm.length/sr, hop = 0.25;
+  if (dur < 4) return { found:false, reason:'녹음이 너무 짧습니다' };
+  // ② 맥동용 소리 크기 (5 ms)
+  const bp = biquad(biquad(pcm, sr, 'hp', 600), sr, 'lp', 3000), ef = 200, en = Math.floor(sr/ef), E = new Float32Array(Math.floor(pcm.length/en));
+  for (let k=0;k<E.length;k++){ let s=0; for (let i=k*en;i<(k+1)*en;i++) s+=bp[i]*bp[i]; E[k]=10*Math.log10(s/en+1e-18); }
+  const F = [];
+  const bin = sr/FFTN;
+  for (let t=1; t<=dur+1e-9; t+=hop){
+    const i1 = Math.floor(t*sr);
+    // ① 소리 크기
+    let s=0; for (let i=i1-Math.floor(hop*sr); i<i1; i++) s+=pcm[i]*pcm[i];
+    const lvl = 10*Math.log10(s/(hop*sr)+1e-18);
+    // ② 크랭킹 맥동
+    const e1 = Math.floor(t*ef), e0 = e1-ef, seg = E.slice(Math.max(0,e0), e1); let m=0; for (const v of seg) m+=v; m/=seg.length;
+    const z = seg.map(v=>v-m), ac = lag => { let a=0; for (let i=0;i+lag<z.length;i++) a+=z[i]*z[i+lag]; return a; }, a0 = ac(0)||1e-12;
+    let bl=0, bv=-9; for (let L=Math.ceil(ef/16); L<=Math.floor(ef/5); L++){ const v=ac(L)/a0; if (v>bv){ bv=v; bl=L; } }
+    const ym=ac(bl-1)/a0, yp=ac(bl+1)/a0, d=(ym-yp)/(2*(ym-2*bv+yp)||1), lag=(bl+(isFinite(d)&&Math.abs(d)<1?d:0))/ef;
+    // ③ 운전 확인
+    const P = promSpectrum(FFT(pcm.subarray(i1-sr, i1), FFTN, Math.ceil((ANA_FMAX*1.01+15)/bin)), bin);
+    let rf=0, rs=-1; for (let f=650/20; f<=1400/20; f+=0.05){ const v=combScore(P,bin,f); if (v>rs){ rs=v; rf=f; } }
+    for (let f=rf-0.05; f<=rf+0.05; f+=0.005){ const v=combScore(P,bin,f); if (v>rs){ rs=v; rf=f; } }
+    const horn = (horns||[]).some(h => t > h[0] && t-1 < h[1]+0.2);
+    F.push({ t, lvl, crank: 20/lag, ac: bv, run: rs >= START_REF.runThr && !horn, rpm: rf*20, score: rs });
+  }
+  const pct = (a,q) => { const b=[...a].sort((x,y)=>x-y); return b[Math.min(b.length-1, Math.max(0, Math.round(q*(b.length-1))))]; };
+  const bg = pct(F.filter(f=>f.t<=2.5).map(f=>f.lvl), 0.2);
+  const i0 = F.findIndex(f => f.lvl >= bg+10);
+  // 녹음 시작부터 이미 엔진이 돌고 있는 경우
+  if (F.slice(0,4).every(f=>f.run)) return { found:false, reason:'녹음을 시작할 때 이미 엔진이 돌고 있었습니다. 키를 돌리기 전에 측정을 시작하세요.' };
+  if (i0 < 0) return { found:false, reason:'스타터·엔진 소리를 찾지 못했습니다 (소리 크기 변화 없음).' };
+  const crankStart = Math.max(0, F[i0].t - hop/2);
+  let k1 = -1; for (let k=i0; k+3<F.length; k++){ if (F[k].run && F[k+1].run && F[k+2].run && F[k+3].run){ k1=k; break; } }
+  const runOnset = k1>=0 ? F[k1].t - 0.5 : null;
+  let lastAct = i0; for (let k=i0;k<F.length;k++) if (F[k].lvl >= bg+10 || F[k].run) lastAct = k;
+  const ok = f => f.ac >= 0.25 && f.crank>=100 && f.crank<=320 && !f.run;
+  // 크랭킹 기준 속도: 스타터 연결 직후 0.75~2초 (분석 창 1초가 크랭킹 안에 들어온 구간)
+  const early = F.filter(f => f.t-1 >= crankStart-0.1 && f.t <= crankStart+2.25 && ok(f));
+  const base = early.length ? median(early.map(f=>f.crank)) : null;
+  // 착화: 연속 운전이 있을 때만, 그 2.5초 전부터 크랭킹 속도가 기준의 1.2배 넘게 두 번 연속 오른 때 (없으면 연속 운전 1.5초 전)
+  //       연속 운전이 없으면 착화 없음 (반짝 운전은 아래 "끊긴 착화"로 셈) — 소리 맥동만으로는 실패 녹음에서 헛 착화가 잡혀서
+  let ign = null;
+  if (base && runOnset!=null){
+    for (let k=0; k<F.length-1; k++){ const f=F[k], g=F[k+1];
+      if (f.t-1 < crankStart+0.5 || f.t-0.5 < runOnset-2.5) continue;
+      if (runOnset!=null && f.t-0.5 > runOnset) break;
+      if (f.ac>=0.25 && g.ac>=0.25 && f.crank>1.2*base && g.crank>1.2*base && f.crank<=400 && g.crank<=400){ ign = f.t-0.5; break; } }
+  }
+  if (ign==null && runOnset!=null) ign = Math.max(crankStart+0.5, runOnset-1.5);
+  const crankEnd = ign!=null ? ign : F[lastAct].t;
+  const cr = F.filter(f => f.t-1 >= crankStart-0.1 && f.t <= crankEnd+0.25 && ok(f));
+  const crankRpm = cr.length ? median(cr.map(f=>f.crank)) : base;
+  const crankDur = Math.max(0, crankEnd - crankStart);
+  let trend = null;
+  if (cr.length >= 8 && crankDur >= 3){
+    const n3 = Math.max(2, Math.floor(cr.length/3)), a = median(cr.slice(0,n3).map(f=>f.crank)), b = median(cr.slice(-n3).map(f=>f.crank));
+    trend = { first: Math.round(a), last: Math.round(b), pct: +((b/a-1)*100).toFixed(1) };
+  }
+  // 끊긴 착화: 연속 운전 전(또는 실패)에 0.5초 이상 반짝 운전한 구간 수
+  let partial=0, runLen=0;
+  for (let k=i0;k<F.length;k++){
+    if (runOnset!=null && F[k].t-0.5 >= runOnset) break;
+    if (F[k].run) runLen++; else { if (runLen>=2) partial++; runLen=0; }
+  }
+  if (runOnset==null && runLen>=2) partial++;
+  // 운전 후
+  let after = null, stalled = false;
+  if (runOnset!=null){
+    const R = F.filter(f => f.t-0.5 >= runOnset);
+    const runFrac = R.filter(f=>f.run).length / Math.max(1,R.length);
+    let lastRun = runOnset; for (const f of R) if (f.run) lastRun = f.t;
+    stalled = (dur - lastRun > 3) && runFrac < 0.6;
+    const w = R.filter(f => f.run && f.t-0.5 <= runOnset+6).map(f=>f.rpm);
+    if (w.length >= 4){
+      const first = median(w.slice(0, Math.min(8,w.length)));
+      const tail = w.slice(Math.floor(w.length*2/3)), head = w.slice(0, Math.max(2,Math.floor(w.length/3)));
+      after = { firstRpm: Math.round(first), shake: Math.round(pct(w,0.9)-pct(w,0.1)), sagPct: +((median(tail)/median(head)-1)*100).toFixed(1),
+                runFor: +(Math.min(dur, lastRun) - runOnset).toFixed(1) };
+    }
+  }
+  const crankEndAll = runOnset!=null ? runOnset : F[lastAct].t;
+  const okRun = runOnset!=null && !stalled && (dur - runOnset) >= 3;
+  return {
+    found:true, auto: okRun ? 'success' : (runOnset!=null && stalled ? 'stall' : 'fail'),
+    bgDb: +bg.toFixed(1), crankStart: +crankStart.toFixed(2), crankEnd: +crankEnd.toFixed(2), crankDur: +crankDur.toFixed(1), activeEnd: +crankEndAll.toFixed(2),
+    crankRpm: crankRpm ? Math.round(crankRpm) : null, trend, ignS: ign!=null ? +(ign-crankStart).toFixed(1) : null,
+    runS: runOnset!=null ? +(runOnset-crankStart).toFixed(1) : null, runOnset: runOnset!=null ? +runOnset.toFixed(2) : null,
+    partial, after, stalled, dur:+dur.toFixed(1), method:'start-0.7',
+  };
+}
+
+/* ---------------- 시동 리포트 화면 ---------------- */
+let startRec = null;
+function startItems(A, outcome){
+  const S = START_REF, it = [];
+  // 1. 배터리·스타터 (크랭킹 속도)
+  if (A.crankRpm==null) it.push({ k:'배터리 · 스타터', sub:'크랭킹 속도', st:'na', v:'—', ref:'평소 195~225 rpm', p: A.crankDur < 0.8 ? '크랭킹이 너무 짧아 속도를 재지 못했습니다.' : '압축 맥동을 찾지 못해 속도를 재지 못했습니다. 폰을 엔진 가까이(50 cm~1 m) 두세요.' });
+  else if (A.crankRpm < S.crankSlow) it.push({ k:'배터리 · 스타터', sub:'크랭킹 속도', st:'bad', v:A.crankRpm, u:'rpm', ref:'평소 195~225 rpm · 느림 기준 170 이하', p:'크랭킹이 평소보다 느립니다. 배터리 전압·스타터·케이블 쪽 신호입니다. 영하에서는 차가운 엔진오일 때문에 느릴 수도 있습니다.' });
+  else if (A.crankRpm < S.crankOk) it.push({ k:'배터리 · 스타터', sub:'크랭킹 속도', st:'warn', v:A.crankRpm, u:'rpm', ref:'평소 195~225 rpm · 느림 기준 170 이하', p:'평소보다 조금 느립니다. 다음 시동에서도 이 정도면 배터리 상태를 확인하세요.' });
+  else it.push({ k:'배터리 · 스타터', sub:'크랭킹 속도', st:'ok', v:A.crankRpm, u:'rpm', ref:'평소 195~225 rpm', p:'크랭킹 속도는 평소 범위입니다. 배터리·스타터 쪽 신호는 없습니다.' });
+  // 2. 크랭킹 중 속도 변화
+  if (!A.trend) it.push({ k:'크랭킹 중 속도 변화', sub:'처음 → 끝', st:'na', v:'—', ref:'크랭킹 3초 이상일 때 판단', p: A.crankDur < 3 ? `크랭킹이 ${A.crankDur}초로 짧아 판단하지 않습니다 (빨리 걸린 시동은 정상).` : '맥동이 고르지 않아 판단하지 못했습니다.' });
+  else if (A.trend.pct <= -S.trendPct) it.push({ k:'크랭킹 중 속도 변화', sub:'처음 → 끝', st:'bad', v:`${A.trend.first} → ${A.trend.last}`, u:'rpm', ref:`${A.trend.pct}% · 기준 ±15%`, p:'크랭킹하는 동안 점점 느려졌습니다. 배터리가 버티지 못하는 모습입니다. 더 돌리지 말고 배터리를 보호하세요.' });
+  else if (A.trend.pct >= S.trendPct) it.push({ k:'크랭킹 중 속도 변화', sub:'처음 → 끝', st:'warn', v:`${A.trend.first} → ${A.trend.last}`, u:'rpm', ref:`+${A.trend.pct}% · 기준 ±15%`, p:'크랭킹하는 동안 점점 빨라졌습니다. 배터리 문제가 아니라 차가운 엔진오일이 풀리는 모습입니다(혹한 사례 IMG_3335와 같은 모양).' });
+  else it.push({ k:'크랭킹 중 속도 변화', sub:'처음 → 끝', st:'ok', v:`${A.trend.first} → ${A.trend.last}`, u:'rpm', ref:`${A.trend.pct>0?'+':''}${A.trend.pct}% · 기준 ±15%`, p:'크랭킹하는 동안 속도가 일정했습니다.' });
+  // 3. 착화
+  if (A.ignS==null) it.push({ k:'착화', sub:'스타터 연결 → 첫 착화', st: A.crankDur >= S.ignLate ? 'bad' : 'warn', v:'없음', ref:`평소 1.6~3.4초 · 경보 기준 ${S.ignLate}초`, p: A.crankDur >= S.ignLate ? `${A.crankDur}초 동안 크랭킹했지만 착화가 없었습니다.` : `${A.crankDur}초 크랭킹하는 동안 착화가 없었습니다.` });
+  else if (A.ignS <= S.ignOk) it.push({ k:'착화', sub:'스타터 연결 → 첫 착화', st:'ok', v:'약 '+A.ignS, u:'초', ref:'평소 1.6~3.4초 · ±0.5초 정도 오차', p:'평소처럼 빨리 착화했습니다.' });
+  else it.push({ k:'착화', sub:'스타터 연결 → 첫 착화', st: A.ignS > S.ignLate ? 'bad' : 'warn', v:'약 '+A.ignS, u:'초', ref:`평소 1.6~3.4초 · 경보 기준 ${S.ignLate}초`, p:'평소보다 늦게 착화했습니다. 연료 공급(에어 유입, 필터) 또는 냉간 영향일 수 있습니다.' });
+  // 4. 연료 공급 패턴
+  const fuel = [];
+  if (A.partial) fuel.push(`끊어진 착화 ${A.partial}번`);
+  if (A.after && A.after.shake >= S.shakeRpm) fuel.push(`시동 직후 rpm 흔들림 ${A.after.shake} rpm`);
+  if (A.after && A.after.sagPct <= -S.sagPct) fuel.push(`시동 직후 rpm 처짐 ${A.after.sagPct}%`);
+  if (A.stalled) fuel.push('운전하다 꺼짐');
+  if (fuel.length) it.push({ k:'연료 공급 패턴', sub:'끊긴 착화 · 흔들림 · 처짐', st:'warn', v: fuel.length+'건', ref: fuel.join(' · '), p:'연료가 고르게 들어오지 않을 때의 모습입니다(시동 불량 사례 1878·1879·2452와 비슷). 연료라인 에어 유입, 연료필터 일부 막힘을 확인하세요.' });
+  else if (A.ignS==null) it.push({ k:'연료 공급 패턴', sub:'끊긴 착화 · 흔들림 · 처짐', st:'na', v:'—', ref:'착화가 없어 판단 못 함', p:'착화가 한 번도 없어 연료 공급의 고르기는 판단할 수 없습니다. 아래 "배기 연기"를 고르면 안내가 정확해집니다.' });
+  else it.push({ k:'연료 공급 패턴', sub:'끊긴 착화 · 흔들림 · 처짐', st:'ok', v:'없음', ref:`흔들림 기준 ${S.shakeRpm} rpm · 처짐 기준 −${S.sagPct}%`, p:'끊긴 착화나 시동 직후 흔들림·처짐이 없었습니다.' });
+  // 5. 시동 후 안정
+  if (A.runS==null || !A.after) it.push({ k:'시동 후 안정', sub:'스타터 연결 → 연속 운전', st:'na', v:'—', ref:'평소 4~7.5초 · 첫 공회전 약 990 rpm', p: outcome==='success' ? '운전 구간이 짧아 판단하지 못했습니다. 시동 후 10초 이상 녹음하세요.' : '엔진이 연속 운전으로 넘어가지 않았습니다.' });
+  else it.push({ k:'시동 후 안정', sub:'스타터 연결 → 연속 운전', st: A.runS > S.runOk ? 'warn' : 'ok', v:A.runS, u:'초', ref:`평소 4~7.5초 · 첫 공회전 ${A.after.firstRpm} rpm (평소 약 990 → 910)`, p: A.runS > S.runOk ? '연속 운전까지 평소보다 오래 걸렸습니다.' : '평소처럼 안정되었습니다.' });
+  return it;
+}
+function startTodo(A, outcome, smoke){
+  const slow = A.crankRpm!=null && A.crankRpm < START_REF.crankSlow, falling = A.trend && A.trend.pct <= -START_REF.trendPct;
+  const rising = A.trend && A.trend.pct >= START_REF.trendPct;
+  if (outcome==='success'){
+    const t = ['이 녹음은 시동 기준을 쌓는 자료가 됩니다. 매번 같은 자리·같은 방향에서 시동 측정을 해 주세요.'];
+    if (A.partial || (A.after && (A.after.shake>=START_REF.shakeRpm || A.after.sagPct<=-START_REF.sagPct))) t.unshift('시동은 됐지만 연료 공급이 고르지 않은 모습이 있었습니다. 공회전 측정으로 rpm과 흔들림을 확인하고, 다음 시동도 측정해 비교하세요.');
+    if (slow) t.unshift('크랭킹이 느렸습니다. 다음 시동 전에 배터리 전압을 확인하세요.');
+    return { cls:'ok', title:'참고', list:t };
+  }
+  const L = [];
+  if (slow || falling){
+    L.push('크랭킹을 멈추세요. 오래 돌릴수록 배터리만 줄어듭니다.');
+    L.push('배터리 전압 · 스타터 · 케이블 연결을 확인하세요. 필요하면 다른 차량에서 배터리 연결(점프).');
+    L.push('영하라면 엔진과 흡기를 데운 뒤(열풍기 등) 다시 시도하세요 — 2026-01 혹한기 사례에서 70분 가온 후 성공.');
+  } else if (rising){
+    /* 크랭킹이 점점 빨라졌는데 착화 없음 = 배터리보다 추위 영향 (10-05 분석 IMG_3335, 2026-01 혹한기 사례) */
+    L.push('크랭킹이 점점 빨라졌는데도 착화가 없습니다. 배터리보다 추위의 영향으로 보입니다: 차가운 엔진오일, 낮은 압축 온도, 연료 왁스·수분 결빙.');
+    L.push('크랭킹을 멈추세요. 오래 돌릴수록 배터리만 줄어듭니다.');
+    L.push('엔진과 흡기를 데우세요(열풍기 등) — 2026-01 혹한기 사례에서 70분 가온 후 성공. 흡기 예열 장치가 있다면 작동을 확인하세요.');
+    L.push('연료필터를 데우거나 확인하세요. 동절기용 연료인지, 연료에 수분이 없는지(물 빼기) 확인하세요.');
+    if (smoke==='black') L.push('검은 연기만 났다면 연료는 분사되지만 압축 온도가 낮아 제대로 타지 못한 모습입니다. 가온 후 다시 시도하고, 에어필터 막힘도 확인하세요.');
+    else if (smoke==='white') L.push('흰 연기 → 검은 연기가 났다면 연료는 들어갔지만 타지 못한 것입니다. 가온이 우선입니다.');
+    else if (smoke==='none') L.push('연기가 없었다면 연료가 실린더까지 오지 않은 것입니다. 연료 왁스·결빙으로 필터가 막혔을 가능성이 큽니다.');
+    else L.push('배기 연기 색을 고르면 안내를 더 좁혀 드립니다.');
+  } else if (smoke==='none'){
+    L.push('크랭킹은 정상인데 배기 연기가 없습니다 → 연료가 실린더까지 오지 않는 모습입니다.');
+    L.push('수동 펌핑 · 연료라인 에어빼기를 하세요.');
+    L.push('연료필터 막힘 · 이물질, 연료 차단 장치를 확인하세요 (사례 IMG_2418: 계속 펌핑해도 착화 없음).');
+  } else if (smoke==='white'){
+    L.push('흰 연기(→ 검은 연기)가 났다면 연료는 들어갔지만 타지 못한 것입니다. 압축 온도가 부족한 모습입니다.');
+    L.push('크랭킹을 멈추고 배터리를 보호하세요.');
+    L.push('엔진과 흡기를 데운 뒤 다시 시도하세요 (2026-01 혹한기 사례와 같은 모양). 흡기 예열 장치가 있다면 작동을 확인하세요.');
+  } else if (smoke==='black'){
+    L.push('검은 연기만 났다면 연료는 들어가는데 불완전 연소하는 모습입니다.');
+    L.push('크랭킹 속도가 충분한지(배터리), 에어필터 막힘을 확인하세요 (사례 IMG_3277: 느린 크랭킹 + 검은 매연).');
+  } else {
+    L.push('배기 연기 색을 고르면 원인에 맞춘 안내를 보여 드립니다.');
+    L.push('크랭킹은 한 번에 오래 하지 말고, 쉬었다가 다시 시도하세요.');
+  }
+  if (A.partial) L.push(`착화가 ${A.partial}번 끊어지며 일어났습니다. 연료라인 에어 유입·필터 일부 막힘 쪽을 함께 보세요.`);
+  L.push('정비 담당과 함께 확인하고, 조치 내용은 "점검 · 정비"로 기록해 주세요.');
+  return { cls:'', title:'지금 할 일 (참고)', list:L };
+}
+function renderStart(){
+  const r = startRec, A = r.live && r.live.start, body = $('#startBody'); body.innerHTML='';
+  body.append(el('div',{class:'fname',text:r.fileName}));
+  if (!A || !A.found){
+    body.append(el('div',{class:'sv na',text:'분석할 수 없음'}), el('p',{class:'hint',text:(A&&A.reason)||'시동 분석 결과가 없습니다.'}),
+      el('p',{class:'hint',text:'녹음은 저장되었습니다. 키를 돌리기 몇 초 전에 시동 측정을 시작하고, 엔진이 안정될 때까지(또는 크랭킹을 멈출 때까지) 녹음하세요.'}));
+    return;
+  }
+  const outcome = A.outcome || (A.auto==='success' ? 'success' : 'fail');
+  const vt = outcome==='success' ? ['시동 성공','ok'] : A.auto==='stall' ? ['시동 후 꺼짐','bad'] : ['시동 실패','bad'];
+  body.append(el('div',{class:'cap',style:'margin-top:16px',text:'소리로 본 결과'}), el('div',{class:'sv '+vt[1],text:vt[0]}));
+  if (r.soak && r.soak.hours!=null) body.append(el('p',{class:'hint',style:'margin-top:2px',text:`시동 전 상태: 마지막 운전 후 ${Math.round(r.soak.hours)}시간` + (r.soak.minC!=null ? ` · 그동안 외기 최저 ${r.soak.minC.toFixed(1)} ℃` : '') + (r.soak.level ? (r.soak.level==='bad' ? ' · 저온 방치 경고 상태였음' : ' · 저온 방치 주의 상태였음') : '')}));
+  body.append(el('p',{class:'hint',style:'margin-top:2px',text: A.outcome && A.outcome!==(A.auto==='success'?'success':'fail') ? `작업자가 고친 결과입니다 (앱 판단: ${A.auto==='success'?'성공':'실패'}).` : '앱이 소리로 판단했습니다. 실제 결과가 다르면 고쳐 주세요.'}));
+  const seg = el('div',{class:'seg c2',style:'margin-top:8px'},
+    el('button',{'data-v':'success',class: outcome==='success'?'sel':'',text:'시동 성공'}), el('button',{'data-v':'fail',class: outcome==='fail'?'sel':'',text:'시동 실패'}));
+  seg.addEventListener('click', e => { const b=e.target.closest('button'); if(!b) return; saveStartField('outcome', b.dataset.v); });
+  body.append(seg);
+  // 시간 막대
+  const T = A.dur, wpct = x => Math.max(0, x/T*100);
+  const segs = [['w', A.crankStart]];
+  const act = (A.activeEnd!=null ? A.activeEnd : A.crankEnd) - A.crankStart;
+  if (A.ignS!=null){ segs.push(['c', A.ignS]); segs.push(['g', Math.max(0.3,(A.runS!=null ? A.runS : act)-A.ignS)]); }
+  else segs.push(['c', A.crankDur]);
+  const used = segs.reduce((s,x)=>s+x[1],0);
+  segs.push([A.runOnset!=null ? (A.stalled?'x':'r') : 'w', Math.max(0, T-used)]);
+  body.append(el('div',{class:'tl'}, ...segs.map(([c,w])=>el('i',{class:c,style:`width:${wpct(w)}%`}))));
+  body.append(el('div',{class:'tlk'}, el('span',{},el('i',{style:'background:#1a1a1e;border:1px solid var(--line)'}),'대기'), el('span',{},el('i',{style:'background:#55555d'}),`크랭킹 ${A.crankDur}초`),
+    A.ignS!=null ? el('span',{},el('i',{style:'background:var(--warn)'}),'착화 → 회전 상승') : null,
+    A.runOnset!=null ? el('span',{},el('i',{style:'background:#fff'}),'운전') : null, el('span',{},`전체 ${T}초`)));
+  // 항목
+  body.append(el('div',{class:'sect big'}, '평소 시동과 비교 - 5가지'));
+  const lab = { ok:'평소와 같음', warn:'주의', bad:'벗어남', na:'판단 못 함' };
+  let no = 0;
+  for (const x of startItems(A, outcome)){ no++;
+    body.append(el('div',{class:'sitem'},
+      el('div',{class:'h'}, el('span',{}, el('i',{class:'n',text:String(no)}), x.k, el('small',{text:x.sub})), el('b',{class:'chip '+x.st,text:lab[x.st]})),
+      el('div',{class:'v'}, String(x.v), x.u ? el('small',{text:x.u}) : null), el('div',{class:'ref',text:x.ref}), el('p',{text:x.p})));
+  }
+  // 배기 연기 (실패일 때)
+  if (outcome!=='success'){
+    body.append(el('div',{class:'sect'}, '배기 연기 색', el('small',{text:'배기구를 보고 고르세요'})));
+    const sm = el('div',{class:'seg c2'}, ...[['none','없음'],['white','흰색 → 검정'],['black','검정만'],['unknown','못 봄']].map(([v,t]) => el('button',{'data-v':v,class:A.smoke===v?'sel':'',text:t})));
+    sm.addEventListener('click', e => { const b=e.target.closest('button'); if(!b) return; saveStartField('smoke', b.dataset.v); });
+    body.append(sm);
+  }
+  const td = startTodo(A, outcome, A.smoke);
+  body.append(el('div',{class:'todo '+td.cls}, el('h3',{text:td.title}), el('ol',{}, ...td.list.map(t=>el('li',{text:t})))));
+  // 아직 알 수 없는 것
+  const unk = ['평소 기준은 외기 약 14 ℃의 정상 시동 3회와 시동 불량 동영상 8개입니다. 횟수가 적어 경보선(크랭킹 170 rpm, 착화 8초)은 임시값입니다.',
+    '소리만으로는 연료 쪽 원인(에어 유입 · 필터 막힘 · 펌프 · 압축 온도 부족)을 하나로 정하지 못합니다.',
+    '실린더별 압축 상태와 196 Hz 소리의 의미는 판단하지 않습니다.'];
+  const tC = r.env && r.env.tempC;
+  if (tC!=null && tC < 5) unk.unshift(`오늘 기온 ${tC.toFixed(1)} ℃: 추운 날의 정상 시동 기준이 아직 없어, 상온 기준과 비교한 결과입니다.`);
+  body.append(el('div',{class:'sect'}, '아직 알 수 없는 것', el('small',{text:'데이터가 더 쌓여야 판단할 수 있는 부분'})), el('ul',{class:'unk'}, ...unk.map(t=>el('li',{text:t}))));
+}
+async function saveStartField(k, v){
+  const cur = await DB.get('records', startRec.id); if (!cur || !cur.live || !cur.live.start) return;
+  cur.live.start[k] = v; cur.updatedAt = new Date().toISOString(); await DB.put('records', cur.id, cur);
+  startRec = cur; renderStart();
+}
+function openStartReport(rec, afterStop){
+  startRec = rec; renderStart();
+  $('#btnStartNext').style.display = afterStop ? '' : 'none';
+  $('#startBack').style.display = afterStop ? 'none' : '';
+  $('#startDel').style.display = afterStop ? '' : 'none';
+  if (afterStop){ navStack.length = 1; } go('start');
+}
+/* 측정 종료 직후 화면의 "삭제" (v0.9.2): 잘못 측정한 녹음을 저장하지 않고 지운다 */
+async function discardMeasurement(id){
+  if (!id) return;
+  if (!confirm('이 측정을 저장하지 않고 지울까요?\n녹음과 분석 결과가 모두 지워지고, 기록과 AI 학습에 남지 않습니다.')) return;
+  await deleteEntry('records', id);
+  metaRec = null; startRec = null; navStack.length = 1; go('home'); toast('측정을 지웠습니다', 2500);
+}
+$('#startDel').addEventListener('click', () => discardMeasurement(startRec && startRec.id));
+$('#metaDel').addEventListener('click', () => discardMeasurement(metaRec && metaRec.id));
+$('#btnStartNext').addEventListener('click', async () => { const r = await DB.get('records', startRec.id); openMeta(r || startRec); });
+
+/* =========================================================
+   META — 측정 정보 → 파일 이름
+   형식: YYYYMMDD_HHMM_{L|R}_{B|A}_{N|W}_{초}s.wav
+   ========================================================= */
+let metaRec = null;
+const vMeta = $('#v-meta'); segInit(vMeta); chipsInit($('#mItems'));
+function stamp(d){ return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`; }
+const sitCode = rec => rec && rec.situation && SIT[rec.situation] ? '_'+SIT[rec.situation].code : '';
+function tempName(d, dur, sit){ return `${stamp(d)}_X_X_X${sit && SIT[sit] ? '_'+SIT[sit].code : ''}_${dur}s.wav`; }
+async function buildName(rec, side, timing, mode){
+  const base = `${stamp(new Date(rec.createdAt))}_${side}_${timing}_${mode}${sitCode(rec)}_${rec.duration}s`;
+  const names = new Set((await DB.all('records')).filter(r=>r.id!==rec.id).map(r=>r.fileName));
+  let name = base+'.wav', k=2; while (names.has(name)) name = `${base}-${k++}.wav`;
+  return name;
+}
+let metaEnvView = null;   /* 화면에만 보이는 임시 상태 (장소 바꾸기 목록) */
+function renderMetaEnv(){
+  const box = $('#envBox'); box.innerHTML='';
+  if (!metaRec) return;
+  const id = metaRec.id;
+  const draw = (env, viewOnly) => { if (!metaRec || metaRec.id!==id) return; if (viewOnly) metaEnvView = env; else { metaEnvView = null; if (env.status!=='locating') metaRec.env = env; } paint(env); };
+  const h = envHandlers(() => id, () => metaRec && metaRec.env, draw);
+  const paint = env => { box.innerHTML=''; box.append(envView(env, { onRetry:h.onRetry, onChoose:h.onChoose, onChange: env.status==='ok'||env.status==='pending' ? h.onChange : null })); };
+  paint(metaEnvView || metaRec.env);
+}
+function openMeta(rec){
+  metaRec = rec;
+  for (const k of ['side','timing','mode']) segClear(vMeta, k, true);
+  segClear(vMeta,'confidence'); segSet(vMeta,'workType','none'); $('#mWorkBox').style.display='none';
+  $$('#mItems button').forEach(b=>b.classList.remove('sel'));
+  $('#mOperator').value = settings.operator||''; $('#mGauge').value=''; $('#mOpinion').value=''; $('#mWorkText').value='';
+  $('#metaSit').textContent = rec.situation && SIT[rec.situation] ? SIT[rec.situation].btn : '';
+  const mSeg = vMeta.querySelector('.seg[data-key="mode"]').closest('.fld');
+  if (rec.situation==='start'){ segSet(vMeta,'mode','N'); mSeg.style.display='none'; } else mSeg.style.display='';
+  $('#metaIntro').textContent = `녹음은 이미 안전하게 저장되었습니다. 아래 번호가 붙은 ${rec.situation==='start'?'두':'세'} 가지를 고르면 파일 이름이 정해집니다. 잘못 측정했으면 오른쪽 위 "삭제"를 누르세요.`;
+  metaEnvView = null; updateMetaPreview(); renderMetaEnv();
+  navStack.length = 1; go('meta');
+}
+async function updateMetaPreview(){
+  const s=segVal(vMeta,'side'), t=segVal(vMeta,'timing'), m=segVal(vMeta,'mode');
+  const ok = s && t && m;
+  $('#fnamePreview').textContent = metaRec ? (ok ? await buildName(metaRec,s,t,m) : `${stamp(new Date(metaRec.createdAt))}_${s||'?'}_${t||'?'}_${m||'?'}${sitCode(metaRec)}_${metaRec.duration}s.wav`) : '—';
+  $('#btnMetaSave').disabled = !ok;
+  $('#btnMetaSave').textContent = ok ? '저장' : (metaRec && metaRec.situation==='start' ? '측정 쪽 · 작업 전후를 고르세요' : '측정 쪽 · 작업 전후 · 모드를 고르세요');
+}
+vMeta.querySelectorAll('.seg').forEach(s => s.addEventListener('change', updateMetaPreview));
+vMeta.querySelector('.seg[data-key="workType"]').addEventListener('change', e => { $('#mWorkBox').style.display = e.detail==='none' ? 'none' : 'block'; });
+
+$('#btnMetaSave').addEventListener('click', async () => {
+  const side=segVal(vMeta,'side'), timing=segVal(vMeta,'timing'), mode=segVal(vMeta,'mode');
+  if (!(side&&timing&&mode)) return;
+  busy(true,'저장 중…');
+  const rec = await DB.get('records', metaRec.id);
+  const now = new Date().toISOString();
+  const operator = $('#mOperator').value.trim();
+  const gauge = $('#mGauge').value ? +$('#mGauge').value : null;
+  rec.meta = { side, timing, mode, hydraulic: mode==='W' ? 'ON' : 'OFF', gaugeRpm: gauge, operator };  // 작업 모드 W = 유압 ON
+  rec.fileName = await buildName(rec, side, timing, mode);
+  rec.updatedAt = now;
+  if (metaRec.env && metaRec.env.status!=='locating'){ const cur = await DB.get('records', metaRec.id); rec.env = (cur && cur.env && cur.env.fetchedAt && (!metaRec.env.fetchedAt || cur.env.fetchedAt > metaRec.env.fetchedAt)) ? cur.env : metaRec.env; }
+  const opinion = $('#mOpinion').value.trim();
+  if (opinion){
+    const n = { id:newId('n'), createdAt:now, updatedAt:now, deviceId:settings.deviceId, equip:EQUIP.code, kind:'opinion',
+      text:opinion, confidence: segVal(vMeta,'confidence'), operator, recordId: rec.id, recordFile: rec.fileName };
+    await DB.put('notes', n.id, n); rec.opinion = opinion;
+  }
+  const wt = segVal(vMeta,'workType');
+  if (wt && wt!=='none'){
+    const m = { id:newId('m'), createdAt:now, updatedAt:now, deviceId:settings.deviceId, equip:EQUIP.code, kind:wt,
+      items: chipsVal($('#mItems')), text: $('#mWorkText').value.trim(),
+      operator, recordId: rec.id, recordFile: rec.fileName, resetBaseline:false };
+    await DB.put('maint', m.id, m);
+  }
+  await DB.put('records', rec.id, rec);
+  const a = await DB.get('audio', rec.id); if (a){ a.fileName = rec.fileName; await DB.put('audio', rec.id, a); }
+  settings.operator = operator; await saveSettings();
+  busy(false); metaRec = null; toast('저장했습니다 · '+rec.fileName, 3000);
+  navStack.length = 1; go('home', false);
+});
+
+/* ---------------- 의견 · 점검 · 정비 (단독 기록) ---------------- */
+const vLog = $('#v-log'); segInit(vLog); chipsInit($('#lItems'));
+let logLinkRec = null;
+function openLog(linkRec){
+  logLinkRec = linkRec || null;
+  segSet(vLog,'lkind','opinion'); segClear(vLog,'lconf');
+  $('#lItemsBox').style.display='none'; $('#lConfBox').style.display='block';
+  $$('#lItems button').forEach(b=>b.classList.remove('sel'));
+  $('#lText').value=''; $('#lOperator').value=settings.operator||'';
+  $('#lLinkHint').textContent = logLinkRec ? '연결된 측정: '+logLinkRec.fileName : '';
+  go('log');
+}
+vLog.querySelector('.seg[data-key="lkind"]').addEventListener('change', e => {
+  const op = e.detail==='opinion'; $('#lItemsBox').style.display = op?'none':'block'; $('#lConfBox').style.display = op?'block':'none';
+});
+$('#btnAddLog').addEventListener('click', () => openLog(null));
+$('#btnLogSave').addEventListener('click', async () => {
+  const kind = segVal(vLog,'lkind'), text = $('#lText').value.trim(), items = chipsVal($('#lItems'));
+  if (!text && !items.length){ toast('내용을 입력하세요'); return; }
+  const now = new Date().toISOString(), operator = $('#lOperator').value.trim();
+  const base = { createdAt:now, updatedAt:now, deviceId:settings.deviceId, equip:EQUIP.code, operator, text,
+    recordId: logLinkRec ? logLinkRec.id : null, recordFile: logLinkRec ? logLinkRec.fileName : null };
+  if (kind==='opinion'){ const n = {...base, id:newId('n'), kind:'opinion', confidence: segVal(vLog,'lconf')}; await DB.put('notes', n.id, n); }
+  else { const m = {...base, id:newId('m'), kind, items, resetBaseline:false}; await DB.put('maint', m.id, m); }
+  settings.operator = operator; await saveSettings();
+  toast('기록했습니다'); back();
+});
+
+/* ---------------- HISTORY ---------------- */
+let histTab = 'rec';
+$$('#v-history .tabs button').forEach(b => b.addEventListener('click', () => { histTab=b.dataset.tab; $$('#v-history .tabs button').forEach(x=>x.classList.toggle('sel',x===b)); renderHistory(); }));
+/* 선택 삭제 (v0.9.1): 선택 모드에서 측정·의견·정비·정보 입력 전 녹음을 골라 한 번에 지운다 */
+const PICK = { on:false, sel:new Map() };   /* key 'records:id' | 'notes:id' | 'maint:id' → 표시 이름 */
+function pickItem(node, store, id, label, allowed=true){
+  if (!PICK.on) return node;
+  node = node.cloneNode(true);   /* 원래의 "상세 열기" 동작을 떼어 낸 복사본 */
+  const key = store+':'+id;
+  node.classList.add('pick'); if (!allowed) node.classList.add('off'); if (PICK.sel.has(key)) node.classList.add('on');
+  node.onclick = e => { e.preventDefault(); if (!allowed){ toast('내장 분석 자료는 지울 수 없습니다'); return; }
+    if (PICK.sel.has(key)) PICK.sel.delete(key); else PICK.sel.set(key, label);
+    node.classList.toggle('on', PICK.sel.has(key)); updatePickBar(); };
+  return node;
+}
+function updatePickBar(){
+  const n = PICK.sel.size;
+  $('#histDel').disabled = !n; $('#histDel').textContent = n ? `${n}건 삭제` : '삭제';
+}
+function setPick(on){
+  PICK.on = on; PICK.sel.clear();
+  $('#histPick').textContent = on ? '선택 끝' : '선택';
+  $('#histBar').classList.toggle('on', on); $('#histPickHint').style.display = on ? '' : 'none';
+  updatePickBar(); renderHistory();
+}
+$('#histPick').addEventListener('click', () => setPick(!PICK.on));
+$('#histCancel').addEventListener('click', () => setPick(false));
+$('#histDel').addEventListener('click', async () => {
+  const keys = [...PICK.sel.keys()]; if (!keys.length) return;
+  const nRec = keys.filter(k=>k.startsWith('records:')).length, nLog = keys.length - nRec;
+  const msg = `선택한 ${keys.length}건을 이 폰에서 지울까요?\n` + (nRec ? `측정 ${nRec}건은 사운드도 함께 지워지고, AI 학습에서도 빠집니다.\n` : '') + (nLog ? `의견·정비 ${nLog}건.\n` : '') + '되돌릴 수 없습니다. 필요하면 먼저 "보내기"로 백업하세요.';
+  if (!confirm(msg)) return;
+  busy(true,'지우는 중…');
+  for (const k of keys){ const [st, id] = [k.slice(0,k.indexOf(':')), k.slice(k.indexOf(':')+1)]; await deleteEntry(st, id); }
+  busy(false); toast(`${keys.length}건 삭제했습니다`, 2500); setPick(false); renderHome();
+});
+/* 측정을 지우면 사운드도 지우고, 기준 파일(GitHub)에서 다시 불러오지 않도록 지운 ID를 기억한다.
+   연결된 의견·정비는 남기고 "삭제된 측정"으로 표시한다 */
+async function deleteEntry(store, id){
+  if (store==='records'){
+    const r = await DB.get('records', id);
+    await DB.del('records', id); await DB.del('audio', id);
+    settings.deletedIds = [...new Set([...(settings.deletedIds||[]), id])].slice(-500); await saveSettings();
+    for (const s of ['notes','maint']) for (const x of (await DB.all(s)).filter(x=>x.recordId===id)){
+      x.recordId = null; x.recordFile = (r && r.fileName ? r.fileName : '측정') + ' (삭제된 측정)'; x.updatedAt = new Date().toISOString(); await DB.put(s, x.id, x); }
+  } else await DB.del(store, id);
+}
+async function renderHistory(){
+  const box = $('#histList'); box.innerHTML='';
+  const recs = await allRecords();
+  const notes = await DB.all('notes'), maint = await DB.all('maint');
+  let rows;
+  if (histTab==='rec') rows = recs.map(r=>({t:r.createdAt, r}));
+  else rows = [...recs.map(r=>({t:r.createdAt, r})), ...notes.map(n=>({t:n.createdAt, n})), ...maint.map(m=>({t:m.createdAt, m}))];
+  rows.sort((a,b)=>b.t.localeCompare(a.t));
+  // 메타 입력 전 녹음(앱이 중간에 닫힌 경우)도 보여준다
+  const orphan = (await DB.all('records')).filter(r=>!r.meta);
+  for (const r of orphan) box.append(pickItem(el('button',{class:'item',onclick:()=>openMeta(r)},
+    el('div',{class:'t warn',text:'정보 입력 필요 · '+fmtDate(new Date(r.createdAt))}), el('div',{class:'s',text:`${r.duration} s · 눌러서 측정 정보를 입력하세요`})), 'records', r.id, '정보 입력 전 녹음'));
+  if (!rows.length && !orphan.length){ box.append(el('div',{class:'empty',text:'아직 기록이 없습니다'})); return; }
+  for (const x of rows){
+    if (x.r){ const r=x.r;
+      box.append(pickItem(el('button',{class:'item',onclick:()=>openDetail(r.id)},
+        el('div',{class:'t',text:r.fileName}),
+        el('div',{class:'s'}, el('span',{class:'tag',text: r.seed ? '분석 자료' : (r.situation && SIT[r.situation] ? SIT[r.situation].label + (r.situation==='start' && r.live && r.live.start && r.live.start.found ? ((r.live.start.outcome||(r.live.start.auto==='success'?'success':'fail'))==='success' ? ' 성공' : ' 실패') : '') : r.fromBaseline ? '기준 파일' : '이전 버전') + (!r.seed && (r.live&&r.live.excluded || r.excludedManual || !r.situation) ? ' · 기준 제외' : '')}), `${r.seed ? r.createdAt.slice(0,10) : fmtDate(new Date(r.createdAt))} · ${r.live&&(r.live.workMedian||r.live.rpmMedian)?Math.round(r.live.workMedian||r.live.rpmMedian)+' rpm · ':''}${r.meta.mode==='W'?'작업 W':'일반 N'}${r.meta.operator?' · '+r.meta.operator:''}${r.seed||r.hasAudio?'':' · 사운드 없음'}${r.env&&(siteLabel(r.env)||r.env.dong)?' · '+(siteLabel(r.env)||r.env.dong):''}${r.env&&r.env.tempC!=null?' · '+r.env.tempC.toFixed(1)+' ℃':''}`),
+        r.opinion ? el('div',{class:'o',text:r.opinion}) : null), 'records', r.id, r.fileName, !r.seed));
+    } else { const v = x.n || x.m; const kind = x.n ? '의견' : v.kind;
+      box.append(pickItem(el('div',{class:'item'},
+        el('div',{class:'s'}, el('span',{class:'tag',text:kind}), `${fmtDate(new Date(v.createdAt))}${v.operator?' · '+v.operator:''}${v.hourMeter?' · '+v.hourMeter+' h':''}${v.confidence?' · '+v.confidence:''}`),
+        v.items && v.items.length ? el('div',{class:'o',text:v.items.join(', ')}) : null,
+        v.text ? el('div',{class:'o',text:v.text}) : null,
+        v.recordFile ? el('div',{class:'s',text:'↳ '+v.recordFile}) : null), x.n ? 'notes' : 'maint', v.id, kind));
+    }
+  }
+}
+
+/* ---------------- DETAIL ---------------- */
+let audioUrl = null;
+async function openDetail(id){
+  const r = await getRecord(id); if (!r) return;
+  const a = r.seed ? null : await DB.get('audio', id);
+  const body = $('#detailBody'); body.innerHTML='';
+  if (audioUrl) URL.revokeObjectURL(audioUrl); audioUrl = null;
+  body.append(el('div',{class:'fname',text:r.fileName}));
+  const L = r.live || {};
+  if (!r.seed){
+    const sitTxt = r.situation && SIT[r.situation] ? SIT[r.situation].btn : 'v0.5.0 이전 측정 (상황 구분 없음)';
+    const why = !r.situation ? '상황 구분이 없어 기준에 넣지 않습니다.' : L.excluded ? L.excludeReason + ' — 기준에서 자동으로 뺐습니다.' : r.excludedManual ? '직접 기준에서 뺐습니다.' : r.situation==='start' ? '시동 측정은 기준(최근 10회)에 넣지 않고, 시동측정 리포트로 평소 시동과 비교합니다.' : '기준(최근 10회)에 들어갑니다.';
+    body.append(el('div',{class:'sect'}, sitTxt, el('small',{text:'측정 종류'})),
+      el('div',{class:'st'+(L.excluded||!r.situation?' warn':''),style:'font-size:15px;margin-top:4px;color:'+(L.excluded?'var(--warn)':'var(--soft)'),text:why}));
+    if (r.situation==='start' && L.start){
+      const A = L.start, oc = A.found ? (A.outcome || (A.auto==='success'?'success':'fail')) : null;
+      body.append(el('div',{class:'acts',style:'margin-top:10px'}, el('button',{class:'btn h52',text:`시동측정 리포트 보기${oc ? ' · '+(oc==='success'?'성공':'실패') : ''}`,onclick: async () => openStartReport(await DB.get('records', r.id), false)})));
+    }
+    if (L.horns && L.horns.length) body.append(el('div',{class:'hint',text:`경적 ${L.horns.length}회 감지 (${L.horns.map(h=>h[0].toFixed(1)+' s').join(', ')}) · 그 구간은 rpm과 소리 평균에서 뺐습니다.`}));
+    if (r.situation && r.situation!=='start' && !L.excluded){
+      body.append(el('div',{class:'acts',style:'margin-top:10px'}, el('button',{class:'btn h52',text: r.excludedManual ? '기준에 다시 넣기' : '이 측정을 기준에서 빼기', onclick: async () => {
+        const cur = await DB.get('records', r.id); cur.excludedManual = !cur.excludedManual; cur.updatedAt = new Date().toISOString(); await DB.put('records', r.id, cur);
+        toast(cur.excludedManual ? '기준에서 뺐습니다' : '기준에 다시 넣었습니다'); openDetail(r.id); renderHome(); }})));
+    }
+  }
+  if (r.situation==='start'){
+    const A = L.start || {};
+    body.append(el('div',{class:'cap',style:'margin-top:18px',text:'크랭킹 속도 · 평소 195~225 rpm'}),
+      el('div',{class:'stat'}, el('div',{}, el('span',{class:'v lg',text: A.crankRpm ? String(A.crankRpm) : '—'}), el('span',{class:'u',text:'rpm'})),
+        el('div',{class:'refs'}, el('div',{}, el('span',{text:'착화 '}), el('b',{text: A.ignS!=null ? '약 '+A.ignS+'초' : '없음'})), el('div',{}, el('span',{text:'크랭킹 '}), el('b',{text: A.crankDur!=null ? A.crankDur+'초' : '—'})))));
+  } else body.append(el('div',{class:'cap',style:'margin-top:18px',text: L.workMedian ? '작업 rpm · 측정 중앙값' : L.idleMedian ? '공회전 rpm · 측정 중앙값' : 'rpm · 측정 중앙값'}));
+  if (r.situation!=='start') body.append(el('div',{class:'stat'}, el('div',{}, el('span',{class:'v lg',text: (L.workMedian||L.idleMedian||(!r.situation && L.rpmMedian)) ? Math.round(L.workMedian||L.idleMedian||L.rpmMedian) : '—'}), el('span',{class:'u',text:'rpm'})),
+    L.workMedian && L.idleMedian ? el('div',{class:'refs'}, el('div',{}, el('span',{text:'공회전 '}), el('b',{text:Math.round(L.idleMedian)}))) : null));
+  if (a && a.blob){ audioUrl = URL.createObjectURL(a.blob); body.append(el('audio',{controls:'',src:audioUrl,preload:'metadata'})); }
+  else body.append(el('p',{class:'hint',text: r.seed ? '앱에 들어 있는 분석 자료입니다 (원본은 아이폰 음성메모 m4a, 사운드는 앱에 없음).' : '이 기기에는 사운드 원본이 없습니다 (이력만 받은 기록).'}));
+  // AI 학습 비교: 이 측정 이전의 같은 조건 최근 10회로 학습한 모델과 비교 (v0.9)
+  const allR = await allRecords(), rules = el('div',{});
+  let learnHead = null;
+  for (const zone of ['work','idle']){
+    const cur = L[zone+'Median']; if (cur==null) continue;
+    if (!r.seed && r.situation && r.situation!==zone) continue;
+    const M = modelFor(allR, r, zone), A = anomalyOf(r, zone, M);
+    if (!r.seed && A.S!=null) learnHead = scoreEl(A, M);
+    const name = zone==='work' ? '작업 rpm' : '공회전 rpm';
+    if (!M.n){ rules.append(el('div',{class:'rule'}, el('span',{text:name}), el('b',{text:Math.round(cur)}), el('small',{text:'학습할 이전 측정 없음'}))); continue; }
+    const dv = cur - M.mean, cls = Math.abs(dv) >= M.badHalf ? 'bad' : Math.abs(dv) >= M.warnHalf ? 'warn' : '';
+    rules.append(el('div',{class:'rule'}, el('span',{text:name}), el('b',{class:cls,text:(dv>=0?'+':'−')+Math.abs(dv).toFixed(1)+' rpm'}),
+      el('small',{text:`${cur.toFixed(1)} rpm · 평소 ${M.mean.toFixed(1)} ± ${M.warnHalf.toFixed(0)} (학습 ${M.n}회, 비중 ${Math.round(M.w*100)}%) · 규칙 기준 ${M.target} ± ${M.priorWarn.toFixed(0)}` + (cls ? ` · ${cls==='bad'?'많이 다름':'조금 다름'}` : ' · 평소 범위 안')})));
+    for (const p of A.parts.filter(p=>p.k!==name)) rules.append(el('div',{class:'rule'}, el('span',{text:p.k}), el('b',{class: p.z>=LEARN.sBad?'bad':p.z>=LEARN.sWarn?'warn':'', text:p.z.toFixed(1)}), el('small',{text:p.txt + ' (2 미만 평소)'})));
+  }
+  if (rules.childNodes.length) body.append(el('hr'), el('div',{class:'sect',style:'margin-top:0'}, 'AI 학습 비교', el('small',{text:'이 측정 전의 같은 조건 최근 10회로 배운 평소 모습과 비교'})), learnHead || el('span'), rules);
+  if (!r.seed){
+    const envBox = el('div',{class:'panel env',style:'margin-top:10px'});
+    let curEnv = r.env || { at: r.createdAt, status:'choose', gpsMsg:'이 측정에는 위치·날씨 기록이 없습니다' };
+    const drawEnv = (env, viewOnly) => { if (!viewOnly && env.status!=='locating') curEnv = env;
+      envBox.innerHTML=''; envBox.append(envView(env, { onRetry:h.onRetry, onChoose:h.onChoose, onChange: env.status==='ok'||env.status==='pending' ? h.onChange : null })); };
+    const h = envHandlers(() => id, () => curEnv, drawEnv);
+    drawEnv(curEnv);
+    body.append(el('hr'), el('div',{class:'sect',style:'margin-top:0'}, '위치 · 날씨'), envBox);
+  }
+  const ap = (r.quality&&r.quality.applied)||{};
+  const onoff = v => v===false ? '꺼짐' : v===true ? '켜짐' : '확인 불가';
+  const dl = el('dl',{class:'kv'});
+  const add = (k,v) => dl.append(el('dt',{text:k}), el('dd',{text:v}));
+  add('측정 시각', r.seed ? r.createdAt.slice(0,10) : fmtDate(new Date(r.createdAt)));
+  add('측정 쪽 (엔진)', r.meta.side==='L'?'왼쪽 (L)':'오른쪽 (R)');
+  add('작업 전후', r.meta.timing==='B'?'작업 전 (B)':r.meta.timing==='A'?'작업 후 (A)':'기록 없음');
+  add('모드', r.meta.mode==='N'?'일반 (N) · 유압 OFF':'작업 (W) · 유압 ON');
+  add('게이지 rpm', r.meta.gaugeRpm!=null ? String(r.meta.gaugeRpm) : '—');
+  add('측정자', r.meta.operator||'—');
+  if (r.seed){ add('자료', 'features_log.csv · engine_features.py v1'); add('메모', r.seedNote||'—'); body.append(el('hr'), dl); go('detail'); return; }
+  add('길이 · 크기', `${r.duration} s · ${r.bytes?fmtMB(r.bytes):'—'} · ${r.sr} Hz`);
+  add('최대 음량', r.quality ? r.quality.peakDb+' dBFS' : '—');
+  add('잘림(클리핑)', r.quality ? (r.quality.clipCount ? `${r.quality.clipCount} 샘플 — 다음엔 조금 멀리` : '없음') : '—');
+  add('음성 처리', `에코 ${onoff(ap.echoCancellation)} · 소음억제 ${onoff(ap.noiseSuppression)} · 자동음량 ${onoff(ap.autoGainControl)}`);
+  add('기기', `${r.deviceId} · v${r.appVersion}`);
+  body.append(el('hr'), dl);
+  // 연결된 의견·정비
+  const notes = (await DB.all('notes')).filter(n=>n.recordId===id);
+  const maint = (await DB.all('maint')).filter(m=>m.recordId===id);
+  if (notes.length || maint.length){
+    body.append(el('hr'), el('div',{class:'sect',style:'margin-top:0'}, '의견 · 점검 · 정비', el('small',{text:'이 측정에 연결된 기록'})));
+    for (const v of [...notes, ...maint].sort((x,y)=>x.createdAt.localeCompare(y.createdAt)))
+      body.append(el('div',{class:'item'}, el('div',{class:'s'}, el('span',{class:'tag',text: v.kind==='opinion'?'의견':v.kind}), fmtDate(new Date(v.createdAt))+(v.operator?' · '+v.operator:'')),
+        v.items&&v.items.length ? el('div',{class:'o',text:v.items.join(', ')}) : null, v.text ? el('div',{class:'o',text:v.text}) : null));
+  }
+  body.append(el('div',{class:'stack',style:'margin-top:24px'},
+    a && a.blob ? el('button',{class:'btn fill h84',text:'사운드 파일 보내기 (WAV)',onclick:()=>shareFile(new File([a.blob], r.fileName, {type:'audio/wav'}))}) : null,
+    el('button',{class:'btn h64',text:'이 측정에 의견 · 정비 추가',onclick:()=>openLog(r)}),
+    el('button',{class:'btn h52 badline',text:'이 측정 삭제',onclick:async()=>{
+      if (!confirm('이 측정과 사운드를 이 폰에서 지울까요? 되돌릴 수 없습니다.')) return;
+      await deleteEntry('records', id); toast('삭제했습니다'); back(); }})));
+  go('detail');
+}
+
+/* =========================================================
+   보내기 · 받기 — ② 장비 데이터 파일 (설계서 6.4)
+   .zip = MTT01.engineear(JSON 이력) + audio/*.wav
+   ========================================================= */
+async function shareFile(file){
+  try{
+    if (navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:file.name}); return; }
+  }catch(e){ if (e && e.name==='AbortError') return; }
+  const url = URL.createObjectURL(file); const a = el('a',{href:url,download:file.name}); document.body.append(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 60000);
+}
+async function buildPayload(){
+  const records = (await DB.all('records')).filter(r=>r.meta);
+  return { format:'engineear', formatVersion:1, appName:'EngineTALK', appVersion:APP_VERSION, analysisVersion:ANALYSIS_VERSION,
+    exportedAt:new Date().toISOString(), exportedBy:settings.deviceId, equip:EQUIP,
+    records, maint: await DB.all('maint'), notes: await DB.all('notes'), learning:null };
+}
+const exportName = ext => `${EQUIP.code}_${stamp(new Date())}_EngineTALK.${ext}`;
+async function exportJson(){
+  const p = await buildPayload();
+  await shareFile(new File([JSON.stringify(p)], exportName('engineear'), {type:'application/json'}));
+  settings.lastExportAt = p.exportedAt; await saveSettings(); renderData();
+}
+async function exportZip(){
+  busy(true,'파일 묶는 중…');
+  try{
+    const p = await buildPayload();
+    const files = [{ name:`${EQUIP.code}.engineear`, blob:new Blob([JSON.stringify(p, null, 1)]) }];
+    for (const r of p.records){ const a = await DB.get('audio', r.id); if (a && a.blob) files.push({ name:'audio/'+r.fileName, blob:a.blob }); }
+    const zip = await makeZip(files);
+    busy(false);
+    await shareFile(new File([zip], exportName('zip'), {type:'application/zip'}));
+    settings.lastExportAt = p.exportedAt; await saveSettings(); renderData();
+  }catch(e){ busy(false); toast('보내기 실패: '+e.message, 4000); }
+}
+$('#btnExpJson').addEventListener('click', exportJson);
+$('#btnExpFull').addEventListener('click', exportZip);
+
+/* --- ZIP (압축 없이 묶기, 외부 라이브러리 없음) --- */
+const CRC_T = (()=>{ const t=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c = c&1 ? 0xEDB88320^(c>>>1) : c>>>1; t[n]=c>>>0; } return t; })();
+function crc32(u8, c=0xFFFFFFFF){ for (let i=0;i<u8.length;i++) c = CRC_T[(c^u8[i])&255]^(c>>>8); return c; }
+function dosTime(d){ return { time:(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1), date:((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate() }; }
+async function makeZip(files){
+  const enc = new TextEncoder(), parts=[], central=[]; let off=0; const {time,date} = dosTime(new Date());
+  for (const f of files){
+    const name = enc.encode(f.name), u8 = new Uint8Array(await f.blob.arrayBuffer());
+    const crc = (crc32(u8) ^ 0xFFFFFFFF) >>> 0, size = u8.length;
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0,0x04034b50,true); lh.setUint16(4,20,true); lh.setUint16(6,0x0800,true); lh.setUint16(8,0,true);
+    lh.setUint16(10,time,true); lh.setUint16(12,date,true); lh.setUint32(14,crc,true); lh.setUint32(18,size,true); lh.setUint32(22,size,true);
+    lh.setUint16(26,name.length,true); lh.setUint16(28,0,true);
+    parts.push(lh.buffer, name, f.blob);
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0,0x02014b50,true); ch.setUint16(4,20,true); ch.setUint16(6,20,true); ch.setUint16(8,0x0800,true); ch.setUint16(10,0,true);
+    ch.setUint16(12,time,true); ch.setUint16(14,date,true); ch.setUint32(16,crc,true); ch.setUint32(20,size,true); ch.setUint32(24,size,true);
+    ch.setUint16(28,name.length,true); ch.setUint32(42,off,true);
+    central.push(ch.buffer, name);
+    off += 30 + name.length + size;
+  }
+  let cd = 0; for (const c of central) cd += c.byteLength;
+  const end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0,0x06054b50,true); end.setUint16(8,files.length,true); end.setUint16(10,files.length,true); end.setUint32(12,cd,true); end.setUint32(16,off,true);
+  return new Blob([...parts, ...central, end.buffer], {type:'application/zip'});
+}
+async function readZip(blob){
+  const buf = new Uint8Array(await blob.arrayBuffer()), dv = new DataView(buf.buffer), dec = new TextDecoder();
+  let e=-1; for (let i=buf.length-22; i>=Math.max(0, buf.length-65557); i--) if (dv.getUint32(i,true)===0x06054b50){ e=i; break; }
+  if (e<0) throw new Error('zip 파일이 아닙니다');
+  const n = dv.getUint16(e+10,true); let p = dv.getUint32(e+16,true); const out=[];
+  for (let k=0;k<n;k++){
+    if (dv.getUint32(p,true)!==0x02014b50) throw new Error('zip 구조 오류');
+    const method=dv.getUint16(p+10,true), csize=dv.getUint32(p+20,true), nl=dv.getUint16(p+28,true), xl=dv.getUint16(p+30,true), cl=dv.getUint16(p+32,true), lho=dv.getUint32(p+42,true);
+    const name = dec.decode(buf.subarray(p+46, p+46+nl));
+    const start = lho + 30 + dv.getUint16(lho+26,true) + dv.getUint16(lho+28,true);
+    let data = buf.subarray(start, start+csize);
+    if (method===8){
+      if (!('DecompressionStream' in window)) throw new Error('이 브라우저는 압축된 zip을 풀 수 없습니다');
+      data = new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+    } else if (method!==0) throw new Error('지원하지 않는 zip 압축 방식');
+    if (!name.endsWith('/') && !name.startsWith('__MACOSX')) out.push({ name, data });
+    p += 46 + nl + xl + cl;
+  }
+  return out;
+}
+
+$('#btnImport').addEventListener('click', () => $('#fileImport').click());
+$('#fileImport').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value=''; if (!f) return;
+  busy(true,'파일 읽는 중…');
+  try{
+    let payload=null; const wavs = new Map();
+    const head = new Uint8Array(await f.slice(0,4).arrayBuffer());
+    if (head[0]===0x50 && head[1]===0x4b){
+      for (const z of await readZip(f)){
+        const base = z.name.split('/').pop();
+        if (/\.(engineear|json)$/i.test(base)) payload = JSON.parse(new TextDecoder().decode(z.data));
+        else if (/\.wav$/i.test(base)) wavs.set(base, z.data);
+      }
+    } else payload = JSON.parse(await f.text());
+    if (!payload || payload.format!=='engineear' || !Array.isArray(payload.records)) throw new Error('EngineTALK/EngineNOTE 데이터 파일이 아닙니다');
+    // 미리보기 계산 (설계서 6.5)
+    const plan = { records:[], maint:[], notes:[], dup:0, audio:0 };
+    for (const [store, list] of [['records',payload.records],['maint',payload.maint||[]],['notes',payload.notes||[]]]){
+      for (const x of list){
+        if (!x || typeof x.id!=='string') continue;
+        const cur = await DB.get(store, x.id);
+        if (!cur || (x.updatedAt||'') > (cur.updatedAt||'')) plan[store].push(x); else plan.dup++;
+      }
+    }
+    for (const r of payload.records){ if (r && wavs.has(r.fileName) && !(await DB.get('audio', r.id))) plan.audio++; }
+    busy(false);
+    const msg = `새로 합칠 측정 ${plan.records.length}건, 사운드 ${plan.audio}개, 정비·점검 ${plan.maint.length}건, 의견 ${plan.notes.length}건\n이미 있는 기록 ${plan.dup}건은 건너뜁니다.\n\n합칠까요?`;
+    if (!confirm(msg)) return;
+    busy(true,'합치는 중…');
+    for (const s of ['records','maint','notes']) for (const x of plan[s]){
+      if (s==='records'){ const has = await DB.get('audio', x.id); x.hasAudio = !!(has || wavs.has(x.fileName)); }
+      await DB.put(s, x.id, x);
+    }
+    for (const r of payload.records){
+      if (r && wavs.has(r.fileName) && !(await DB.get('audio', r.id))) await DB.put('audio', r.id, { blob:new Blob([wavs.get(r.fileName)],{type:'audio/wav'}), fileName:r.fileName });
+    }
+    busy(false); toast('합쳤습니다', 2500); renderData();
+  }catch(err){ busy(false); toast('불러오기 실패: '+err.message, 4500); }
+});
+
+/* GitHub 기준 파일 (설계서 6.7) — index.html 옆의 baseline.engineear를 자동으로 불러온다 */
+async function loadBaselineFile(){
+  if (!/^https?:$/.test(location.protocol)) return;
+  try{
+    const res = await fetch('baseline.engineear', {cache:'no-store'});
+    if (!res.ok) return;
+    const p = await res.json();
+    if (!p || p.format!=='engineear' || !Array.isArray(p.records)) return;
+    let n = 0;
+    for (const x of p.records){
+      if (!x || typeof x.id!=='string' || x.seed || !x.meta) continue;
+      if ((settings.deletedIds||[]).includes(x.id)) continue;   /* 이 폰에서 지운 측정은 다시 불러오지 않는다 */
+      if (!(await DB.get('records', x.id))){ x.fromBaseline = true; x.hasAudio = false; await DB.put('records', x.id, x); n++; }
+    }
+    for (const x of (p.maint||[])){ if (x && typeof x.id==='string' && !(await DB.get('maint', x.id))){ x.fromBaseline = true; await DB.put('maint', x.id, x); } }
+    settings.baselineFile = { exportedAt: p.exportedAt||null, records: p.records.length, checkedAt: new Date().toISOString(), added: n };
+    await saveSettings();
+    if (n) toast(`기준 파일에서 측정 ${n}회를 불러왔습니다`, 3000);
+  }catch(e){}
+}
+async function exportBaseline(){
+  const recs = (await DB.all('records')).filter(r=>r.meta && r.live);
+  if (!recs.length){ toast('아직 이 폰에 측정이 없습니다'); return; }
+  const clean = recs.map(r => { const c = JSON.parse(JSON.stringify(r)); c.meta.operator=''; delete c.opinion; delete c.fromBaseline; c.hasAudio=false;
+    if (c.env){ for (const k of ['lat','lon','accM','gpsLat','gpsLon','gpsAccM','siteDistM','posAt','place']) delete c.env[k]; c.env.siteLabel = siteLabel(c.env); } return c; });   /* 공개 저장소: 좌표 제외, 장소 이름(지상/지하)은 남김 */
+  const maint = (await DB.all('maint')).map(m => ({ id:m.id, createdAt:m.createdAt, updatedAt:m.updatedAt, equip:m.equip, kind:m.kind, items:m.items||[], recordId:m.recordId||null, recordFile:m.recordFile||null, resetBaseline:!!m.resetBaseline }));
+  const p = { format:'engineear', formatVersion:1, kind:'baseline', appName:'EngineTALK', appVersion:APP_VERSION, analysisVersion:ANALYSIS_VERSION,
+    exportedAt:new Date().toISOString(), exportedBy:settings.deviceId, equip:EQUIP, records:clean, maint, notes:[], learning:null };
+  await shareFile(new File([JSON.stringify(p)], 'baseline.engineear', {type:'application/json'}));
+}
+$('#btnExpBase').addEventListener('click', exportBaseline);
+
+async function renderData(){
+  const recs = (await DB.all('records')).filter(r=>r.meta);
+  const bytes = recs.reduce((s,r)=>s+(r.hasAudio&&r.bytes?r.bytes:0),0);
+  $('#expInfo').textContent = `측정 ${recs.length}건 · 사운드 약 ${fmtMB(bytes)}` + (settings.lastExportAt ? ` · 마지막 보내기 ${fmtDate(new Date(settings.lastExportAt))}` : ' · 아직 보낸 적 없음');
+  let t = '확인할 수 없음';
+  try{ if (navigator.storage && navigator.storage.estimate){ const e = await navigator.storage.estimate(); t = `사용 ${fmtMB(e.usage||0)} / 사용 가능 약 ${fmtMB(e.quota||0)}`; }
+    if (navigator.storage && navigator.storage.persisted){ t += (await navigator.storage.persisted()) ? ' · 보호됨' : ' · 보호 안 됨'; } }catch(e){}
+  if (DB.mem) t = '임시 모드 — 앱을 닫으면 사라집니다. 꼭 보내기로 백업하세요.';
+  $('#storeInfo').textContent = t;
+  const bf = settings.baselineFile;
+  $('#baseInfo').textContent = bf ? `GitHub 기준 파일: 측정 ${bf.records}회 (만든 때 ${bf.exportedAt ? fmtDate(new Date(bf.exportedAt)) : '—'}) · 마지막 확인 ${fmtDate(new Date(bf.checkedAt))}` : 'GitHub에 기준 파일이 아직 없습니다 (또는 이 주소에서 찾지 못함).';
+}
+$('#btnPersist').addEventListener('click', async () => {
+  try{ const ok = navigator.storage && navigator.storage.persist && await navigator.storage.persist(); toast(ok ? '보호를 요청했습니다' : '이 브라우저는 보호 요청을 받지 않았습니다. 홈 화면에 추가해 보세요.', 3500); }catch(e){ toast('지원하지 않는 기능입니다'); }
+  renderData();
+});
+
+/* ---------------- boot ---------------- */
+(async function(){
+  buildCircle();
+  await DB.open(); await loadSettings();
+  if (!window.isSecureContext) $('#secureAlert').style.display='block';
+  renderHome();
+  await loadBaselineFile();
+  renderHome();
+  retryPendingEnv();
+})();
+</script>
+</body>
+</html>
