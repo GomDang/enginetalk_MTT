@@ -343,7 +343,7 @@ canvas{display:block;width:100%;border:1px solid var(--line);border-radius:12px;
     <button data-go="learn"><i>05</i>엔진 학습 상태<em>›</em></button>
     <button data-go="help"><i>06</i>도움말 · 녹음 요령<em>›</em></button>
   </div>
-  <p class="hint" style="margin-top:20px">EngineTALK v0.9.11 · 저장 위치: 이 폰의 브라우저</p>
+  <p class="hint" style="margin-top:20px">EngineTALK v0.9.12 · 저장 위치: 이 폰의 브라우저</p>
 </section>
 
 <!-- ============ META (after stop) ============ -->
@@ -534,7 +534,7 @@ canvas{display:block;width:100%;border:1px solid var(--line);border-radius:12px;
   <p><b>점수 보는 법:</b> 2 미만 평소 범위 안 · 2~3.5 조금 다름(노랑) · 3.5 이상 많이 다름(빨강). rpm은 점수 2가 주의 폭(3σ) 끝, 3.5가 약 5σ에 해당합니다. 같은 조건의 학습이 5회 미만이면 점수는 보여 주되 판정은 하지 않고 "학습 중 (판단은 규칙으로)"으로 표시합니다.</p>
   <p><b>알아 둘 점:</b> 경계값(2, 3.5)과 최소 폭(3 rpm, 1.5 dB)은 지금은 임시값이며, 측정이 쌓이면 조정합니다. 소리 모양 점수는 평소에도 1 안팎으로 나와서, 이상이 없어도 회색 줄에 "소리 모양"이 가장 큰 항목으로 자주 나옵니다. 또 49개 대역을 평균하므로 한 대역만 크게 커진 소리(베어링음 등)는 점수보다 원형 막대의 노랑·빨강에서 먼저 보입니다. 측정 중 원형 막대도 함께 보세요.</p>
   <h2>저온 방치 경고</h2>
-  <p>마지막으로 엔진이 돈 측정이 지상(차량기지 등)이었고 12시간 넘게 지났으면, 앱이 그동안의 외기 최저 기온을 날씨 서비스에서 가져옵니다. 최저 5 ℃ 이하면 홈에 <b>저온 방치 주의</b>, 36시간 넘게 지나고 최저 −5 ℃ 이하면 <b>저온 방치 경고</b>가 나옵니다(임시값, 2026-01 혹한기 사례(지상 4일 유치, 약 −12 ℃)보다 일찍 알리도록 정함). 늦가을부터는 주의가 자주 나올 수 있는데, 이때 시동 측정을 해 두면 추운 날의 시동 기준을 모으는 데 도움이 됩니다. 지하 유치는 외기와 달라 경고하지 않습니다. 상자가 나오지 않을 때는 홈 맨 위 회색 줄에 확인 결과(그동안 최저 기온, 아직 12시간이 안 됨, 지하 측정, 위치 기록 없음, 날씨를 받지 못함)가 나옵니다. 다른 폰에서 받은 기록이나 기준 파일의 기록처럼 좌표가 없어도, 장소가 목록의 차량기지면 그 좌표로 확인합니다. 이때 시동 측정을 하면 방치 시간과 최저 기온이 시동 기록에 함께 저장되어, 추운 날의 시동 기준을 쌓는 데 쓰입니다.</p>
+  <p>마지막으로 엔진이 돈 측정이 지상(차량기지 등)이었고 12시간 넘게 지났으면, 앱이 그동안의 외기 최저 기온을 날씨 서비스에서 가져옵니다. 최저 5 ℃ 이하면 홈에 <b>저온 방치 주의</b>, 36시간 넘게 지나고 최저 −5 ℃ 이하면 <b>저온 방치 경고</b>가 나옵니다(임시값, 2026-01 혹한기 사례(지상 4일 유치, 약 −12 ℃)보다 일찍 알리도록 정함). 늦가을부터는 주의가 자주 나올 수 있는데, 이때 시동 측정을 해 두면 추운 날의 시동 기준을 모으는 데 도움이 됩니다. 지하 유치는 외기와 달라 경고하지 않습니다. 상자가 나오지 않을 때는 홈 맨 위 회색 줄에 확인 결과(그동안 최저 기온, 아직 12시간이 안 됨, 지하 측정, 위치 기록 없음, 날씨를 받지 못함)가 나옵니다. 마지막 측정에 위치가 없으면 그 아래 <b>"마지막 측정 위치 입력"</b> 버튼이 나옵니다. 측정한 장소를 고르면 홈에서 바로 다시 확인합니다. 다른 폰에서 받은 기록이나 기준 파일의 기록처럼 좌표가 없어도, 장소가 목록의 차량기지면 그 좌표로 확인합니다. 이때 시동 측정을 하면 방치 시간과 최저 기온이 시동 기록에 함께 저장되어, 추운 날의 시동 기준을 쌓는 데 쓰입니다.</p>
   <h2>기준은 어디서 오나요</h2>
   <p>기준은 같은 측정(공회전 / 작업 RPM)과 같은 작업 모드(N 일반 / W 작업)의 <b>최근 10회 측정</b>입니다. v0.5.0까지 앱으로 녹음한 측정은 상황 구분이 없어서 기준에 넣지 않습니다. 앱에는 2026-10-07~10-15에 분석한 녹음 7회의 rpm 값이 들어 있어서, 이 폰에 기록이 없어도 처음부터 비교를 시작합니다. 새 측정이 쌓이면 오래된 것부터 최근 10회에서 빠집니다.</p>
   <p>원형 막대의 회색 평균(소리 모양)은 이 앱으로 녹음한 측정에서만 만들어집니다. 예전 분석 자료에는 이 값이 없어서, 이 폰이나 기준 파일에 앱 측정이 생긴 뒤부터 회색 막대가 나타납니다.</p>
@@ -547,6 +547,7 @@ canvas{display:block;width:100%;border:1px solid var(--line);border-radius:12px;
   <p><b>차량기지(지상)</b>: GPS가 잡히고 목록의 차량기지 2 km 안이면 그 차량기지를 자동으로 고릅니다. 날씨는 목록의 차량기지 좌표로 가져와 매번 같은 지점과 비교됩니다.</p>
   <p><b>지하 본선</b>: GPS를 쓸 수 없거나 위치 오차가 200 m보다 크면 "GPS 정보를 사용할 수 없습니다. 현재 위치를 선택해주세요"와 함께 장소 목록이 나옵니다. 고른 장소의 좌표로 날씨를 가져옵니다. 지하 측정의 기온은 터널이 아니라 <b>바깥 공기(참고)</b>입니다.</p>
   <p>목록에 없는 곳은 이름을 입력하세요. 지상이면 GPS로 날씨를 가져오고, GPS가 안 되면 날씨 없이 저장합니다. 자동으로 고른 장소가 틀리면 "장소 바꾸기"를 누르세요.</p>
+  <p><b>나중에 위치 넣기 · 바꾸기:</b> 측정 직후 앱을 닫는 등으로 위치를 받지 못한 측정은 03 측정 기록 목록에 <b>"위치 없음"</b>이 붙습니다. 그 측정을 열고 아래 <b>"위치 · 날씨"</b>에서 장소를 고르면, 그 장소의 좌표로 측정 시각의 날씨를 다시 가져옵니다. 장소가 틀렸으면 "장소 바꾸기"를 누르세요. 지난 측정(30분 넘게 지난 것)에는 지금 폰의 GPS를 쓰지 않으므로, 목록에 없는 장소는 이름만 저장되고 날씨는 비어 있습니다.</p>
   <p>날씨는 Open-Meteo(기상청 KMA 모델)에서 가져오며, 관측소 실측이 아니라 약 1.5 km 격자 값입니다. 체감 온도는 기상청 방식(5~9월 여름철 식, 그 밖에는 겨울철 식)으로 계산합니다. 인터넷이 안 되면 다음에 앱을 열 때 측정 시각 기준으로 다시 채웁니다. GitHub 기준 파일에는 목록에 있는 차량기지·역의 위도·경도만 넣고, 폰의 GPS 원래 값과 목록 밖 GPS 위치는 넣지 않습니다.</p>
   <h2>측정 화면의 원형 막대</h2>
   <p>원 둘레의 막대는 주파수 대역별 소리 크기입니다. 12시(40 Hz)에서 시작해 시계 방향으로 높은 소리(12 kHz)까지 갑니다. 1시~6시는 엔진 본체 소리, 6시 이후는 베어링·누설 같은 이상음 영역입니다.</p>
@@ -583,7 +584,7 @@ canvas{display:block;width:100%;border:1px solid var(--line);border-radius:12px;
    EngineTALK v0.7 — 착륙선 (현장 앱)
    통합설계서: EngineTALK_NOTE_통합설계서.md
    ========================================================= */
-const APP_VERSION = '0.9.11';
+const APP_VERSION = '0.9.12';
 const ANALYSIS_VERSION = 'rt-0.6';
 /* 측정 상황 (v0.6): 고른 상황의 rpm 범위에서만 찾는다. aliasMax: 다른 배수 간격이 이만큼 더 맞으면 "범위 밖" (2026-10-17 녹음으로 정함) */
 const SIT = {
@@ -788,6 +789,11 @@ function lastRun(all){
   const ran = r => !r.seed && r.meta && (r.situation!=='start' || (r.live && r.live.start && (r.live.start.outcome||r.live.start.auto)==='success'));
   return all.filter(ran).sort((a,b)=>b.createdAt.localeCompare(a.createdAt))[0] || null;
 }
+/* v0.9.12: 응답이 오지 않는 요청이 위치·날씨 수집을 붙잡아 두지 않도록 12초에서 끊는다 */
+async function fetchT(url, ms=12000){
+  const c = typeof AbortController==='function' ? new AbortController() : null, t = c ? setTimeout(() => c.abort(), ms) : null;
+  try{ return await fetch(url, c ? { signal:c.signal } : undefined); } finally { if (t) clearTimeout(t); }
+}
 async function fetchSoak(lat, lon, since){
   /* v0.9.9: 기상청 모델(kma_seamless)은 지난 시간의 기온이 비어 오는 경우가 있다(2026-10-28 현장 확인).
      예전에는 응답만 오면 멈춰서 최저 기온을 못 구하고 상자를 조용히 숨겼다 → 최저 기온을 구할 때까지 기본 모델로 다시 받는다 */
@@ -796,7 +802,7 @@ async function fetchSoak(lat, lon, since){
   let got = false;
   for (const [u, model] of [[url,'kma_seamless'], [url.replace('&models=kma_seamless',''),'best_match']]){
     let d = null;
-    try{ const r = await fetch(u); if (r.ok) d = await r.json(); }catch(e){}
+    try{ const r = await fetchT(u); if (r.ok) d = await r.json(); }catch(e){}
     if (!d || !d.hourly || !d.hourly.time) continue;
     got = true;
     const t = d.hourly.time.map(x => Date.parse(x.length===16 ? x+':00+09:00' : x)), T = d.hourly.temperature_2m || [], now = Date.now();
@@ -816,22 +822,36 @@ function envPos(env){
   const st = env.site && env.site.id ? SITES.find(x => x.id===env.site.id) : null;
   return st ? { lat:st.lat, lon:st.lon } : null;
 }
+/* v0.9.12: 위치 상태가 '수집 중(locating)'에 멈춘 기록 (2026-11-18 현장 확인: 측정 중·직후 앱이 닫히거나,
+   측정 정보 저장이 위치 저장과 겹쳐 덮어씀) → 10분이 지나면 장소를 고르는 상태로 보여 주고 나중에 넣을 수 있게 한다 */
+const ENV_STALE_MS = 10*60e3, ENV_PAST_MS = 30*60e3;
+const isPastRec = r => Date.now() - Date.parse(r.createdAt) > ENV_PAST_MS;   /* 지난 측정: 지금 폰의 GPS를 쓰지 않는다 */
+function envNow(r){
+  const env = r && r.env;
+  if (!env) return { at: r.createdAt, status:'choose', gpsMsg:'이 측정에는 위치 기록이 없습니다', missing:true };
+  const stale = env.status==='locating' && Date.now() - Date.parse(r.createdAt) > ENV_STALE_MS;
+  if (stale || env.status==='no-location') return { ...env, at: env.at || r.createdAt, status:'choose', gpsMsg: env.gpsMsg || '측정 때 위치를 받지 못했습니다', missing:true };
+  return env;
+}
 async function renderSoak(all){
   const box = $('#soakBox'); if (!box) return;
   const r = lastRun(all);
-  const env = r && r.env;
+  const env = r && envNow(r);
   box.innerHTML='';
   if (!r) return;
   const since = Date.parse(r.createdAt), hours = (Date.now()-since)/36e5;
   /* v0.9.10: 좌표가 없는 기록(v0.9.9 이전 기준 파일)은 장소 목록의 좌표를 쓴다. 확인하지 못하면 이유를 한 줄로 보여 준다 */
   const pos = envPos(env);
-  if (!env || env.underground===true || !pos){
-    box.append(soakNote(`저온 방치 확인 안 함: 마지막 운전 ${soakH(hours)} 전 · ${!env ? '위치 기록 없음' : env.underground===true ? '지하 측정(외기와 다름)' : '위치(좌표) 기록 없음'}`)); return; }
+  if (env.underground===true){ box.append(soakNote(`저온 방치 확인 안 함: 마지막 운전 ${soakH(hours)} 전 · 지하 측정(외기와 다름)`)); return; }
+  if (!pos){   /* v0.9.12: 위치가 없으면 이유와 함께 바로 넣는 버튼 */
+    box.append(soakNote(`저온 방치 확인 안 함: 마지막 운전 ${soakH(hours)} 전 · ${env.missing ? '마지막 측정의 위치 기록 없음 (측정 때 GPS·날씨를 받지 못함)' : env.site && env.site.custom ? `직접 입력한 장소(${env.site.name})라 좌표 없음` : '위치(좌표) 기록 없음'}`),
+      el('div',{class:'acts',style:'margin-top:8px'}, el('button',{class:'btn h52',text:'마지막 측정 위치 입력',onclick:()=>openDetail(r.id, true)})));
+    return; }
   if (hours < SOAK.warnH){ box.append(soakNote(`저온 방치 확인: 마지막 운전 후 ${soakH(hours)} (${SOAK.warnH}시간이 지나면 확인합니다)`)); return; }
   let c = settings.soak;
-  if (!c || c.recId!==r.id || c.minC==null || (Date.now()-Date.parse(c.fetchedAt))/6e4 > SOAK.refreshMin){
-    try{ const w = await fetchSoak(pos.lat, pos.lon, since); c = { recId:r.id, fetchedAt:new Date().toISOString(), ...w }; settings.soak = c; await saveSettings(); }
-    catch(e){ if (!c || c.recId!==r.id || c.minC==null){   /* v0.9.9: 조용히 숨기지 않고 이유를 보여 준다 */
+  if (!c || c.recId!==r.id || c.lat!==pos.lat || c.lon!==pos.lon || c.minC==null || (Date.now()-Date.parse(c.fetchedAt))/6e4 > SOAK.refreshMin){   /* v0.9.12: 위치를 바꾸면 다시 확인 */
+    try{ const w = await fetchSoak(pos.lat, pos.lon, since); c = { recId:r.id, lat:pos.lat, lon:pos.lon, fetchedAt:new Date().toISOString(), ...w }; settings.soak = c; await saveSettings(); }
+    catch(e){ if (!c || c.recId!==r.id || c.lat!==pos.lat || c.lon!==pos.lon || c.minC==null){   /* v0.9.9: 조용히 숨기지 않고 이유를 보여 준다 */
       box.innerHTML=''; box.append(soakNote(`저온 방치 확인: 날씨를 받지 못했습니다${navigator.onLine===false?' (인터넷 없음)':''} · 마지막 운전 후 ${soakH(hours)} · 앱을 다시 열면 다시 확인합니다`)); return; } }
   }
   c.hours = hours; c.site = siteLabel(env) || env.dong || '마지막 측정 장소';
@@ -1077,7 +1097,7 @@ async function fetchWeather(lat, lon, at){
   const base = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m&past_days=${pd}&forecast_days=2&timezone=Asia%2FSeoul&wind_speed_unit=ms`;
   let j = null, model = 'kma_seamless';
   for (const url of [base+'&models=kma_seamless', base]){
-    try{ const r = await fetch(url); if (!r.ok) throw 0; const d = await r.json();   /* v0.9.9: 측정 시각 앞뒤 기온이 있어야 그 모델을 쓴다 */
+    try{ const r = await fetchT(url); if (!r.ok) throw 0; const d = await r.json();   /* v0.9.9: 측정 시각 앞뒤 기온이 있어야 그 모델을 쓴다 */
       if (d && d.hourly && d.hourly.time){ const tt = d.hourly.time.map(t => Date.parse(t.length===16 ? t+':00+09:00' : t)), TT = d.hourly.temperature_2m||[], t0 = at.getTime();
         if (tt.some((x,i) => TT[i]!=null && Math.abs(x-t0) <= 3600e3)){ j = d; break; } } }catch(e){}
     model = 'best_match';
@@ -1096,7 +1116,7 @@ async function lookupDong(lat, lon){   /* 목록 밖 GPS 위치만 OpenStreetMap
   const key = lat.toFixed(3)+','+lon.toFixed(3);
   settings.geoCache = settings.geoCache || {};
   if (settings.geoCache[key]) return { ...settings.geoCache[key], dongSource:'OpenStreetMap' };
-  const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=16&accept-language=ko&addressdetails=1`);
+  const r = await fetchT(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=16&accept-language=ko&addressdetails=1`);
   if (!r.ok) throw new Error('geo');
   const a = (await r.json()).address || {};
   const cand = [a.quarter, a.suburb, a.neighbourhood, a.city_district, a.village, a.town, a.hamlet].filter(Boolean);
@@ -1114,12 +1134,13 @@ async function fillEnv(env){
     if (env.site && env.site.dong){ env.dong = env.site.dong; env.gu = env.site.gu; env.dongSource = '장소 목록'; }
     else if (env.lat!=null){ try{ Object.assign(env, await lookupDong(env.lat, env.lon)); }catch(e){ miss.push('동 이름'); } }
   }
+  delete env.early;   /* v0.9.12: 먼저 넣은 위치(early)도 날씨까지 채우면 보통 기록이 된다 */
   env.status = miss.length ? 'pending' : 'ok';
-  env.msg = miss.length ? `${miss.join(' · ')} 정보를 받지 못했습니다. 인터넷이 될 때 다시 채웁니다.` : (env.noWeather ? 'GPS를 쓸 수 없어 날씨 없이 저장합니다.' : '');
+  env.msg = miss.length ? `${miss.join(' · ')} 정보를 받지 못했습니다. 인터넷이 될 때 다시 채웁니다.` : (env.noWeather ? (env.noWeatherWhy || 'GPS를 쓸 수 없어 날씨 없이 저장합니다.') : '');
   env.fetchedAt = new Date().toISOString();
   return env;
 }
-async function collectEnv(at){
+async function collectEnv(at, onPos){   /* v0.9.12: onPos — 위치가 정해지면 날씨를 받기 전에 먼저 알린다 (앱이 닫혀도 좌표가 남게) */
   const env = { at: at.toISOString(), status:'locating' };
   let p = null;
   try{ p = await getPosition(); }catch(e){ env.gpsMsg = e && e.code===1 ? '위치 권한 거부' : 'GPS 수신 안 됨'; }
@@ -1134,6 +1155,7 @@ async function collectEnv(at){
     Object.assign(env, { site: siteRef(near.st), underground:false, lat: near.st.lat, lon: near.st.lon, posSource:'gps-site', siteDistM: Math.round(near.d) });
     rememberSite(near.st.id);
   } else Object.assign(env, { lat: env.gpsLat, lon: env.gpsLon, underground:false, posSource:'gps' });
+  if (onPos){ try{ onPos(JSON.parse(JSON.stringify({ ...env, status:'pending', early:true, msg:'날씨를 가져오는 중입니다. 앱을 닫아도 다음에 열 때 채웁니다.' }))); }catch(e){} }
   return fillEnv(env);
 }
 function rememberSite(id){ settings.recentSites = [id, ...(settings.recentSites||[]).filter(x=>x!==id)].slice(0,3); saveSettings(); }
@@ -1143,9 +1165,10 @@ async function applySite(env, st){
   rememberSite(st.id);
   return fillEnv(e);
 }
-async function applyCustom(env){
+async function applyCustom(env, opts={}){
   const name = (prompt('목록에 없는 장소의 이름을 입력하세요') || '').trim(); if (!name) return null;
   const e = { at: env.at, site: { id:null, name, custom:true }, posSource:'custom' };
+  if (opts.gps===false){ Object.assign(e, { underground:null, noWeather:true, noWeatherWhy:'지난 측정이라 지금 폰의 GPS를 쓰지 않습니다. 날씨 없이 저장합니다.' }); return fillEnv(e); }   /* v0.9.12 */
   try{
     const p = await getPosition();
     if ((p.coords.accuracy||0) <= GPS_ACC_MAX){ Object.assign(e, { lat:+p.coords.latitude.toFixed(5), lon:+p.coords.longitude.toFixed(5), gpsAccM:Math.round(p.coords.accuracy||0), underground:false }); return fillEnv(e); }
@@ -1169,10 +1192,14 @@ function envView(env, opts={}){
   const box = el('div',{});
   if (!env || env.status==='locating'){ box.append(el('div',{class:'st',text:ENV_LOCATING})); return box; }
   if (env.status==='choose'){
-    box.append(el('div',{class:'ask',text:'GPS 정보를 사용할 수 없습니다. 현재 위치를 선택해주세요'}));
-    if (env.gpsMsg) box.append(el('div',{class:'st',text:`(${env.gpsMsg})`}));
+    box.append(el('div',{class:'ask',text: env.changing ? '장소를 다시 고르세요' : opts.past ? '이 측정의 위치가 없습니다. 측정한 장소를 선택해주세요' : 'GPS 정보를 사용할 수 없습니다. 현재 위치를 선택해주세요'}));
+    if (env.gpsMsg && !env.changing) box.append(el('div',{class:'st',text:`(${env.gpsMsg})`}));
+    if (opts.past) box.append(el('div',{class:'st',text:'고른 장소의 좌표로 측정 시각의 날씨를 가져옵니다. 지난 측정이라 지금 폰의 GPS는 쓰지 않습니다.'}));
     if (opts.onChoose) box.append(siteList(opts.onChoose));
-    if (opts.onRetry) box.append(el('div',{class:'acts'}, el('button',{class:'btn h52',text:'GPS 다시 시도',onclick:opts.onRetry})));
+    const acts = el('div',{class:'acts'});
+    if (opts.onRetry && !opts.past) acts.append(el('button',{class:'btn h52',text:'GPS 다시 시도',onclick:opts.onRetry}));
+    if (env.changing && opts.onCancel) acts.append(el('button',{class:'btn h52',text:'취소',onclick:opts.onCancel}));
+    if (acts.childNodes.length) box.append(acts);
     return box;
   }
   const lbl = siteLabel(env);
@@ -1193,6 +1220,7 @@ function envView(env, opts={}){
   else if (env.posSource==='select') notes.push('목록에서 선택' + (env.gpsMsg ? ` (${env.gpsMsg})` : ''));
   else if (env.posSource==='gps') notes.push('GPS 위치 · 목록의 차량기지 2 km 밖');
   else if (env.posSource==='custom') notes.push('직접 입력한 장소');
+  if (env.editedAt) notes.push(`나중에 입력 ${fmtDate(new Date(env.editedAt))}`);
   if (env.msg) notes.push(env.msg);
   if (env.tempC!=null) notes.push(`Open-Meteo${env.wxModel==='kma_seamless'?' (기상청 KMA 모델)':''} · 체감 ${env.feelsMethod||''} 식`);
   if (notes.length) box.append(el('div',{class:'st'+(env.status==='ok'?'':' warn'),text:notes.join(' · ')}));
@@ -1209,22 +1237,29 @@ async function saveEnvFor(id, env){
 async function retryEnvFor(id){
   const r = await DB.get('records', id); if (!r) return null;
   let env = r.env;
-  if (!env || env.status==='choose' || env.lat==null && !env.site) env = await collectEnv(new Date(r.createdAt));
+  const needPos = !env || env.status==='choose' || env.status==='locating' || env.lat==null && !env.site;
+  if (needPos && isPastRec(r)) return envNow(r);   /* v0.9.12: 지난 측정은 지금 GPS로 채우지 않는다 → 목록에서 고르게 */
+  if (needPos) env = await collectEnv(new Date(r.createdAt));
   else env = await fillEnv(env);
   return saveEnvFor(id, env);
 }
 /* 위치·날씨 칸 공통 동작 (측정 정보 화면, 측정 상세) */
-function envHandlers(getId, getEnv, draw){
+function envHandlers(getId, getEnv, draw, isPast){   /* v0.9.12: isPast — 지난 측정이면 지금 GPS를 쓰지 않고, 고친 시각을 남긴다 */
+  const past = () => !!(isPast && isPast());
   return {
     onRetry: async () => { draw({ status:'locating' }); draw(await retryEnvFor(getId())); },
     onChoose: async pick => {
       const base = getEnv() || { at: new Date().toISOString() };
+      const keep = base.changing ? { ...base, changing:undefined } : base;
       draw({ status:'locating' });
-      const env = pick==='custom' ? await applyCustom(base) : await applySite(base, pick);
-      if (!env){ draw(base); return; }
+      const env = pick==='custom' ? await applyCustom(base, { gps: !past() }) : await applySite(base, pick);
+      if (!env){ draw(keep, !!base.changing); return; }
+      if (past()) env.editedAt = new Date().toISOString();
       draw(await saveEnvFor(getId(), env));
+      if (past()) toast('측정 위치를 저장했습니다', 2500);
     },
-    onChange: () => { const e = getEnv() || {}; draw({ ...e, status:'choose', gpsMsg: '장소를 다시 고릅니다' }, true); },
+    onChange: () => { const e = getEnv() || {}; draw({ ...e, status:'choose', changing:true }, true); },
+    onCancel: () => draw(getEnv()),
   };
 }
 async function retryPendingEnv(){   /* 앱을 열 때 인터넷이 되면 비어 있는 날씨·동 이름을 채운다 */
@@ -1248,6 +1283,18 @@ class Rec extends AudioWorkletProcessor{
 }
 registerProcessor('et-rec',Rec);`;
 
+/* v0.9.12: 위치 기록 합치기 — '수집 중' < 위치만 먼저 넣은 것(early) < 다 채운 것·사용자가 고른 것 */
+const envReplaceable = e => !e || e.status==='locating' || !!e.early;
+function betterEnv(a, b){
+  const rank = e => !e ? -1 : e.status==='locating' ? 0 : e.early ? 1 : 2;
+  if (rank(a)!==rank(b)) return rank(a) > rank(b) ? a : b;
+  return ((b && b.fetchedAt) || '') > ((a && a.fetchedAt) || '') ? b : a;
+}
+async function saveEarlyEnv(id, e){
+  const cur = await DB.get('records', id); if (!cur || (cur.env && cur.env.status!=='locating')) return;
+  cur.env = e; cur.updatedAt = new Date().toISOString(); await DB.put('records', id, cur);
+  if (metaRec && metaRec.id===id && !metaEnvView && (!metaRec.env || metaRec.env.status==='locating')){ metaRec.env = e; renderMetaEnv(); }
+}
 async function startRecording(sit){
   sit = SIT[sit] ? sit : 'idle';
   if (!window.isSecureContext || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
@@ -1271,7 +1318,9 @@ async function startRecording(sit){
   await resumeP;
   if (ctx.state !== 'running'){ try{ await ctx.resume(); }catch(e){} }
   const envStartedAt = new Date();
-  const envP = collectEnv(envStartedAt).catch(() => ({ at: envStartedAt.toISOString(), status:'no-location', msg:'위치·날씨를 가져오지 못했습니다.' }));
+  const envSt = { early:null, recId:null };   /* v0.9.12: 위치가 정해지면 측정 기록에 먼저 넣는다 (날씨는 나중에) */
+  const envP = collectEnv(envStartedAt, e => { envSt.early = e; if (envSt.recId) saveEarlyEnv(envSt.recId, e); })
+    .catch(() => ({ at: envStartedAt.toISOString(), status:'no-location', msg:'위치·날씨를 가져오지 못했습니다.' }));
   const track = stream.getAudioTracks()[0];
   const applied = track.getSettings ? track.getSettings() : {};
   const src = ctx.createMediaStreamSource(stream);
@@ -1281,7 +1330,7 @@ async function startRecording(sit){
 
   const base = await loadBaseline();
   Object.assign(REC, { on:true, ctx, stream, track, applied, an, src, mute, resumeTried:0, chunks:[], samples:0, clipCount:0, peak:0,
-    envP, base, bandS:null, bandAcc:{ idle:{s:new Float64Array(CIR.N), n:0}, work:{s:new Float64Array(CIR.N), n:0} },
+    envP, envSt, base, bandS:null, bandAcc:{ idle:{s:new Float64Array(CIR.N), n:0}, work:{s:new Float64Array(CIR.N), n:0} },
     lvlPeak:0, lastClipAt:-99, startedAt:new Date(), t0:performance.now(), rpmTrack:[], rpmBuf:[], endResolve:null,
     freq:new Float32Array(an.frequencyBinCount), node:null, hidden:false,
     sit, sr: ctx.sampleRate, ring:new Float32Array(Math.round(ctx.sampleRate)), ringPos:0, ringFill:0, chunkSamples:0,
@@ -1324,6 +1373,7 @@ async function startRecording(sit){
 async function stopRecording(cancel){
   if (!REC.on) return;
   REC.on = false;
+  const envP = REC.envP, envSt = REC.envSt;
   if (REC.kind==='worklet'){
     await new Promise(res => { REC.endResolve = res; REC.node.port.postMessage('stop'); setTimeout(res, 600); });
   }
@@ -1371,14 +1421,14 @@ async function stopRecording(cancel){
       idleP10: qtl(idleCore,.1), idleP90: qtl(idleCore,.9), bands: bandsSaved, bandSpec: BAND_SPEC, match,
       excluded, excludeReason, horns: REC.horns.filter(h => h[0] < dur - 0.3).map(h=>[+h[0].toFixed(2), +h[1].toFixed(2)]), nAna: REC.nAna, nOut: REC.nOut, nHornSkip: REC.nHornSkip },
     hasAudio: true, important: false,
-    env: { at: REC.startedAt.toISOString(), status:'locating' },
+    env: envSt.early || { at: REC.startedAt.toISOString(), status:'locating' },
   };
   await DB.put('audio', rec.id, { blob: wav, fileName: rec.fileName });
   await DB.put('records', rec.id, rec);
-  const envP = REC.envP;
-  envP.then(async env => {
-    if (metaRec && metaRec.id===rec.id && !metaEnvView){ metaRec.env = env; renderMetaEnv(); }
-    const cur = await DB.get('records', rec.id); if (!cur) return;
+  envSt.recId = rec.id;
+  envP.then(async env => {   /* v0.9.12: 사용자가 이미 고른 장소는 덮어쓰지 않는다 */
+    if (metaRec && metaRec.id===rec.id && !metaEnvView && envReplaceable(metaRec.env)){ metaRec.env = env; renderMetaEnv(); }
+    const cur = await DB.get('records', rec.id); if (!cur || !envReplaceable(cur.env)) return;
     cur.env = env; cur.updatedAt = new Date().toISOString(); await DB.put('records', rec.id, cur);
   });
   if (REC.sit==='start'){
@@ -2097,9 +2147,10 @@ function renderMetaEnv(){
   if (!metaRec) return;
   const id = metaRec.id;
   const draw = (env, viewOnly) => { if (!metaRec || metaRec.id!==id) return; if (viewOnly) metaEnvView = env; else { metaEnvView = null; if (env.status!=='locating') metaRec.env = env; } paint(env); };
-  const h = envHandlers(() => id, () => metaRec && metaRec.env, draw);
-  const paint = env => { box.innerHTML=''; box.append(envView(env, { onRetry:h.onRetry, onChoose:h.onChoose, onChange: env.status==='ok'||env.status==='pending' ? h.onChange : null })); };
-  paint(metaEnvView || metaRec.env);
+  const past = () => metaRec && isPastRec(metaRec);
+  const h = envHandlers(() => id, () => metaRec && envNow(metaRec), draw, past);
+  const paint = env => { box.innerHTML=''; box.append(envView(env, { past: past(), onRetry:h.onRetry, onChoose:h.onChoose, onCancel:h.onCancel, onChange: env.status==='ok'||env.status==='pending' ? h.onChange : null })); };
+  paint(metaEnvView || envNow(metaRec));
 }
 function openMeta(rec){
   metaRec = rec;
@@ -2135,7 +2186,6 @@ $('#btnMetaSave').addEventListener('click', async () => {
   rec.meta = { side, timing, mode, hydraulic: mode==='W' ? 'ON' : 'OFF', gaugeRpm: gauge, operator };  // 작업 모드 W = 유압 ON
   rec.fileName = await buildName(rec, side, timing, mode);
   rec.updatedAt = now;
-  if (metaRec.env && metaRec.env.status!=='locating'){ const cur = await DB.get('records', metaRec.id); rec.env = (cur && cur.env && cur.env.fetchedAt && (!metaRec.env.fetchedAt || cur.env.fetchedAt > metaRec.env.fetchedAt)) ? cur.env : metaRec.env; }
   const opinion = $('#mOpinion').value.trim();
   if (opinion){
     const n = { id:newId('n'), createdAt:now, updatedAt:now, deviceId:settings.deviceId, equip:EQUIP.code, kind:'opinion',
@@ -2149,6 +2199,10 @@ $('#btnMetaSave').addEventListener('click', async () => {
       operator, recordId: rec.id, recordFile: rec.fileName, resetBaseline:false };
     await DB.put('maint', m.id, m);
   }
+  /* v0.9.12: 저장 중에 도착한 위치·날씨를 덮어쓰지 않도록, 넣기 바로 전에 다시 읽어 더 나은 쪽을 쓴다
+     (v0.9.11까지는 처음에 읽은 '수집 중' 기록으로 덮어써 위치가 사라질 수 있었다) */
+  const fresh = await DB.get('records', rec.id);
+  rec.env = betterEnv(fresh && fresh.env, metaRec.env);
   await DB.put('records', rec.id, rec);
   const a = await DB.get('audio', rec.id); if (a){ a.fileName = rec.fileName; await DB.put('audio', rec.id, a); }
   settings.operator = operator; await saveSettings();
@@ -2248,7 +2302,7 @@ async function renderHistory(){
     if (x.r){ const r=x.r;
       box.append(pickItem(el('button',{class:'item',onclick:()=>openDetail(r.id)},
         el('div',{class:'t',text:r.fileName}),
-        el('div',{class:'s'}, el('span',{class:'tag',text: r.seed ? '분석 자료' : (r.situation && SIT[r.situation] ? SIT[r.situation].label + (r.situation==='start' && r.live && r.live.start && r.live.start.found ? ((r.live.start.outcome||(r.live.start.auto==='success'?'success':'fail'))==='success' ? ' 성공' : ' 실패') : '') : r.fromBaseline ? '기준 파일' : '이전 버전') + (!r.seed && (r.live&&r.live.excluded || r.excludedManual || !r.situation) ? ' · 기준 제외' : '')}), `${r.seed ? r.createdAt.slice(0,10) : fmtDate(new Date(r.createdAt))} · ${r.live&&(r.live.workMedian||r.live.rpmMedian)?Math.round(r.live.workMedian||r.live.rpmMedian)+' rpm · ':''}${r.meta.mode==='W'?'작업 W':'일반 N'}${r.meta.operator?' · '+r.meta.operator:''}${r.seed||r.hasAudio?'':' · 사운드 없음'}${r.env&&(siteLabel(r.env)||r.env.dong)?' · '+(siteLabel(r.env)||r.env.dong):''}${r.env&&r.env.tempC!=null?' · '+r.env.tempC.toFixed(1)+' ℃':''}`),
+        el('div',{class:'s'}, el('span',{class:'tag',text: r.seed ? '분석 자료' : (r.situation && SIT[r.situation] ? SIT[r.situation].label + (r.situation==='start' && r.live && r.live.start && r.live.start.found ? ((r.live.start.outcome||(r.live.start.auto==='success'?'success':'fail'))==='success' ? ' 성공' : ' 실패') : '') : r.fromBaseline ? '기준 파일' : '이전 버전') + (!r.seed && (r.live&&r.live.excluded || r.excludedManual || !r.situation) ? ' · 기준 제외' : '')}), `${r.seed ? r.createdAt.slice(0,10) : fmtDate(new Date(r.createdAt))} · ${r.live&&(r.live.workMedian||r.live.rpmMedian)?Math.round(r.live.workMedian||r.live.rpmMedian)+' rpm · ':''}${r.meta.mode==='W'?'작업 W':'일반 N'}${r.meta.operator?' · '+r.meta.operator:''}${r.seed||r.hasAudio?'':' · 사운드 없음'}${r.env&&(siteLabel(r.env)||r.env.dong)?' · '+(siteLabel(r.env)||r.env.dong):''}${!r.seed && envNow(r).missing ? ' · 위치 없음' : ''}${r.env&&r.env.tempC!=null?' · '+r.env.tempC.toFixed(1)+' ℃':''}`),
         r.opinion ? el('div',{class:'o',text:r.opinion}) : null), 'records', r.id, r.fileName, !r.seed));
     } else { const v = x.n || x.m; const kind = x.n ? '의견' : v.kind;
       box.append(pickItem(el('div',{class:'item'},
@@ -2262,7 +2316,7 @@ async function renderHistory(){
 
 /* ---------------- DETAIL ---------------- */
 let audioUrl = null;
-async function openDetail(id){
+async function openDetail(id, focusEnv){   /* v0.9.12: focusEnv — 홈의 "마지막 측정 위치 입력"에서 열면 위치 칸으로 */
   const r = await getRecord(id); if (!r) return;
   const a = r.seed ? null : await DB.get('audio', id);
   const body = $('#detailBody'); body.innerHTML='';
@@ -2314,12 +2368,13 @@ async function openDetail(id){
   if (rules.childNodes.length) body.append(el('hr'), el('div',{class:'sect',style:'margin-top:0'}, 'AI 학습 비교', el('small',{text:'이 측정 전의 같은 조건 최근 10회로 배운 평소 모습과 비교'})), learnHead || el('span'), rules);
   if (!r.seed){
     const envBox = el('div',{class:'panel env',style:'margin-top:10px'});
-    let curEnv = r.env || { at: r.createdAt, status:'choose', gpsMsg:'이 측정에는 위치·날씨 기록이 없습니다' };
+    let curEnv = envNow(r);   /* v0.9.12: 기록이 없거나 '수집 중'에 멈춘 위치는 목록에서 고르게 */
+    const past = () => isPastRec(r);
     const drawEnv = (env, viewOnly) => { if (!viewOnly && env.status!=='locating') curEnv = env;
-      envBox.innerHTML=''; envBox.append(envView(env, { onRetry:h.onRetry, onChoose:h.onChoose, onChange: env.status==='ok'||env.status==='pending' ? h.onChange : null })); };
-    const h = envHandlers(() => id, () => curEnv, drawEnv);
+      envBox.innerHTML=''; envBox.append(envView(env, { past: past(), onRetry:h.onRetry, onChoose:h.onChoose, onCancel:h.onCancel, onChange: env.status==='ok'||env.status==='pending' ? h.onChange : null })); };
+    const h = envHandlers(() => id, () => curEnv, drawEnv, past);
     drawEnv(curEnv);
-    body.append(el('hr'), el('div',{class:'sect',style:'margin-top:0'}, '위치 · 날씨'), envBox);
+    body.append(el('hr'), el('div',{class:'sect',id:'detailEnv',style:'margin-top:0;scroll-margin-top:12px'}, '위치 · 날씨', el('small',{text:'측정 위치를 나중에 넣거나 바꿀 수 있습니다. 바꾸면 그 장소의 측정 시각 날씨를 다시 가져옵니다.'})), envBox);
   }
   const ap = (r.quality&&r.quality.applied)||{};
   const onoff = v => v===false ? '꺼짐' : v===true ? '켜짐' : '확인 불가';
@@ -2354,6 +2409,7 @@ async function openDetail(id){
       if (!confirm('이 측정과 사운드를 이 폰에서 지울까요? 되돌릴 수 없습니다.')) return;
       await deleteEntry('records', id); toast('삭제했습니다'); back(); }})));
   go('detail');
+  if (focusEnv) requestAnimationFrame(() => { const t = $('#detailEnv'); if (t) t.scrollIntoView({ block:'start' }); });
 }
 
 /* =========================================================
